@@ -575,4 +575,33 @@ hr {
     }
 
 
+    #current-date {
+        font-family: Arial, sans-serif;
+    }
+    .timesheet {
+        color: black;
+        font-weight: bold;
+    }
+    .date {
+        color: gray;
+    }
+    #current-date1 {
+        font-family: Arial, sans-serif;
+    
+    }
+    .date1 {
+        color: gray;
+        font-weight: bold;
+
+    }
+    .hours-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+    }
     
