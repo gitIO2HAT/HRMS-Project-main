@@ -1377,3 +1377,65 @@ Did you mean one of these?
 #50 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
 #51 {main}
 "} 
+[2024-07-04 09:34:10] local.ERROR: Command "config:cleare" is not defined.
+
+Did you mean one of these?
+    cache:clear
+    config:cache
+    config:clear
+    config:show
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    view:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"config:cleare\" is not defined.
+
+Did you mean one of these?
+    cache:clear
+    config:cache
+    config:clear
+    config:show
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    view:clear at C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\symfony\\console\\Application.php:737)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\symfony\\console\\Application.php(266): Symfony\\Component\\Console\\Application->find('config:cleare')
+#1 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\xampp\\htdocs\\HRMS-Project-main\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
+"} 
+[2024-07-04 01:34:29] local.ERROR: Command "cache:clelar" is not defined.
+
+Did you mean one of these?
+    cache:clear
+    cache:forget
+    cache:prune-stale-tags
+    cache:table
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    view:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"cache:clelar\" is not defined.
+
+Did you mean one of these?
+    cache:clear
+    cache:forget
+    cache:prune-stale-tags
+    cache:table
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    view:clear at C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\symfony\\console\\Application.php:737)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\symfony\\console\\Application.php(266): Symfony\\Component\\Console\\Application->find('cache:clelar')
+#1 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\xampp\\htdocs\\HRMS-Project-main\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\xampp\\htdocs\\HRMS-Project-main\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
+"} 
