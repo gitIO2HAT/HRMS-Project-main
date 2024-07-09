@@ -46,7 +46,7 @@
 <?php if(Auth::user()->user_type == '0'): ?>
 <body class="bg-white" onclick="window.location='<?php echo e(url('SuperAdmin/Employee')); ?>'" style="cursor: pointer;">
 <?php elseif(Auth::user()->user_type == '1'): ?>
-<body class="bg-white" onclick="window.location='<?php echo e(url('Admin/Employee')); ?>'" style="cursor: pointer;">
+<body class="bg-white" onclick="window.location='<?php echo e(url('SuperAdmin/Employee')); ?>'" style="cursor: pointer;">
 <?php endif; ?>
     <container class="col-12">
         <div class="row g-4">
@@ -57,7 +57,7 @@
                 <div class="mt-5 bg-success " style="height:50%; width:100%">
                     <p class="mt-2 d-flex justify-content-center align-items-center">
                     <h3 class="mt-5 text-center d-flex justify-content-around align-items-center text-white">Employee
-                        Information 
+                        Information
                         Sheet</h3>
                     </p>
                 </div>
@@ -167,4 +167,4 @@
 <!-- Template Javascript -->
 <script src="<?php echo e(asset('js/main.js')); ?>"></script>
 
-</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/admin/employee/previewemployee.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/superadmin/employee/previewemployee.blade.php ENDPATH**/ ?>

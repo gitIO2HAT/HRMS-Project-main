@@ -89,5 +89,10 @@ static public function getID($id)
             $user->age = Carbon::parse($user->birth_date)->age;
         });
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }
 

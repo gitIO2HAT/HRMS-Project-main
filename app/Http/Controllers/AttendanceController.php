@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Message;
+use App\Models\Attendance;
 class AttendanceController extends Controller
 {
     public function attendance()
@@ -39,5 +40,30 @@ class AttendanceController extends Controller
             'notification' => $notification,
             'getNot' => $getNot,
         ]);
+    }
+
+    public function clockin()
+    {
+        $attendance = Attendance::create([
+            'user_id' => auth()->id(),
+            'clock_in' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Clocked in successfully');
+    }
+
+    public function clockout()
+    {
+        $attendance = Attendance::where('user_id', auth()->id())
+                                ->whereNull('clock_out')
+                                ->latest()
+                                ->first();
+
+        if ($attendance) {
+            $attendance->update(['clock_out' => now()]);
+            return redirect()->back()->with('success', 'Clocked out successfully');
+        }
+
+        return redirect()->back()->with('error', 'No active clock-in found');
     }
 }

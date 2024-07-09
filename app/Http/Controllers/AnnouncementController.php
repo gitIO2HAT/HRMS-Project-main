@@ -8,7 +8,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Message;
 use Pusher\Pusher;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Events\TaskCreated;
 use Illuminate\Support\Facades\Http;
 use App\Rules\AfterOrEqualStart;

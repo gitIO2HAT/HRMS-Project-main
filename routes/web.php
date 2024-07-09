@@ -90,10 +90,15 @@ Route::group(['middleware' => 'admin'], function () {
 Route::group(['middleware' => 'employee'], function () {
     Route::get('/Employee/Dashboard', [DashboardController::class, 'dashboard']);
     Route::get('/Employee/Leave', [LeaveController::class, 'leave']);
-    Route::get('/Employee/Attendance', [AttendanceController::class, 'attendance']);
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/Employee/MyAccount', [MyAccountController::class, 'updatemyaccount']);
     Route::get('/Employee/Read/{id}', [AnnouncementController::class, 'read']);
     Route::get('/Employee/Setting', [SettingController::class, 'setting']);
+
+   
+    Route::get('/Employee/Attendance', [AttendanceController::class, 'attendance']);
+    Route::post('/Employee/ClockIn', [AttendanceController::class, 'clockin']);
+    Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockout']);
+    Route::get('/Employee/TotalOnlineTime', [AttendanceController::class, 'gettotalonline']);
 });
 

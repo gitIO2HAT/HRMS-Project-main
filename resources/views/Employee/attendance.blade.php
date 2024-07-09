@@ -21,7 +21,7 @@
                                 <div class="hours-circle">
                                     <p>3.45 hrs</p>
                                 </div>
-                                
+
                             </div>
                           
                         </div>
@@ -134,5 +134,5 @@
         // Initial call to display the time immediately on page load
         updateTime();
     </script>
-    
+
 @endsection
