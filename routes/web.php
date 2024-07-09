@@ -100,5 +100,6 @@ Route::group(['middleware' => 'employee'], function () {
     Route::post('/Employee/ClockIn', [AttendanceController::class, 'clockin']);
     Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockout']);
     Route::get('/Employee/TotalOnlineTime', [AttendanceController::class, 'gettotalonline']);
+    Route::get('/current-time', [AttendanceController::class, 'getcurrenttime'])->name('current-time');
 });
 

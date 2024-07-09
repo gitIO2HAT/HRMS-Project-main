@@ -66,4 +66,20 @@ class AttendanceController extends Controller
 
         return redirect()->back()->with('error', 'No active clock-in found');
     }
+    public function getCurrentTime()
+    {
+        $todayAttendance =  Attendance::where('user_id', auth()->id())
+                            ->whereDate('clock_in', \Carbon\Carbon::today())
+                            ->whereNotNull('clock_out')
+                            ->get();
+
+        $totalDuration = $todayAttendance->reduce(function($carry, $attendance) 
+        {
+            $clockIn = \Carbon\Carbon::parse($attendance->clock_in);
+            $clockOut = \Carbon\Carbon::parse($attendance->clock_out);
+            return $carry->add($clockOut->diffAsCarbonInterval($clockIn));
+        }, \Carbon\CarbonInterval::seconds(0));
+
+        return response()->json(['totalDuration' => $totalDuration->cascade()->forHumans()]);
+    }
 }
