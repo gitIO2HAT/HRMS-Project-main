@@ -27,148 +27,214 @@
                                 <p>{{ session('error') }}</p>
                                 @endif
 
-                                <form action="{{('/Employee/ClockIn') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary">Clock In</button>
-                                </form>
+                                <<h3 class="text-dark hours-circle"><span id="todays-hours">0s</span></h3>
 
-                                <form action="{{('/Employee/ClockOut') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger">Clock Out</button>
-                                </form>
+                                    <div class="d-flex justify-content-center">
+                                        <form action="{{ ('/Employee/ClockIn') }}" method="POST" class="me-2">
+                                            @csrf
+                                            <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockInButton">Clock In</button>
+                                        </form>
 
-                                <h3 class="text-dark" >Today's Hours: <span id="todays-hours"></span></h3>
-
+                                        <form action="{{ ('/Employee/ClockOut') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockOutButton">Clock Out</button>
+                                        </form>
+                                    </div>
                             </div>
 
                         </div>
                         <div class="col-sm-12 col-xl-5 rounded">
                             <div class="bg-white rounded-3 h-100 p-4">
-                                <h6 class="mb-4 fs-2 text-primary">Today's Birthday</h6>
-                                <div class="my-2 rounded-2 border-start border-primary">
-                                    <span class=" d-flex justify-content-between align-items-center">
-                                        <img class="my-1 mx-1" src="{{ asset('img/user.png') }}" alt="Employee" width="30px">
-                                        <h3 class="fs-5 text-start text-dark">Today is Ben's 30th birthday!</h3>
-                                        <i class="fas fa-birthday-cake" style="color: #000000;"></i>
-                                    </span>
-                                </div>
-                                <div class="my-2 rounded-2 border-start border-primary">
-                                    <span class=" d-flex justify-content-between align-items-center">
-                                        <img class="my-1 mx-1" src="{{ asset('img/user.png') }}" alt="Employee" width="30px">
-                                        <h3 class="fs-5 text-start text-dark">Today is Ben's 30th birthday!</h3>
-                                        <i class="fas fa-birthday-cake" style="color: #000000;"></i>
-                                    </span>
-                                </div>
-                                <div class="my-2 rounded-2 border-start border-primary">
-                                    <span class=" d-flex justify-content-between align-items-center">
-                                        <img class="my-1 mx-1" src="{{ asset('img/user.png') }}" alt="Employee" width="30px">
-                                        <h3 class="fs-5 text-start text-dark">Today is Ben's 30th birthday!</h3>
-                                        <i class="fas fa-birthday-cake" style="color: #000000;"></i>
-                                    </span>
+                                <div class="row g-4">
+                                    <div class="col-sm-12">
+                                        <div class="bg-white rounded-3 h-100 p-4">
+                                            <h4 class="text-dark mb-4">Statistics</h4>
+                                            <div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Today</span>
+                                                    <span id="today-stats">0 / 8 hrs</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>This Week</span>
+                                                    <span id="week-stats">0 / 40 hrs</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>This Month</span>
+                                                    <span id="month-stats">0 / 160 hrs</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
 
-    <script>
-        function updateDateTime() {
-            const today = new Date();
-            const day = today.getDate();
-            const monthNames = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            const month = monthNames[today.getMonth()];
-            const year = today.getFullYear();
+            <script>
+                function updateDateTime() {
+                    const today = new Date();
+                    const day = today.getDate();
+                    const monthNames = [
+                        "January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                    ];
+                    const month = monthNames[today.getMonth()];
+                    const year = today.getFullYear();
 
-            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            const dayOfWeek = daysOfWeek[today.getDay()];
-            let hours = today.getHours();
-            const minutes = today.getMinutes().toString().padStart(2, '0');
-            const seconds = today.getSeconds().toString().padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            const timeString = `${hours}:${minutes}:${seconds}${ampm}`;
+                    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                    const dayOfWeek = daysOfWeek[today.getDay()];
+                    let hours = today.getHours();
+                    const minutes = today.getMinutes().toString().padStart(2, '0');
+                    const seconds = today.getSeconds().toString().padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    const timeString = `${hours}:${minutes}:${seconds}${ampm}`;
 
-            const dateString =
-                `<span class="timesheet">Timesheet</span> <span class="date">${day} ${month} ${year} <span> `;
-            document.getElementById('current-date').innerHTML = dateString;
-        }
-
-        // Update the date and time every second
-        setInterval(updateDateTime, 1000);
-
-        // Initial call to display the date and time immediately on page load
-        updateDateTime();
-    </script>
-    <script>
-        function updateTime() {
-            const today1 = new Date();
-            const day1 = today1.getDate();
-            const daySuffix1 = (day1) => {
-                if (day1 > 3 && day1 < 21) return 'th';
-                switch (day1 % 10) {
-                    case 1:
-                        return "st";
-                    case 2:
-                        return "nd";
-                    case 3:
-                        return "rd";
-                    default:
-                        return "th";
+                    const dateString =
+                        `<span class="timesheet">Timesheet</span> <span class="date">${day} ${month} ${year} <span> `;
+                    document.getElementById('current-date').innerHTML = dateString;
                 }
-            };
 
-            const daysOfWeek1 = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            const months1 = [
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ];
+                // Update the date and time every second
+                setInterval(updateDateTime, 1000);
 
-            const dayOfWeek1 = daysOfWeek1[today1.getDay()];
-            const month1 = months1[today1.getMonth()];
-            const year1 = today1.getFullYear();
+                // Initial call to display the date and time immediately on page load
+                updateDateTime();
+            </script>
+            <script>
+                function updateTime() {
+                    const today1 = new Date();
+                    const day1 = today1.getDate();
+                    const daySuffix1 = (day1) => {
+                        if (day1 > 3 && day1 < 21) return 'th';
+                        switch (day1 % 10) {
+                            case 1:
+                                return "st";
+                            case 2:
+                                return "nd";
+                            case 3:
+                                return "rd";
+                            default:
+                                return "th";
+                        }
+                    };
 
-            let hours1 = today1.getHours();
-            const minutes1 = today1.getMinutes().toString().padStart(2, '0');
-            const seconds1 = today1.getSeconds().toString().padStart(2, '0');
-            const ampm1 = hours1 >= 12 ? ' PM' : ' AM';
-            hours1 = hours1 % 12;
-            hours1 = hours1 ? hours1 : 12; // the hour '0' should be '12'
-            const timeString1 = `${hours1}:${minutes1}:${seconds1}${ampm1}`;
+                    const daysOfWeek1 = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                    const months1 = [
+                        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                    ];
 
-            const dateString1 =
-                `<span class="date1">${dayOfWeek1}, ${day1}${daySuffix1(day1)} ${month1} ${year1} ${timeString1}</span>`;
-            document.getElementById('current-date1').innerHTML = dateString1;
-        }
+                    const dayOfWeek1 = daysOfWeek1[today1.getDay()];
+                    const month1 = months1[today1.getMonth()];
+                    const year1 = today1.getFullYear();
 
-        // Update the time every second
-        setInterval(updateTime, 1000);
+                    let hours1 = today1.getHours();
+                    const minutes1 = today1.getMinutes().toString().padStart(2, '0');
+                    const seconds1 = today1.getSeconds().toString().padStart(2, '0');
+                    const ampm1 = hours1 >= 12 ? ' PM' : ' AM';
+                    hours1 = hours1 % 12;
+                    hours1 = hours1 ? hours1 : 12; // the hour '0' should be '12'
+                    const timeString1 = `${hours1}:${minutes1}:${seconds1}${ampm1}`;
 
-        // Initial call to display the time immediately on page load
-        updateTime();
-    </script>
+                    const dateString1 =
+                        `<span class="date1">${dayOfWeek1}, ${day1}${daySuffix1(day1)} ${month1} ${year1} ${timeString1}</span>`;
+                    document.getElementById('current-date1').innerHTML = dateString1;
+                }
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    function updateCurrentTime() {
-        fetch("{{ route('current-time') }}")
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("todays-hours").textContent = data.totalDuration;
-            })
-            .catch(error => console.error("Error fetching current time:", error));
-    }
+                // Update the time every second
+                setInterval(updateTime, 1000);
 
-    updateCurrentTime();
-    setInterval(updateCurrentTime, 1000);
-});
-</script>
+                // Initial call to display the time immediately on page load
+                updateTime();
+            </script>
 
-    @endsection
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    let intervalId;
+                    let totalDuration = 0;
+
+                    function updateDisplay(seconds) {
+                        document.getElementById("todays-hours").textContent = `${seconds}s`;
+                    }
+
+                    function fetchCurrentTime() {
+                        fetch("{{ route('current-time') }}")
+                            .then(response => response.json())
+                            .then(data => {
+                                totalDuration = data.totalDuration;
+                                updateDisplay(totalDuration);
+                            })
+                            .catch(error => console.error("Error fetching current time:", error));
+                    }
+
+                    function startTimer() {
+                        intervalId = setInterval(() => {
+                            totalDuration++;
+                            updateDisplay(totalDuration);
+                        }, 1000);
+                    }
+
+                    function stopTimer() {
+                        clearInterval(intervalId);
+                    }
+
+                    fetchCurrentTime();
+
+                    document.getElementById("clockInButton").addEventListener("click", function() {
+                        startTimer();
+                    });
+
+                    document.getElementById("clockOutButton").addEventListener("click", function() {
+                        stopTimer();
+                    });
+                });
+            </script>
+
+            <script>
+                function checkTimeAndDisplayButton() {
+                    const now = new Date();
+                    const formatter = new Intl.DateTimeFormat('en-US', {
+                        timeZone: 'Asia/Manila',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    });
+
+                    const formattedTime = formatter.formatToParts(now);
+                    const hours = parseInt(formattedTime.find(part => part.type === 'hour').value);
+                    const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
+
+
+                    if ((hours === 13 && minutes >= 0 && minutes <= 59) ||
+                        (hours === 8 && minutes === 0) ||
+                        (hours === 12 && minutes >= 31 && minutes <= 59) ||
+                        (hours === 13 && minutes === 0)
+                    ) {
+                        document.getElementById('clockInButton').style.display = 'block';
+                    } else {
+                        document.getElementById('clockInButton').style.display = 'none';
+                    }
+                    if ((hours === 13 && minutes >= 1 && minutes <= 50) ||
+                        (hours === 17 && minutes >= 0 && minutes <= 59) ||
+                        (hours === 18 && minutes === 0)
+                    ) {
+                        document.getElementById('clockOutButton').style.display = 'block';
+                    } else {
+                        document.getElementById('clockOutButton').style.display = 'none';
+                    }
+
+
+                }
+
+                // Check every minute if the button should be displayed
+                setInterval(checkTimeAndDisplayButton, 1000);
+
+                // Initial check when the page loads
+                checkTimeAndDisplayButton();
+            </script>
+            @endsection

@@ -3080,6 +3080,11 @@ fieldset:disabled .btn {
     background-color: #EB1616;
     border-color: #EB1616
 }
+.btn-orange{
+    color: #fff;
+    background-color: #ff902f;
+    border-color: #ff902f
+}
 
 .btn-primary:hover {
     color: #fff;

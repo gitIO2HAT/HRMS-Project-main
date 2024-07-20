@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Message;
 use App\Models\Attendance;
+
 class AttendanceController extends Controller
 {
     public function attendance()
@@ -27,7 +28,7 @@ class AttendanceController extends Controller
         GROUP BY
             users.id, users.name, users.lastname, users.email
     ");
-          $query = Message::getNotify();
+        $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.dashboard'
@@ -35,51 +36,59 @@ class AttendanceController extends Controller
                 ? 'admin.dashboard'
                 : 'employee.attendance');
 
-     
-        return view($viewPath,[
+
+        return view($viewPath, [
             'notification' => $notification,
             'getNot' => $getNot,
         ]);
     }
 
-    public function clockin()
+    public function clockIn()
     {
-        $attendance = Attendance::create([
-            'user_id' => auth()->id(),
-            'clock_in' => now(),
-        ]);
+        $user = Auth::user();
+        $attendance = Attendance::firstOrCreate(
+            ['user_id' => $user->id, 'date' => now()->toDateString()],
+            ['start_time' => now(), 'total_duration' => 0]
+        );
 
-        return redirect()->back()->with('success', 'Clocked in successfully');
-    }
-
-    public function clockout()
-    {
-        $attendance = Attendance::where('user_id', auth()->id())
-                                ->whereNull('clock_out')
-                                ->latest()
-                                ->first();
-
-        if ($attendance) {
-            $attendance->update(['clock_out' => now()]);
-            return redirect()->back()->with('success', 'Clocked out successfully');
+        if ($attendance->end_time) {
+            $attendance->start_time = now();
+            $attendance->end_time = null;
         }
 
-        return redirect()->back()->with('error', 'No active clock-in found');
+        $attendance->save();
+
+        return redirect()->back();
     }
-    public function getCurrentTime()
+
+    public function clockOut()
     {
-        $todayAttendance =  Attendance::where('user_id', auth()->id())
-                            ->whereDate('clock_in', \Carbon\Carbon::today())
-                            ->whereNotNull('clock_out')
-                            ->get();
+        $user = Auth::user();
+        $attendance = Attendance::where('user_id', $user->id)->where('date', now()->toDateString())->firstOrFail();
 
-        $totalDuration = $todayAttendance->reduce(function($carry, $attendance) 
-        {
-            $clockIn = \Carbon\Carbon::parse($attendance->clock_in);
-            $clockOut = \Carbon\Carbon::parse($attendance->clock_out);
-            return $carry->add($clockOut->diffAsCarbonInterval($clockIn));
-        }, \Carbon\CarbonInterval::seconds(0));
+        $attendance->end_time = now();
+        $attendance->total_duration += now()->diffInSeconds($attendance->start_time);
+        $attendance->save();
 
-        return response()->json(['totalDuration' => $totalDuration->cascade()->forHumans()]);
+        return redirect()->back();
     }
+
+    public function currentTime()
+    {
+        $user = Auth::user();
+        $attendance = Attendance::where('user_id', $user->id)->where('date', now()->toDateString())->first();
+
+        if ($attendance) {
+            $totalDuration = $attendance->total_duration;
+            if ($attendance->start_time && !$attendance->end_time) {
+                $totalDuration += now()->diffInSeconds($attendance->start_time);
+            }
+        } else {
+            $totalDuration = 0;
+        }
+
+        return response()->json(['totalDuration' => $totalDuration]);
+    }
+
+  
 }

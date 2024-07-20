@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamp('clock_in')->nullable();
-            $table->timestamp('clock_out')->nullable();
+            $table->date('date');
+            $table->timestamp('start_time')->nullable();
+            $table->timestamp('end_time')->nullable();
+            $table->integer('total_duration')->default(0);
             $table->timestamps();
         });
     }
