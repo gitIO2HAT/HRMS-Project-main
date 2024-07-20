@@ -158,8 +158,16 @@
                     let intervalId;
                     let totalDuration = 0;
 
-                    function updateDisplay(seconds) {
-                        document.getElementById("todays-hours").textContent = `${seconds}s`;
+                    function updateDisplay() {
+                        const hours = Math.floor(totalDuration / 3600);
+                        const minutes = Math.floor((totalDuration % 3600) / 60);
+                        const seconds = totalDuration % 60;
+
+                        const hoursDisplay = hours > 0 ? `${hours}h ` : "";
+                        const minutesDisplay = minutes > 0 ? `${minutes}m ` : "";
+                        const secondsDisplay = `${seconds}s`;
+
+                        document.getElementById("todays-hours").textContent = hoursDisplay + minutesDisplay + secondsDisplay;
                     }
 
                     function fetchCurrentTime() {
@@ -167,7 +175,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 totalDuration = data.totalDuration;
-                                updateDisplay(totalDuration);
+                                updateDisplay();
                             })
                             .catch(error => console.error("Error fetching current time:", error));
                     }
@@ -175,7 +183,7 @@
                     function startTimer() {
                         intervalId = setInterval(() => {
                             totalDuration++;
-                            updateDisplay(totalDuration);
+                            updateDisplay();
                         }, 1000);
                     }
 
@@ -192,6 +200,10 @@
                     document.getElementById("clockOutButton").addEventListener("click", function() {
                         stopTimer();
                     });
+
+                    // Initial display update
+                    setInterval(updateDisplay, 1000);
+                    updateDisplay();
                 });
             </script>
 
