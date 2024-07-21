@@ -36,7 +36,7 @@
                                         <a href="{{url('Admin/Employee/ArchiveEmployee')}}" class="m-1 btn btn-warning "><i class="far fa-file-archive" style="color: #000000;"></i> Archived</a>
                                         @endif
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>

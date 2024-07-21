@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Message;
+use Carbon\Carbon;
 use App\Models\Attendance;
 
 class AttendanceController extends Controller
@@ -37,51 +38,72 @@ class AttendanceController extends Controller
                 : 'employee.attendance');
 
 
+  
+
         return view($viewPath, [
             'notification' => $notification,
             'getNot' => $getNot,
+       
         ]);
     }
 
     public function clockIn()
     {
         $user = Auth::user();
+        $now = Carbon::now('Asia/Manila');
+        $attendance = Attendance::where('user_id', $user->custom_id)
+                                ->where('date', $now->toDateString())
+                                ->first();
+    
+        if ($attendance && is_null($attendance->end_time)) {
+            // Return a warning message since the user is already clocked in
+            return redirect()->back()->with('warning', 'You already Clocked In!');
+        }
+    
         $attendance = Attendance::firstOrCreate(
-            ['user_id' => $user->id, 'date' => now()->toDateString()],
-            ['start_time' => now(), 'total_duration' => 0]
+            ['user_id' => $user->custom_id, 'date' => $now->toDateString()],
+            ['start_time' => $now, 'total_duration' => 0]
         );
-
+    
         if ($attendance->end_time) {
-            $attendance->start_time = now();
+            $attendance->start_time = $now;
             $attendance->end_time = null;
         }
-
+    
         $attendance->save();
-
-        return redirect()->back();
+    
+        return redirect()->back()->with('success', 'Clock In successfully!');
     }
 
     public function clockOut()
-    {
-        $user = Auth::user();
-        $attendance = Attendance::where('user_id', $user->id)->where('date', now()->toDateString())->firstOrFail();
+{
+    $user = Auth::user();
+    $now = Carbon::now('Asia/Manila');
+    $attendance = Attendance::where('user_id', $user->custom_id)
+                            ->where('date', $now->toDateString())
+                            ->first();
 
-        $attendance->end_time = now();
-        $attendance->total_duration += now()->diffInSeconds($attendance->start_time);
-        $attendance->save();
-
-        return redirect()->back();
+    if (!$attendance || $attendance->end_time) {
+        // Return a warning message if there is no active clock-in
+        return redirect()->back()->with('warning', 'No active Clock In!');
     }
 
+    $attendance->end_time = $now;
+    $attendance->total_duration += $now->diffInSeconds($attendance->start_time);
+    $attendance->save();
+
+    return redirect()->back()->with('success', 'Clock Out successfully!');
+}
     public function currentTime()
     {
         $user = Auth::user();
-        $attendance = Attendance::where('user_id', $user->id)->where('date', now()->toDateString())->first();
+        $now = Carbon::now('Asia/Manila');
+        $attendance = Attendance::where('user_id', $user->custom_id)->where('date', $now->toDateString())->first();
 
         if ($attendance) {
             $totalDuration = $attendance->total_duration;
             if ($attendance->start_time && !$attendance->end_time) {
-                $totalDuration += now()->diffInSeconds($attendance->start_time);
+                $totalDuration += $now->diffInSeconds($attendance->start_time);
             }
         } else {
             $totalDuration = 0;
@@ -89,6 +111,4 @@ class AttendanceController extends Controller
 
         return response()->json(['totalDuration' => $totalDuration]);
     }
-
-  
 }

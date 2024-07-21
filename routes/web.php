@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyAccountController;
 
@@ -101,7 +102,5 @@ Route::group(['middleware' => 'employee'], function () {
 Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockOut']);
 Route::get('/current-time', [AttendanceController::class, 'currentTime'])->name('current-time');
     
-
-    
-});
+}); 
 

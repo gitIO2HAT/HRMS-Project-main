@@ -4,8 +4,6 @@
         <div class="col-sm-12 col-xl-12">
             <div class="row g-4">
 
-
-
                 <div class=" pt-4 px-4 ">
                     <div class="row g-4">
                         <div class="col-sm-12 col-xl-7 rounded">
@@ -18,26 +16,21 @@
                                     <div id="current-date1"></div>
 
                                 </div>
-                                <?php if(session('success')): ?>
-                                <p><?php echo e(session('success')); ?></p>
-                                <?php endif; ?>
-                                <?php if(session('error')): ?>
-                                <p><?php echo e(session('error')); ?></p>
-                                <?php endif; ?>
+                                <?php echo $__env->make('layouts._message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                                <<h3 class="text-dark hours-circle"><span id="todays-hours">0s</span></h3>
+                                <h3 class="text-dark hours-circle"><span id="todays-hours">0s</span></h3>
 
-                                    <div class="d-flex justify-content-center">
-                                        <form action="<?php echo e(('/Employee/ClockIn')); ?>" method="POST" class="me-2">
-                                            <?php echo csrf_field(); ?>
-                                            <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockInButton">Clock In</button>
-                                        </form>
+                                <div class="d-flex justify-content-center">
+                                    <form action="<?php echo e(('/Employee/ClockIn')); ?>" method="POST" class="me-2">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockInButton">Clock In</button>
+                                    </form>
 
-                                        <form action="<?php echo e(('/Employee/ClockOut')); ?>" method="POST">
-                                            <?php echo csrf_field(); ?>
-                                            <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockOutButton">Clock Out</button>
-                                        </form>
-                                    </div>
+                                    <form action="<?php echo e(('/Employee/ClockOut')); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockOutButton">Clock Out</button>
+                                    </form>
+                                </div>
                             </div>
 
                         </div>
@@ -50,14 +43,19 @@
                                             <div>
                                                 <div class="d-flex justify-content-between">
                                                     <span>Today</span>
-                                                    <span id="today-stats">0 / 8 hrs</span>
+                                                    <progress id="progressBar" value="0" max="28800"></progress>
+                                                    <span id="todays-hours-stat">0 / 8 hrs</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span>This Week</span>
+                                                    <progress id="progressBar" value="0" max="144000"></progress>
+                                             
+
                                                     <span id="week-stats">0 / 40 hrs</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span>This Month</span>
+                                                    <progress id="progressBar" value="0" max="576000"></progress>
                                                     <span id="month-stats">0 / 160 hrs</span>
                                                 </div>
                                             </div>
@@ -68,10 +66,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-
-            <script>
+                <script>
                 function updateDateTime() {
                     const today = new Date();
                     const day = today.getDate();
@@ -155,6 +151,7 @@
                 document.addEventListener("DOMContentLoaded", function() {
                     let intervalId;
                     let totalDuration = 0;
+                    const progressBar = document.getElementById("progressBar");
 
                     function updateDisplay() {
                         const hours = Math.floor(totalDuration / 3600);
@@ -166,6 +163,8 @@
                         const secondsDisplay = `${seconds}s`;
 
                         document.getElementById("todays-hours").textContent = hoursDisplay + minutesDisplay + secondsDisplay;
+                        document.getElementById("todays-hours-stat").textContent = hoursDisplay + ' / 8 hrs'; // Update this span
+                        progressBar.value = totalDuration; // Update progress bar
                     }
 
                     function fetchCurrentTime() {
@@ -220,7 +219,7 @@
                     const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
 
-                    if ((hours === 13 && minutes >= 0 && minutes <= 59) ||
+                    if ((hours === 22 && minutes >= 0 && minutes <= 59) ||
                         (hours === 8 && minutes === 0) ||
                         (hours === 12 && minutes >= 31 && minutes <= 59) ||
                         (hours === 13 && minutes === 0)
@@ -229,7 +228,7 @@
                     } else {
                         document.getElementById('clockInButton').style.display = 'none';
                     }
-                    if ((hours === 13 && minutes >= 1 && minutes <= 50) ||
+                    if ((hours === 22 && minutes >= 1 && minutes <= 50) ||
                         (hours === 17 && minutes >= 0 && minutes <= 59) ||
                         (hours === 18 && minutes === 0)
                     ) {
@@ -247,5 +246,8 @@
                 // Initial check when the page loads
                 checkTimeAndDisplayButton();
             </script>
-            <?php $__env->stopSection(); ?>
+
+
+
+                <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/employee/attendance.blade.php ENDPATH**/ ?>

@@ -43,11 +43,17 @@
     /* Additional styles for your content go here */
 </style>
 
-@if(Auth::user()->user_type == '0')
-<body class="bg-white" onclick="window.location='{{ url('SuperAdmin/Employee') }}'" style="cursor: pointer;">
-@elseif(Auth::user()->user_type == '1')
-<body class="bg-white" onclick="window.location='{{ url('Admin/Employee') }}'" style="cursor: pointer;">
-@endif
+@php
+    $redirectUrl = '';
+    if (Auth::user()->user_type == '0') {
+        $redirectUrl = url('/SuperAdmin/Employee');
+    } elseif (Auth::user()->user_type == '1') {
+        $redirectUrl = url('/Admin/Employee');
+    }
+@endphp
+
+<body class="bg-white" onclick="window.location='{{ $redirectUrl }}'" style="cursor: pointer;">
+
     <container class="col-12">
         <div class="row g-4">
             <div class="col-sm-4 col-xl-4 text-center d-flex justify-content-around align-items-center">
@@ -57,7 +63,7 @@
                 <div class="mt-5 bg-success " style="height:50%; width:100%">
                     <p class="mt-2 d-flex justify-content-center align-items-center">
                     <h3 class="mt-5 text-center d-flex justify-content-around align-items-center text-white">Employee
-                        Information 
+                        Information
                         Sheet</h3>
                     </p>
                 </div>

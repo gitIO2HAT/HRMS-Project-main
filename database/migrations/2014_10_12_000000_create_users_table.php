@@ -3,6 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Unique;
 
 return new class extends Migration
 {
@@ -20,20 +23,28 @@ return new class extends Migration
             $table->string('password');
             $table->string('lastname', 255);
             $table->string('middlename', 30);
-            $table->enum('suffix', ['Jr.','Sr.','I','II','III'])->nullable();
-            $table->enum('sex', ['Male','Female','Other']);
+            $table->enum('suffix', ['Jr.', 'Sr.', 'I', 'II', 'III'])->nullable();
+            $table->enum('sex', ['Male', 'Female', 'Other']);
             $table->integer('age')->default(18);
             $table->date('birth_date')->nullable();
             $table->string('phonenumber', 20);
-            $table->enum('department', ['Department 1','Department 2','Department 3','Department 4','Department 5','Department 6','Department 7']);
-            $table->enum('position', ['Position 1','Position 2','Position 3','Position 4','Position 5','Position 6','Position 7','Position 8','Position 9','Position 10']);
+            $table->enum('department', [
+                'Department 1', 'Department 2', 'Department 3', 
+                'Department 4', 'Department 5', 'Department 6', 
+                'Department 7'
+            ]);
+            $table->enum('position', [
+                'Position 1', 'Position 2', 'Position 3', 'Position 4', 
+                'Position 5', 'Position 6', 'Position 7', 'Position 8', 
+                'Position 9', 'Position 10'
+            ]);
             $table->decimal('daily_rate', 10, 2);
             $table->decimal('credit', 10, 2)->default(0.00);
-            $table->string('custom_id', 20)->nullable();
+            $table->string('custom_id', 20)->unique()->nullable(); // Add custom_id column here
             $table->date('end_of_contract')->nullable();
-            $table->enum('is_archive', ['1','2'])->default('1');
+            $table->enum('is_archive', ['1', '2'])->default('1');
             $table->datetime('date_archive')->nullable();
-            $table->enum('civil_status', ['Single','Married','Widowed'])->nullable();
+            $table->enum('civil_status', ['Single', 'Married', 'Widowed'])->nullable();
             $table->text('fulladdress')->nullable();
             $table->string('emergency_fullname', 255)->nullable();
             $table->text('emergency_fulladdress')->nullable();

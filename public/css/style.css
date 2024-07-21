@@ -566,7 +566,6 @@ hr {
 .hidden{
     display: none;
 }
-
 .custom-width {
     width: 500px !important; /* Use !important to ensure the style takes precedence */
 }
@@ -576,6 +575,7 @@ hr {
     }
 
 
+    
     #current-date {
         font-family: Arial, sans-serif;
     }
