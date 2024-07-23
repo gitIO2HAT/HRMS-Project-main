@@ -30,6 +30,48 @@ class AttendanceController extends Controller
             users.id, users.name, users.lastname, users.email
     ");
         $query = Message::getNotify();
+
+
+        $userId = Auth::user()->custom_id;
+        $timezone = 'Asia/Manila';
+        Carbon::setLocale('en'); // Optional: Set locale if needed
+
+        // Get the start and end of the current week in Asia/Manila timezone
+        $startOfWeek = Carbon::now($timezone)->startOfWeek();
+        $endOfWeek = Carbon::now($timezone)->endOfWeek();
+        $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->sum('total_duration');
+        $weeklyProgressBar = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->sum('total_duration');
+
+        if ($weekly <= 3599) {
+            $weeklyDuration = floor($weekly / 60);
+            $weeklyFinal = $weeklyDuration . 'm';
+        } else {
+            $weeklyDuration = floor($weekly / 3600);
+            $weeklyFinal = $weeklyDuration . 'h';
+        }
+
+        $startOfMonth = Carbon::now($timezone)->startOfMonth();
+        $endOfMonth = Carbon::now($timezone)->endOfMonth();
+        $monthly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->sum('total_duration');
+        $monthlyProgressBar = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->sum('total_duration');
+
+        if ($monthly <= 3599) {
+            $monthlyDuration = floor($monthly / 60);
+            $monthlyFinal = $monthlyDuration . 'm';
+        } else {
+            $monthlyDuration = floor($monthly / 3600);
+            $monthlyFinal = $monthlyDuration . 'h';
+        }
+
+
+
+
+
+
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.dashboard'
@@ -38,12 +80,16 @@ class AttendanceController extends Controller
                 : 'employee.attendance');
 
 
-  
+
 
         return view($viewPath, [
             'notification' => $notification,
             'getNot' => $getNot,
-       
+            'weeklyFinal' => $weeklyFinal,
+            'weeklyProgressBar' => $weeklyProgressBar,
+            'monthlyFinal' => $monthlyFinal,
+            'monthlyProgressBar' => $monthlyProgressBar,
+
         ]);
     }
 
@@ -52,48 +98,48 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $now = Carbon::now('Asia/Manila');
         $attendance = Attendance::where('user_id', $user->custom_id)
-                                ->where('date', $now->toDateString())
-                                ->first();
-    
+            ->where('date', $now->toDateString())
+            ->first();
+
         if ($attendance && is_null($attendance->end_time)) {
             // Return a warning message since the user is already clocked in
             return redirect()->back()->with('warning', 'You already Clocked In!');
         }
-    
+
         $attendance = Attendance::firstOrCreate(
             ['user_id' => $user->custom_id, 'date' => $now->toDateString()],
             ['start_time' => $now, 'total_duration' => 0]
         );
-    
+
         if ($attendance->end_time) {
             $attendance->start_time = $now;
             $attendance->end_time = null;
         }
-    
+
         $attendance->save();
-    
+
         return redirect()->back()->with('success', 'Clock In successfully!');
     }
 
     public function clockOut()
-{
-    $user = Auth::user();
-    $now = Carbon::now('Asia/Manila');
-    $attendance = Attendance::where('user_id', $user->custom_id)
-                            ->where('date', $now->toDateString())
-                            ->first();
+    {
+        $user = Auth::user();
+        $now = Carbon::now('Asia/Manila');
+        $attendance = Attendance::where('user_id', $user->custom_id)
+            ->where('date', $now->toDateString())
+            ->first();
 
-    if (!$attendance || $attendance->end_time) {
-        // Return a warning message if there is no active clock-in
-        return redirect()->back()->with('warning', 'No active Clock In!');
+        if (!$attendance || $attendance->end_time) {
+            // Return a warning message if there is no active clock-in
+            return redirect()->back()->with('warning', 'No active Clock In!');
+        }
+
+        $attendance->end_time = $now;
+        $attendance->total_duration += $now->diffInSeconds($attendance->start_time);
+        $attendance->save();
+
+        return redirect()->back()->with('success', 'Clock Out successfully!');
     }
-
-    $attendance->end_time = $now;
-    $attendance->total_duration += $now->diffInSeconds($attendance->start_time);
-    $attendance->save();
-
-    return redirect()->back()->with('success', 'Clock Out successfully!');
-}
     public function currentTime()
     {
         $user = Auth::user();

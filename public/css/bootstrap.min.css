@@ -5429,11 +5429,13 @@ fieldset:disabled .btn {
     height: 1rem;
     overflow: hidden;
     font-size: .75rem;
-    background-color: #e9ecef;
+    background-color: #f0f0f0!;
     border-radius: 5px
+   
 }
 
 .progress-bar {
+    height: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -5441,12 +5443,13 @@ fieldset:disabled .btn {
     color: #fff;
     text-align: center;
     white-space: nowrap;
-    background-color: #EB1616;
+    background-color: #f0f0f0!;
     transition: width 0.6s ease
 }
 
 @media (prefers-reduced-motion: reduce) {
     .progress-bar {
+       
         transition: none
     }
 }
