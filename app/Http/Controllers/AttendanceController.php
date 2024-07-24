@@ -58,6 +58,7 @@ class AttendanceController extends Controller
             ->sum('total_duration');
         $monthlyProgressBar = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('total_duration');
+            $monthlyRemaining = 576000 -  $monthlyProgressBar;
 
         if ($monthly <= 3599) {
             $monthlyDuration = floor($monthly / 60);
@@ -67,8 +68,13 @@ class AttendanceController extends Controller
             $monthlyFinal = $monthlyDuration . 'h';
         }
 
-
-
+        if ($monthlyRemaining <= 3599) {
+            $monthlyRemainingFinal = floor($monthlyRemaining / 60);
+            $monthlyRemainingFinals = $monthlyRemainingFinal . 'm';
+        } else {
+            $monthlyRemainingFinal = floor($monthlyRemaining / 3600);
+            $monthlyRemainingFinals = $monthlyRemainingFinal . 'h';
+        }
 
 
 
@@ -89,6 +95,8 @@ class AttendanceController extends Controller
             'weeklyProgressBar' => $weeklyProgressBar,
             'monthlyFinal' => $monthlyFinal,
             'monthlyProgressBar' => $monthlyProgressBar,
+            'monthlyRemaining' => $monthlyRemaining,
+            'monthlyRemainingFinals' => $monthlyRemainingFinals,
 
         ]);
     }

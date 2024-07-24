@@ -60,6 +60,11 @@
                                                     <progress  id="progressBar" value="<?php echo e($monthlyProgressBar); ?>" max="576000"></progress>
                                                     <span id="month-stats"><?php echo e($monthlyFinal); ?>/ 160 hrs</span>
                                                 </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Remaining</span>
+                                                    <progress  id="progressBar" value="<?php echo e($monthlyRemaining); ?>" max="576000"></progress>
+                                                    <span id="month-stats"><?php echo e($monthlyRemainingFinals); ?>/ 160 hrs</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -62,6 +62,11 @@
                                                     <progress  id="progressBar" value="{{$monthlyProgressBar}}" max="576000"></progress>
                                                     <span id="month-stats">{{$monthlyFinal}}/ 160 hrs</span>
                                                 </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Remaining</span>
+                                                    <progress  id="progressBar" value="{{$monthlyRemaining}}" max="576000"></progress>
+                                                    <span id="month-stats">{{$monthlyRemainingFinals}}/ 160 hrs</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
