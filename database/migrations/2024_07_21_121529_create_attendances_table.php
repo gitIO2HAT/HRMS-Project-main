@@ -17,6 +17,10 @@ return new class extends Migration
             $table->date('date');
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
+            $table->timestamp('punch_in_am_first')->nullable();
+            $table->timestamp('punch_in_pm_first')->nullable();
+            $table->timestamp('punch_in_am_second')->nullable();
+            $table->timestamp('punch_in_pm_second')->nullable();
             $table->integer('total_duration')->default(0);
             $table->timestamps();
 

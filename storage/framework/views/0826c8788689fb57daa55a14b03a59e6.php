@@ -42,7 +42,7 @@
                                             <h4 class="text-dark mb-4">Statistics</h4>
                                             <div>
 
-                                            <h4 class="text-dark mb-4"></h4>
+                                                <h4 class="text-dark mb-4"></h4>
                                                 <div class="d-flex justify-content-between">
                                                     <span>Today</span>
                                                     <progress id="progressBar" value="0" max="28800"></progress>
@@ -57,12 +57,12 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span>This Month</span>
-                                                    <progress  id="progressBar" value="<?php echo e($monthlyProgressBar); ?>" max="576000"></progress>
+                                                    <progress id="progressBar" value="<?php echo e($monthlyProgressBar); ?>" max="576000"></progress>
                                                     <span id="month-stats"><?php echo e($monthlyFinal); ?>/ 160 hrs</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span>Remaining</span>
-                                                    <progress  id="progressBar" value="<?php echo e($monthlyRemaining); ?>" max="576000"></progress>
+                                                    <progress id="progressBar" value="<?php echo e($monthlyRemaining); ?>" max="576000"></progress>
                                                     <span id="month-stats"><?php echo e($monthlyRemainingFinals); ?>/ 160 hrs</span>
                                                 </div>
                                             </div>
@@ -170,7 +170,7 @@
                             const secondsDisplay = `${seconds}s`;
 
                             document.getElementById("todays-hours").textContent = hoursDisplay + minutesDisplay + secondsDisplay;
-                            document.getElementById("todays-hours-stat").textContent = hoursDisplay + ' / 8 hrs'; // Update this span
+                            document.getElementById("todays-hours-stat").textContent = hoursDisplay + minutesDisplay + secondsDisplay + ' / 8 hrs'; // Update this span
                             progressBar.value = totalDuration; // Update progress bar
                         }
 
@@ -212,8 +212,27 @@
                 </script>
 
                 <script>
-                    function checkTimeAndDisplayButton() {
-                        const now = new Date();
+                    async function fetchInternetTime() {
+                        try {
+                            const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Manila');
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            const data = await response.json();
+                            return new Date(data.datetime);
+                        } catch (error) {
+                            console.error('There was a problem with the fetch operation:', error);
+                            return null;
+                        }
+                    }
+
+                    async function checkTimeAndDisplayButton() {
+                        const now = await fetchInternetTime();
+                        if (!now) {
+                            console.error('Unable to fetch the internet time');
+                            return;
+                        }
+
                         const formatter = new Intl.DateTimeFormat('en-US', {
                             timeZone: 'Asia/Manila',
                             hour: '2-digit',
@@ -225,30 +244,25 @@
                         const hours = parseInt(formattedTime.find(part => part.type === 'hour').value);
                         const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
-
-                        if ((hours === 1 && minutes >= 0 && minutes <= 59) ||
+                        const isClockInTime = (
+                            (hours === 19 && minutes >= 0 && minutes <= 59) ||
                             (hours === 8 && minutes === 0) ||
                             (hours === 12 && minutes >= 31 && minutes <= 59) ||
                             (hours === 13 && minutes === 0)
-                        ) {
-                            document.getElementById('clockInButton').style.display = 'block';
-                        } else {
-                            document.getElementById('clockInButton').style.display = 'none';
-                        }
-                        if ((hours === 1 && minutes >= 1 && minutes <= 50) ||
+                        );
+
+                        const isClockOutTime = (
+                            (hours === 19 && minutes >= 1 && minutes <= 59) ||
                             (hours === 17 && minutes >= 0 && minutes <= 59) ||
                             (hours === 18 && minutes === 0)
-                        ) {
-                            document.getElementById('clockOutButton').style.display = 'block';
-                        } else {
-                            document.getElementById('clockOutButton').style.display = 'none';
-                        }
+                        );
 
-
+                        document.getElementById('clockInButton').style.display = isClockInTime ? 'block' : 'none';
+                        document.getElementById('clockOutButton').style.display = isClockOutTime ? 'block' : 'none';
                     }
 
                     // Check every minute if the button should be displayed
-                    setInterval(checkTimeAndDisplayButton, 1000);
+                    setInterval(checkTimeAndDisplayButton, 60000);
 
                     // Initial check when the page loads
                     checkTimeAndDisplayButton();
