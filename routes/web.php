@@ -10,7 +10,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyAccountController;
-
+use App\Models\Attendance;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ Route::group(['middleware' => 'superadmin'], function () {
 
 
 
-    Route::get('/SuperAdmin/Setting', [SettingController::class, 'setting']);
+ 
 });
 
 Route::group(['middleware' => 'admin'], function () {
@@ -84,7 +84,7 @@ Route::group(['middleware' => 'admin'], function () {
 
 
 
-    Route::get('/Admin/Setting', [SettingController::class, 'setting']);
+    
 
 });
 
@@ -94,7 +94,6 @@ Route::group(['middleware' => 'employee'], function () {
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/Employee/MyAccount', [MyAccountController::class, 'updatemyaccount']);
     Route::get('/Employee/Read/{id}', [AnnouncementController::class, 'read']);
-    Route::get('/Employee/Setting', [SettingController::class, 'setting']);
 
    
     Route::get('/Employee/Attendance', [AttendanceController::class, 'attendance']);

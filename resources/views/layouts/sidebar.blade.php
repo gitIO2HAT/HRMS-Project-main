@@ -13,7 +13,11 @@
             <img src="{{ asset('public/accountprofile/' . Auth::user()->profile_pic) }}" alt="Employee">
         </div>
         <div class="name">
-            <h3 class="text-dark">{{Auth::user()->name}}</h3>
+            <h3 class="text-dark text-center">{{Auth::user()->name}}</h3>
+            <div class="d-flex align-content-center justify-content-center">
+            <span class="text-dark">{{Auth::user()->custom_id}}</span>
+            </div>
+            <div class="d-flex align-content-center justify-content-center">
             @if(Auth::user()->user_type == 0)
             <span class="text-dark">Super Admin Account</span>
             @elseif(Auth::user()->user_type == 1)
@@ -21,6 +25,8 @@
             @elseif(Auth::user()->user_type == 2)
             <span class="text-dark">Employee Account</span>
             @endif
+            </div>
+
 
         </div>
     </div>
@@ -225,58 +231,59 @@
         </li>
         @endif
         @endif
-    </ul>
-
-    <ul class="side-menu bottom">
         @if(Auth::user()->user_type == 0)
-        @if(Request::segment(2) == 'Setting')
+        @if(Request::segment(2) == 'Attendance')
         <li class="active">
-            <a href="{{url('SuperAdmin/Setting')}}">
+            <a href="{{url('SuperAdmin/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         @else
         <li>
-            <a href="{{url('SuperAdmin/Setting')}}">
+            <a href="{{url('SuperAdmin/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         @endif
         @elseif(Auth::user()->user_type == 1)
-        @if(Request::segment(2) == 'Setting')
+        @if(Request::segment(2) == 'Attendance')
         <li class="active">
-            <a href="{{url('Admin/Setting')}}">
+            <a href="{{url('Admin/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         @else
         <li>
-            <a href="{{url('Admin/Setting')}}">
+            <a href="{{url('Admin/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         @endif
         @elseif(Auth::user()->user_type == 2)
-        @if(Request::segment(2) == 'Setting')
+        @if(Request::segment(2) == 'Attendance')
         <li class="active">
-            <a href="{{url('Employee/Setting')}}">
+            <a href="{{url('Employee/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         @else
         <li>
-            <a href="{{url('Employee/Setting')}}">
+            <a href="{{url('Employee/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         @endif
         @endif
+    </ul>
+
+    <ul class="side-menu bottom">
+      
 
 
         <li>

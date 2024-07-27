@@ -3,14 +3,14 @@
     <div class="row g-4">
         <div class="col-sm-12 col-xl-12">
             <div class="row g-4">
-
                 <div class=" pt-4 px-4 ">
                     <div class="row g-4">
                         <div class="col-sm-12 col-xl-7 rounded">
-                            <div class="bg-white rounded-3  h-100 p-4">
+                            <div class=" bg-white rounded-3  h-100 p-4">
                                 <h1 class="mb-6 text-start text-dark">
                                     <div id="current-date"></div>
                                 </h1>
+
                                 <div style="background-color:#f9f9f9" class="shadow-sm p-3 mb-5 bg-body-tertiary rounded">
                                     <h6 class="text-start text-dark">Punch In at</h6>
                                     <div id="current-date1"></div>
@@ -25,12 +25,12 @@
                                         <?php echo csrf_field(); ?>
                                         <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockInButton">Clock In</button>
                                     </form>
-
-                                    <form action="<?php echo e(('/Employee/ClockOut')); ?>" method="POST">
+                                    <form action="<?php echo e(('/Employee/ClockOut')); ?>" method="POST" class="me-2">
                                         <?php echo csrf_field(); ?>
                                         <button type="submit" class="btn btn-orange hidden rounded-pill" id="clockOutButton">Clock Out</button>
                                     </form>
                                 </div>
+
                             </div>
 
                         </div>
@@ -40,35 +40,122 @@
                                     <div class="col-sm-12">
                                         <div class="bg-white rounded-3 h-100 p-4">
                                             <h4 class="text-dark mb-4">Statistics</h4>
-                                            <div>
-
-                                                <h4 class="text-dark mb-4"></h4>
+                                            <div class="bg-today shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
                                                 <div class="d-flex justify-content-between">
-                                                    <span>Today</span>
-                                                    <progress id="progressBar" value="0" max="28800"></progress>
+                                                    <h6 class="text-start text-dark">Today</h6>
                                                     <span id="todays-hours-stat">0 / 8 hrs</span>
                                                 </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <span>This Week</span>
-                                                    <progress id="progressBar" value="<?php echo e($weeklyProgressBar); ?>" max="144000"></progress>
-
-
-                                                    <span id="week-stats"><?php echo e($weeklyFinal); ?> / 40 hrs</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <span>This Month</span>
-                                                    <progress id="progressBar" value="<?php echo e($monthlyProgressBar); ?>" max="576000"></progress>
-                                                    <span id="month-stats"><?php echo e($monthlyFinal); ?>/ 160 hrs</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <span>Remaining</span>
-                                                    <progress id="progressBar" value="<?php echo e($monthlyRemaining); ?>" max="576000"></progress>
-                                                    <span id="month-stats"><?php echo e($monthlyRemainingFinals); ?>/ 160 hrs</span>
+                                                <div class="d-flex justify-content-center">
+                                                    <progress id="progressBar" value="0" max="28800"></progress>
                                                 </div>
                                             </div>
+
+                                            <div class="bg-week shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                <div class="d-flex justify-content-between">
+                                                    <h6 class="text-start text-dark">This Week</h6>
+                                                    <span id="week-stats"><?php echo e($weeklyFinal); ?> / 40 hrs</span>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <progress id="progressBar" value="<?php echo e($weeklyProgressBar); ?>" max="144000"></progress>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-month shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                <div class="d-flex justify-content-between">
+                                                    <h6 class="text-start text-dark">This Month</h6>
+                                                    <span id="month-stats"><?php echo e($monthlyFinal); ?>/ 160 hrs</span>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <progress id="progressBar" value="<?php echo e($monthlyProgressBar); ?>" max="576000"></progress>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-remaining shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                <div class="d-flex justify-content-between">
+                                                    <h6 class="text-start text-dark">Remaining</h6>
+                                                    <span id="month-stats"><?php echo e($monthlyRemainingFinals); ?>/ 160 hrs</span>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <progress id="progressBar" value="<?php echo e($monthlyRemaining); ?>" max="576000"></progress>
+                                                </div>
+                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xl-12 ">
+                            <div class="bg-white rounded-3 h-100 p-4">
+                                <h6 class="mb-4">Bordered Table</h6>
+
+                                <table class="table table-responsive table-bordered">
+                                    <thead class="text-dark text-center">
+                                        <tr>
+                                            <th class="bg-head" scope="col" colspan="7">Attendance History</th>
+
+                                        </tr>
+                                        <tr class="bg-title">
+                                            <th class="centered" scope="col" rowspan="2">#</th>
+                                            <th class="centered" scope="col" rowspan="2">Employee ID</th>
+                                            <th class="centered" scope="col" rowspan="2">Date</th>
+                                            <th scope="col" colspan="2">Morning</th>
+                                            <th scope="col" colspan="2">Afternoon</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-morning" scope="col">Clock In</th>
+                                            <th class="bg-afternoon" scope="col">Clock Out</th>
+                                            <th class="bg-morning" scope="col">Clock In</th>
+                                            <th class="bg-afternoon" scope="col">Clock Out</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        <?php $__currentLoopData = $getPunch; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $punch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <tr>
+                                            <th scope="row"><?php echo e($index + 1); ?></th>
+                                            <td class="text-dark"><?php echo e($punch->user_id); ?></td>
+                                            <td class="text-dark"><?php echo e(\Carbon\Carbon::parse($punch->date)->format('Y, F j')); ?></td>
+                                            <td class="text-dark">
+                                                <?php if(is_null($punch->punch_in_am_first)): ?>
+                                                NO DATA
+                                                <?php else: ?>
+                                                <?php echo e(\Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A')); ?>
+
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="text-dark">
+                                                <?php if(is_null($punch->punch_in_am_second)): ?>
+                                                NO DATA
+                                                <?php else: ?>
+                                                <?php echo e(\Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A')); ?>
+
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="text-dark">
+                                                <?php if(is_null($punch->punch_in_pm_first)): ?>
+                                                NO DATA
+                                                <?php else: ?>
+                                                <?php echo e(\Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A')); ?>
+
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="text-dark">
+                                                <?php if(is_null($punch->punch_in_pm_second)): ?>
+                                                NO DATA
+                                                <?php else: ?>
+                                                <?php echo e(\Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A')); ?>
+
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        
+                                    </tbody>
+                                </table>
+                                <?php echo e($getPunch->onEachSide(1)->links()); ?>
+
+
                             </div>
                         </div>
                     </div>
@@ -245,14 +332,14 @@
                         const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
                         const isClockInTime = (
-                            (hours === 19 && minutes >= 0 && minutes <= 59) ||
+                            (hours === 6 && minutes >= 0 && minutes <= 59) ||
                             (hours === 8 && minutes === 0) ||
                             (hours === 12 && minutes >= 31 && minutes <= 59) ||
                             (hours === 13 && minutes === 0)
                         );
 
                         const isClockOutTime = (
-                            (hours === 19 && minutes >= 1 && minutes <= 59) ||
+                            (hours === 6 && minutes >= 1 && minutes <= 59) ||
                             (hours === 17 && minutes >= 0 && minutes <= 59) ||
                             (hours === 18 && minutes === 0)
                         );
@@ -262,13 +349,11 @@
                     }
 
                     // Check every minute if the button should be displayed
-                    setInterval(checkTimeAndDisplayButton, 60000);
+                    setInterval(checkTimeAndDisplayButton, 1000);
 
                     // Initial check when the page loads
                     checkTimeAndDisplayButton();
                 </script>
-
-
 
                 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/employee/attendance.blade.php ENDPATH**/ ?>

@@ -13,7 +13,11 @@
             <img src="<?php echo e(asset('public/accountprofile/' . Auth::user()->profile_pic)); ?>" alt="Employee">
         </div>
         <div class="name">
-            <h3 class="text-dark"><?php echo e(Auth::user()->name); ?></h3>
+            <h3 class="text-dark text-center"><?php echo e(Auth::user()->name); ?></h3>
+            <div class="d-flex align-content-center justify-content-center">
+            <span class="text-dark"><?php echo e(Auth::user()->custom_id); ?></span>
+            </div>
+            <div class="d-flex align-content-center justify-content-center">
             <?php if(Auth::user()->user_type == 0): ?>
             <span class="text-dark">Super Admin Account</span>
             <?php elseif(Auth::user()->user_type == 1): ?>
@@ -21,6 +25,8 @@
             <?php elseif(Auth::user()->user_type == 2): ?>
             <span class="text-dark">Employee Account</span>
             <?php endif; ?>
+            </div>
+
 
         </div>
     </div>
@@ -225,58 +231,59 @@
         </li>
         <?php endif; ?>
         <?php endif; ?>
-    </ul>
-
-    <ul class="side-menu bottom">
         <?php if(Auth::user()->user_type == 0): ?>
-        <?php if(Request::segment(2) == 'Setting'): ?>
+        <?php if(Request::segment(2) == 'Attendance'): ?>
         <li class="active">
-            <a href="<?php echo e(url('SuperAdmin/Setting')); ?>">
+            <a href="<?php echo e(url('SuperAdmin/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         <?php else: ?>
         <li>
-            <a href="<?php echo e(url('SuperAdmin/Setting')); ?>">
+            <a href="<?php echo e(url('SuperAdmin/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         <?php endif; ?>
         <?php elseif(Auth::user()->user_type == 1): ?>
-        <?php if(Request::segment(2) == 'Setting'): ?>
+        <?php if(Request::segment(2) == 'Attendance'): ?>
         <li class="active">
-            <a href="<?php echo e(url('Admin/Setting')); ?>">
+            <a href="<?php echo e(url('Admin/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         <?php else: ?>
         <li>
-            <a href="<?php echo e(url('Admin/Setting')); ?>">
+            <a href="<?php echo e(url('Admin/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         <?php endif; ?>
         <?php elseif(Auth::user()->user_type == 2): ?>
-        <?php if(Request::segment(2) == 'Setting'): ?>
+        <?php if(Request::segment(2) == 'Attendance'): ?>
         <li class="active">
-            <a href="<?php echo e(url('Employee/Setting')); ?>">
+            <a href="<?php echo e(url('Employee/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         <?php else: ?>
         <li>
-            <a href="<?php echo e(url('Employee/Setting')); ?>">
+            <a href="<?php echo e(url('Employee/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
-                <span class="text">Settings</span>
+                <span class="text">Attendance</span>
             </a>
         </li>
         <?php endif; ?>
         <?php endif; ?>
+    </ul>
+
+    <ul class="side-menu bottom">
+      
 
 
         <li>

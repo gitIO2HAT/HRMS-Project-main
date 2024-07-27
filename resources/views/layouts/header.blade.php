@@ -53,7 +53,7 @@
                                         </p>
                                     </div>
                                     <div class="col-sm-12 col-xl-12">
-                                        <span class="text-end text-light">{{$unread->created_at}}</span>
+                                        <span class="text-end text-light">{{ \Carbon\Carbon::parse($unread->created_at)->format('g:i A') }}</span>
                                     </div>
                                 </div>
                             </a>

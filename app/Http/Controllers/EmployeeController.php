@@ -169,7 +169,7 @@ class EmployeeController extends Controller
         $currentYear = Carbon::now()->format('Y');
         $latestUserId = User::latest('id')->first(); // Get the latest user ID
         $nextUserId = ($latestUserId) ? $latestUserId->id + 1 : 1; // Increment the latest user ID
-        $customId = $currentYear . sprintf('%05d', $nextUserId); // Format the custom ID
+        $customId = $currentYear . '-' . sprintf('%05d', $nextUserId); // Format the custom ID
 
         // Assign the custom ID to the user
         $user->custom_id = $customId;

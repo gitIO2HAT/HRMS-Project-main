@@ -471,7 +471,8 @@ summary {
 }
 
 progress {
-    vertical-align: baseline
+    width: 100%;
+    vertical-align: baseline;
 }
 
 [hidden] {
@@ -8401,6 +8402,7 @@ fieldset:disabled .btn {
     background-color: #EB1616 !important
 }
 
+
 .bg-secondary {
     background-color: #191C24 !important
 }
@@ -8448,7 +8450,32 @@ fieldset:disabled .btn {
 }
 
 
+.bg-head {
+    background-color: #3cb371 !important
+}
+.bg-title {
+    background-color: #32cd32 !important
+}
 
+.bg-morning {
+    background-color: #98fb98 !important
+}
+.bg-afternoon {
+    background-color: #90ee90 !important
+}
+
+.bg-today {
+    background-color: #90ee90 !important
+}
+.bg-week {
+    background-color: #90ee90 !important
+}
+.bg-month {
+    background-color: #90ee90 !important
+}
+.bg-remaining {
+    background-color: #90ee90 !important
+}
 .pe-none {
     pointer-events: none !important
 }

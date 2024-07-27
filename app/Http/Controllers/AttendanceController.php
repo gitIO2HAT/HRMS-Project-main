@@ -37,6 +37,8 @@ class AttendanceController extends Controller
         $timezone = 'Asia/Manila';
         Carbon::setLocale('en'); // Optional: Set locale if needed
 
+        
+
         // Get the start and end of the current week in Asia/Manila timezone
         $startOfWeek = Carbon::now($timezone)->startOfWeek();
         $endOfWeek = Carbon::now($timezone)->endOfWeek();
@@ -59,7 +61,7 @@ class AttendanceController extends Controller
             ->sum('total_duration');
         $monthlyProgressBar = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('total_duration');
-            $monthlyRemaining = 576000 -  $monthlyProgressBar;
+        $monthlyRemaining = 576000 -  $monthlyProgressBar;
 
         if ($monthly <= 3599) {
             $monthlyDuration = floor($monthly / 60);
@@ -77,7 +79,7 @@ class AttendanceController extends Controller
             $monthlyRemainingFinals = $monthlyRemainingFinal . 'h';
         }
 
-
+        $getPunch = Attendance::where('user_id', $userId) ->orderBy('created_at', 'desc')->take(10)->paginate(10);
 
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
@@ -98,80 +100,81 @@ class AttendanceController extends Controller
             'monthlyProgressBar' => $monthlyProgressBar,
             'monthlyRemaining' => $monthlyRemaining,
             'monthlyRemainingFinals' => $monthlyRemainingFinals,
+            'getPunch' => $getPunch,
 
         ]);
     }
 
     public function getInternetTime()
-{
-    $response = Http::get('http://worldtimeapi.org/api/timezone/Asia/Manila');
-    return Carbon::parse($response->json()['datetime']);
-}
-
-public function clockIn()
-{
-    $user = Auth::user();
-    $now = $this->getInternetTime(); // Use the internet time
-
-    $attendance = Attendance::where('user_id', $user->custom_id)
-        ->where('date', $now->toDateString())
-        ->first();
-
-    if ($attendance && is_null($attendance->end_time)) {
-        // Return a warning message since the user is already clocked in
-        return redirect()->back()->with('warning', 'You already Clocked In!');
+    {
+        $response = Http::get('http://worldtimeapi.org/api/timezone/Asia/Manila');
+        return Carbon::parse($response->json()['datetime']);
     }
 
-    $attendance = Attendance::firstOrCreate(
-        ['user_id' => $user->custom_id, 'date' => $now->toDateString()],
-        ['start_time' => $now, 'total_duration' => 0]
-    );
+    public function clockIn()
+    {
+        $user = Auth::user();
+        $now = $this->getInternetTime(); // Use the internet time
 
-    if ($attendance->end_time) {
-        $attendance->start_time = $now;
-        $attendance->end_time = null;
-    }
-    if ($attendance->punch_in_am_first === null) {
-        $attendance->punch_in_am_first = $now;
-    } else {
-        $attendance->punch_in_pm_first = $now;
-    }
+        $attendance = Attendance::where('user_id', $user->custom_id)
+            ->where('date', $now->toDateString())
+            ->first();
 
-    $attendance->save();
+        if ($attendance && is_null($attendance->end_time)) {
+            // Return a warning message since the user is already clocked in
+            return redirect()->back()->with('warning', 'You already Clocked In!');
+        }
 
-    return redirect()->back()->with('success', 'Clock In successfully!');
-}
+        $attendance = Attendance::firstOrCreate(
+            ['user_id' => $user->custom_id, 'date' => $now->toDateString()],
+            ['start_time' => $now, 'total_duration' => 0]
+        );
 
-public function clockOut()
-{
-    $user = Auth::user();
-    $now = $this->getInternetTime(); // Use the internet time
+        if ($attendance->end_time) {
+            $attendance->start_time = $now;
+            $attendance->end_time = null;
+        }
+        if ($attendance->punch_in_am_first === null) {
+            $attendance->punch_in_am_first = $now;
+        } else {
+            $attendance->punch_in_pm_first = $now;
+        }
 
-    $attendance = Attendance::where('user_id', $user->custom_id)
-        ->where('date', $now->toDateString())
-        ->first();
+        $attendance->save();
 
-    if (!$attendance || $attendance->end_time) {
-        // Return a warning message if there is no active clock-in
-        return redirect()->back()->with('warning', 'No active Clock In!');
-    }
-
-    // Calculate the duration since the last clock-in
-    $duration = $now->diffInSeconds($attendance->start_time);
-
-    $attendance->end_time = $now;
-
-    if ($attendance->punch_in_am_second === null) {
-        $attendance->punch_in_am_second = $now;
-    } else {
-        $attendance->punch_in_pm_second = $now;
+        return redirect()->back()->with('success', 'Clock In successfully!');
     }
 
-    $attendance->total_duration += $duration;
-    $attendance->save();
+    public function clockOut()
+    {
+        $user = Auth::user();
+        $now = $this->getInternetTime(); // Use the internet time
 
-    return redirect()->back()->with('success', 'Clock Out successfully!');
-}
+        $attendance = Attendance::where('user_id', $user->custom_id)
+            ->where('date', $now->toDateString())
+            ->first();
+
+        if (!$attendance || $attendance->end_time) {
+            // Return a warning message if there is no active clock-in
+            return redirect()->back()->with('warning', 'No active Clock In!');
+        }
+
+        // Calculate the duration since the last clock-in
+        $duration = $now->diffInSeconds($attendance->start_time);
+
+        $attendance->end_time = $now;
+
+        if ($attendance->punch_in_am_second === null) {
+            $attendance->punch_in_am_second = $now;
+        } else {
+            $attendance->punch_in_pm_second = $now;
+        }
+
+        $attendance->total_duration += $duration;
+        $attendance->save();
+
+        return redirect()->back()->with('success', 'Clock Out successfully!');
+    }
 
     public function currentTime()
     {

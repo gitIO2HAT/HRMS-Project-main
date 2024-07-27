@@ -642,3 +642,8 @@ hr {
     height: 10px;
     border-radius: 5px;
 }
+.centered {
+    vertical-align: middle;
+    text-align: center;
+ 
+}
