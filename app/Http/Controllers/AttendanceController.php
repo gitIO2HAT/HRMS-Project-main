@@ -9,88 +9,108 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Message;
 use Carbon\Carbon;
 use App\Models\Attendance;
+use App\Models\User;
 
 class AttendanceController extends Controller
 {
-    public function attendance()
+    public function attendance(Request $request)
     {
+        // Get notifications
         $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+            SELECT
+                users.id,
+                users.name,
+                users.lastname,
+                users.email,
+                COUNT(messages.is_read) AS unread
+            FROM
+                users
+            LEFT JOIN
+                messages ON users.id = messages.send_to AND messages.is_read = 0
+            WHERE
+                users.id = " . Auth::id() . "
+            GROUP BY
+                users.id, users.name, users.lastname, users.email
+        ");
         $query = Message::getNotify();
-
-
+    
         $userId = Auth::user()->custom_id;
         $timezone = 'Asia/Manila';
         Carbon::setLocale('en'); // Optional: Set locale if needed
-
-        
-
+    
         // Get the start and end of the current week in Asia/Manila timezone
         $startOfWeek = Carbon::now($timezone)->startOfWeek();
         $endOfWeek = Carbon::now($timezone)->endOfWeek();
-        $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->sum('total_duration');
-        $weeklyProgressBar = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->sum('total_duration');
-
-        if ($weekly <= 3599) {
-            $weeklyDuration = floor($weekly / 60);
-            $weeklyFinal = $weeklyDuration . 'm';
-        } else {
-            $weeklyDuration = floor($weekly / 3600);
-            $weeklyFinal = $weeklyDuration . 'h';
-        }
-
+        $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])->sum('total_duration');
+        $weeklyProgressBar = $weekly;
+    
+        $weeklyFinal = ($weekly <= 3599) ? floor($weekly / 60) . 'm' : floor($weekly / 3600) . 'h';
+    
+        // Get the start and end of the current month in Asia/Manila timezone
         $startOfMonth = Carbon::now($timezone)->startOfMonth();
         $endOfMonth = Carbon::now($timezone)->endOfMonth();
-        $monthly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])
-            ->sum('total_duration');
-        $monthlyProgressBar = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])
-            ->sum('total_duration');
-        $monthlyRemaining = 576000 -  $monthlyProgressBar;
-
-        if ($monthly <= 3599) {
-            $monthlyDuration = floor($monthly / 60);
-            $monthlyFinal = $monthlyDuration . 'm';
-        } else {
-            $monthlyDuration = floor($monthly / 3600);
-            $monthlyFinal = $monthlyDuration . 'h';
+        $monthly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])->sum('total_duration');
+        $monthlyProgressBar = $monthly;
+        $monthlyRemaining = 576000 - $monthlyProgressBar;
+    
+        $monthlyFinal = ($monthly <= 3599) ? floor($monthly / 60) . 'm' : floor($monthly / 3600) . 'h';
+        $monthlyRemainingFinals = ($monthlyRemaining <= 3599) ? floor($monthlyRemaining / 60) . 'm' : floor($monthlyRemaining / 3600) . 'h';
+    
+        // Get selected year and month from the request, or default to current year and month
+        $selectedYear = $request->input('year', Carbon::now($timezone)->year);
+        $selectedMonth = $request->input('month', Carbon::now($timezone)->month);
+    
+        // Generate a series of all days in the selected month of the selected year
+        $startOfMonth = Carbon::create($selectedYear, $selectedMonth, 1, 0, 0, 0, $timezone)->startOfMonth();
+        $endOfMonth = $startOfMonth->copy()->endOfMonth();
+        $allDays = [];
+        $currentDate = $startOfMonth->copy();
+        while ($currentDate->lte($endOfMonth)) {
+            $allDays[] = $currentDate->toDateString();
+            $currentDate->addDay();
         }
-
-        if ($monthlyRemaining <= 3599) {
-            $monthlyRemainingFinal = floor($monthlyRemaining / 60);
-            $monthlyRemainingFinals = $monthlyRemainingFinal . 'm';
-        } else {
-            $monthlyRemainingFinal = floor($monthlyRemaining / 3600);
-            $monthlyRemainingFinals = $monthlyRemainingFinal . 'h';
+    
+        // Fetch daily series data
+        $dailySeries = Attendance::selectRaw('DATE(date) as date, SUM(total_duration) as total_duration')
+            ->where('user_id', $userId)
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->groupBy(DB::raw('DATE(date)'))
+            ->orderBy('date')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->date => $item->total_duration];
+            })
+            ->toArray();
+    
+        // Ensure all days have an entry, even if the total duration is zero
+        $dailySeries = array_merge(array_fill_keys($allDays, 0), $dailySeries);
+    
+        // Get recent punches
+        $getPunch = Attendance::where('user_id', $userId)->orderBy('created_at', 'desc')->take(10)->paginate(10);
+    
+        // Search for employee records
+        $search = $request->input('search');
+        $employeeRecords = User::query(); // Initialize query builder
+    
+        if ($search) {
+            $employeeRecords->where(function ($q) use ($search) {
+                $q->whereRaw("CONCAT(name, ' ', lastname) LIKE ?", ["%$search%"])
+                    ->orWhere('custom_id', 'LIKE', "%$search%");
+            });
         }
-
-        $getPunch = Attendance::where('user_id', $userId) ->orderBy('created_at', 'desc')->take(10)->paginate(10);
-
+    
+        // Add the is_archive condition
+        $employeeRecords->where('is_archive', '=', 1);
+        $employeeRecords = $employeeRecords->paginate(10); // Apply pagination
+    
+        $RecordsAttendance = Attendance::all();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
-            ? 'superadmin.dashboard'
+            ? 'superadmin.attendance'
             : (Auth::user()->user_type == 1
-                ? 'admin.dashboard'
+                ? 'admin.attendance'
                 : 'employee.attendance');
-
-
-
-
+    
         return view($viewPath, [
             'notification' => $notification,
             'getNot' => $getNot,
@@ -101,9 +121,14 @@ class AttendanceController extends Controller
             'monthlyRemaining' => $monthlyRemaining,
             'monthlyRemainingFinals' => $monthlyRemainingFinals,
             'getPunch' => $getPunch,
-
+            'employeeRecords' => $employeeRecords,
+            'dailySeries' => $dailySeries,
+            'selectedYear' => $selectedYear,
+            'selectedMonth' => $selectedMonth,
+            'RecordsAttendance' => $RecordsAttendance,
         ]);
     }
+    
 
     public function getInternetTime()
     {

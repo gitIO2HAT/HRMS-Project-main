@@ -329,14 +329,14 @@
                         const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
                         const isClockInTime = (
-                            (hours === 6 && minutes >= 0 && minutes <= 59) ||
+                            (hours === 11 && minutes >= 0 && minutes <= 59) ||
                             (hours === 8 && minutes === 0) ||
                             (hours === 12 && minutes >= 31 && minutes <= 59) ||
                             (hours === 13 && minutes === 0)
                         );
 
                         const isClockOutTime = (
-                            (hours === 6 && minutes >= 1 && minutes <= 59) ||
+                            (hours === 11 && minutes >= 1 && minutes <= 59) ||
                             (hours === 17 && minutes >= 0 && minutes <= 59) ||
                             (hours === 18 && minutes === 0)
                         );

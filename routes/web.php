@@ -55,7 +55,7 @@ Route::group(['middleware' => 'superadmin'], function () {
 
 
 
- 
+    Route::get('/SuperAdmin/Attendance', [AttendanceController::class, 'attendance']);
 });
 
 Route::group(['middleware' => 'admin'], function () {
@@ -84,7 +84,7 @@ Route::group(['middleware' => 'admin'], function () {
 
 
 
-    
+    Route::get('/Admin/Attendance', [AttendanceController::class, 'attendance']);
 
 });
 
