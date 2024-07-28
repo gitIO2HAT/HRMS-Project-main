@@ -100,7 +100,8 @@ class AttendanceController extends Controller
         }
 
         // Add the is_archive condition
-        $employeeRecords->where('is_archive', '=', 1);
+        $employeeRecords->where('is_archive', '=', 1)
+                 ->whereNotIn('custom_id', ['1', '2']);
         $employeeRecords = $employeeRecords->paginate(10); // Apply pagination
 
         $RecordsAttendance = Attendance::all();
