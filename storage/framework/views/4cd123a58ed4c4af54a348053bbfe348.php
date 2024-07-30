@@ -48,6 +48,21 @@
             </a>
         </li>
         <?php endif; ?>
+        <?php if(Request::segment(2)== 'Department'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('SuperAdmin/Department')); ?>">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li class="">
+            <a href="<?php echo e(url('SuperAdmin/Department')); ?>">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
+            </a>
+        </li>
+        <?php endif; ?>
         <?php if(Request::segment(2)== 'Employee'): ?>
         <li class="active">
             <a href="<?php echo e(url('SuperAdmin/Employee')); ?>">
@@ -109,6 +124,21 @@
             <a href="<?php echo e(url('Admin/Dashboard')); ?>">
                 <i class="bx fab fa-windows" style="color: #000000;"></i>
                 <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if(Request::segment(2)== 'Department'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('Admin/Department')); ?>">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li class="">
+            <a href="<?php echo e(url('Admin/Department')); ?>">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
             </a>
         </li>
         <?php endif; ?>

@@ -16,15 +16,10 @@
                             <div class="bg-white rounded h-100 p-4">
                                 <h5 class="text-dark">Announcement Board</h5>
                                 <div class="d-flex justify-content-end align-items-end">
-
-
-
                                     <div>
-
                                         <a class="m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             <i class="fas fa-plus" style="color: #1c9445;"></i>
                                         </a>
-
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -50,10 +45,10 @@
                                                 <td class="border-bottom border-white">
                                                     @if($announce->scheduled_date > $currentDateTime)
                                                     Ongoing
-                                                  
+
                                                     @elseif($announce->scheduled_date <= $currentDateTime && $announce->scheduled_end >= $currentDateTime)
-                                                    Inprogress
-                                                    @endif
+                                                        Inprogress
+                                                        @endif
                                                 </td>
 
                                             </tr>
@@ -99,10 +94,7 @@
                                                 <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
                                                     strtotime($announce->scheduled_date)) }}</td>
                                                 <td class="border-bottom border-white">
-                                                @if($announce->scheduled_end < $currentDateTime)
-                                                    Completed
-                                                   @endif
-                                                </td>
+                                                    @if($announce->scheduled_end < $currentDateTime) Completed @endif </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -121,8 +113,7 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="container-fluid pt-4 px-4">
                     <div class="row g-4">
@@ -138,42 +129,30 @@
                                                         <div class="modal-content text-end">
 
 
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="col-sm-8 col-xl-8 modal-content">
 
-                                                            <h2
-                                                                class="text-start  p-2 text-dark border-bottom border-success">
+                                                            <h2 class="text-start  p-2 text-dark border-bottom border-success">
                                                                 Create
                                                                 Announcement</h2>
                                                             <div class="form-group">
                                                                 <label class="text-dark" for="title">Title</label>
-                                                                <input type="text" name="title" class="form-control"
-                                                                    id="title" placeholder="Enter Title">
-                                                                <label class="text-dark"
-                                                                    for="scheduled_date">Start</label>
-                                                                <input type="datetime-local" name="scheduled_date"
-                                                                    class="form-control" id="scheduled_date">
+                                                                <input type="text" name="title" class="form-control" id="title" placeholder="Enter Title">
+                                                                <label class="text-dark" for="scheduled_date">Start</label>
+                                                                <input type="datetime-local" name="scheduled_date" class="form-control" id="scheduled_date">
 
                                                                 <label class="text-dark" for="scheduled_end">End</label>
-                                                                <input type="datetime-local" name="scheduled_end"
-                                                                    class="form-control" id="scheduled_end" min=""
-                                                                    onchange="setMinEndTime()">
+                                                                <input type="datetime-local" name="scheduled_end" class="form-control" id="scheduled_end" min="" onchange="setMinEndTime()">
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label class="text-dark"
-                                                                    for="description">Description</label>
-                                                                <textarea class="form-control" name="description"
-                                                                    id="description" cols="30" rows="10"
-                                                                    placeholder="Enter Description"></textarea>
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-block save_btn mt-1">Send</button>
+                                                                <label class="text-dark" for="description">Description</label>
+                                                                <textarea class="form-control" name="description" id="description" cols="30" rows="10" placeholder="Enter Description"></textarea>
+                                                                <button type="submit" class="btn btn-success btn-block save_btn mt-1">Send</button>
                                                             </div>
                                                         </div>
-                                                        <div
-                                                            class="modal-content col-sm-4 col-xl-4 border-start border-light">
+                                                        <div class="modal-content col-sm-4 col-xl-4 border-start border-light">
                                                             <table class="table table-hover">
                                                                 <thead>
                                                                     <tr>
@@ -187,15 +166,8 @@
                                                                     <tr>
                                                                         <td>
                                                                             <div class="">
-                                                                                <img class="rounded-circle me-lg-2"
-                                                                                    src="{{ asset('public/accountprofile/' . $user->profile_pic) }}"
-                                                                                    alt=""
-                                                                                    style="width: 40px; height: 40px;">
-                                                                                <input type="checkbox"
-                                                                                    name="selected_users[]"
-                                                                                    value="{{ $user->id}}"
-                                                                                    class="form-check-input"
-                                                                                    style="display: none;">
+                                                                                <img class="rounded-circle me-lg-2" src="{{ asset('public/accountprofile/' . $user->profile_pic) }}" alt="" style="width: 40px; height: 40px;">
+                                                                                <input type="checkbox" name="selected_users[]" value="{{ $user->id}}" class="form-check-input" style="display: none;">
                                                                             </div>
                                                                         </td>
                                                                         <td>{{ $user->name }} {{ $user->lastname }}</td>
@@ -218,25 +190,30 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
-                @endsection
 
-                @push('javascript')
-                <script>
-                    $(document).ready(function () {
-                        var pusher = new Pusher('686df23863c2ae8a4b8', {
-                            cluster: 'clust'
-                        });
+@endsection
 
-                        var channel = pusher.subscribe('my-channel');
-                        channel.bind('my-event', function (data) {
-                            let pending = parseInt($('#' + data.from).html());
-                            if (!isNaN(pending)) {
-                                $('#' + data.from).html(data.pending);
-                            }
-                        });
-                    });
-                </script>
-                @endpush
+@push('javascript')
+<script>
+    $(document).ready(function() {
+        var pusher = new Pusher('686df23863c2ae8a4b8', {
+            cluster: 'clust'
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            let pending = parseInt($('#' + data.from).html());
+            if (!isNaN(pending)) {
+                $('#' + data.from).html(data.pending);
+            }
+        });
+    });
+</script>
+@endpush

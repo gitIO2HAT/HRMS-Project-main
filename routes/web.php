@@ -10,6 +10,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyAccountController;
+use App\Http\Controllers\DepartmentController;
 use App\Models\Attendance;
 
 /*
@@ -54,7 +55,11 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/Read/{id}', [AnnouncementController::class, 'read']);
 
 
+   
 
+    Route::get('/SuperAdmin/Department', [DepartmentController::class, 'department']);
+    Route::get('/SuperAdmin/positions/{department_id}', [DepartmentController::class, 'getPositions']);
+    
     Route::get('/SuperAdmin/Attendance', [AttendanceController::class, 'attendance']);
 });
 
@@ -85,6 +90,15 @@ Route::group(['middleware' => 'admin'], function () {
 
 
     Route::get('/Admin/Attendance', [AttendanceController::class, 'attendance']);
+
+    Route::get('/Admin/Department', [DepartmentController::class, 'department']);
+    Route::post('/Admin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);
+    Route::get('/Admin/Department/DepartmentArchived', [DepartmentController::class, 'departmentarchived']);
+    Route::get('/Admin/Department/Deleted/{id}', [DepartmentController::class, 'deleted']);
+    Route::get('/Admin/Department/Deletedrestored/{id}', [DepartmentController::class, 'deletedrestored']);
+    Route::post('/Admin/Department/AddDepartment', [DepartmentController::class, 'adddepartment']);
+    Route::post('/Admin/Department/AddPosition', [DepartmentController::class, 'addposition']);
+    Route::get('/Admin/positions/{department_id}', [DepartmentController::class, 'getPositions']);
 
 });
 

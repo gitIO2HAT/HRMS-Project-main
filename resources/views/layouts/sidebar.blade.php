@@ -48,6 +48,21 @@
             </a>
         </li>
         @endif
+        @if(Request::segment(2)== 'Department')
+        <li class="active">
+            <a href="{{url('SuperAdmin/Department')}}">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
+            </a>
+        </li>
+        @else
+        <li class="">
+            <a href="{{url('SuperAdmin/Department')}}">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
+            </a>
+        </li>
+        @endif
         @if(Request::segment(2)== 'Employee')
         <li class="active">
             <a href="{{url('SuperAdmin/Employee')}}">
@@ -109,6 +124,21 @@
             <a href="{{url('Admin/Dashboard')}}">
                 <i class="bx fab fa-windows" style="color: #000000;"></i>
                 <span class="text">Dashboard</span>
+            </a>
+        </li>
+        @endif
+        @if(Request::segment(2)== 'Department')
+        <li class="active">
+            <a href="{{url('Admin/Department')}}">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
+            </a>
+        </li>
+        @else
+        <li class="">
+            <a href="{{url('Admin/Department')}}">
+                <i class="bx fab fa-windows" style="color: #000000;"></i>
+                <span class="text">Department</span>
             </a>
         </li>
         @endif
