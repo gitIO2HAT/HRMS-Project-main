@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('department_id');
             $table->string('name');
+            $table->enum('deleted', ['1', '2'])->default('1');
             $table->timestamps();
     
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');

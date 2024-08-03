@@ -13,4 +13,8 @@ class Position extends Model
     {
         return $this->belongsTo(Department::class);
     }
+    static public function getId($id)
+    {
+        return self::find($id);
+    }
 }

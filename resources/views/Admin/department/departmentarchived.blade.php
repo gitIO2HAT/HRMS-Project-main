@@ -2,118 +2,126 @@
 
 @section('content')
 
-<body>
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="row g-4">
 
-@if(Auth::user()->user_type == 0)
+                <div class=" pt-4 px-4 ">
+                    @include('layouts._message')
 
-    
-<a href="{{url('/SuperAdmin/Department')}}" class="m-1 btn btn-warning "><i class="far fa-file-archive" style="color: #000000;"></i> Back</a>
-@elseif(Auth::user()->user_type == 1)
+                    <div class="row g-4">
+                        <div class="col-12 rounded">
+                            <div class="bg-white rounded-3  h-100 p-4">
+                                <h2 class="text-dark text-center">DEPARTMENT ARCHIVED</h2>
+                                <div class="d-flex align-items-center">
+                                    <div class="col-sm-10 ms-5 ">
+                                        <form action="{{url('/Admin/Department')}}" class="me-1">
+                                            @csrf
+                                            <input type="search" id="search" class="form-control bg-transparent" name="search" placeholder="Search Here" value="{{ request('search') }}">
+                                            <button style="display: none;" class="btn btn-success m-1" type="submit">Search</button>
+                                            <button style="display: none;" type="hidden" class="btn btn-success m-1" onclick="clearSearch()">Clear</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-2 ms-5 ">
+                                        @if(Auth::user()->user_type == 0)
+                                        <a href="{{url('/SuperAdmin/Department')}}" class="m-1 btn btn-white "><i class="fas fa-arrow-left" style="color: #000000;"> Back</i></a>
+                                        @elseif(Auth::user()->user_type == 1)
+                                        <a href="{{url('/Admin/Department')}}" class="m-1 btn btn-white "><i class="fas fa-arrow-left" style="color: #000000;"></i> Back</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 rounded">
 
-<a href="{{url('/Admin/Department')}}" class="m-1 btn btn-warning "><i class="far fa-file-archive" style="color: #000000;"></i> Back</a>
-@endif
-    @include('layouts._message')
-    <form action="/Admin/Department/AddPosition" method="POST">
-        @csrf
-        <div>
-            <label for="department">Department</label>
-            <select id="department" name="department_id">
-                <option value="">Select Department</option>
-                @foreach($departments as $department)
-                <option value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
-            @if($errors->has('department_id'))
-            <span class="text-danger">{{ $errors->first('department_id') }}</span>
-            @endif
-        </div>
+                            <div class="bg-white rounded-3  h-100 p-4">
+
+                              
 
 
+                                <table class="table table-striped table-responsive table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Department</th>
+                                            <th class="text-center">Year Published</th>
+                                            <th class="text-center">Action</th>
 
-        <div class="row g-4">
-            <div class="col-sm-6 col-xl-6">
-                <div class="fields">
-                    <div class="input-field">
-                        <label>Position</label>
-                        <input type="text" placeholder="Position Name" class="form-control" name="name" value="">
-                        @if($errors->has('name'))
-                        <span class="text-danger">{{ $errors->first('name') }}</span>
-                        @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($departments as $index => $list)
+                                       
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td class="text-center">
+                                                    {{ $list->name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if(Auth::user()->user_type == 0)
+                                                <td class="text-center"><a href="{{ url('/SuperAdmin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                                    @elseif(Auth::user()->user_type == 1)
+                                                    
+                                                    <a href="{{ url('/Admin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                                </td>
+                                                @endif
+                                            </tr>
+                                     
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
+                                {{$departments->onEachSide(1)->links()}}
+                            </div>
+
+                        </div>
+                       
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
-
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
+    </div>
 
 
 
 
 
-    <form action="/Admin/Department/AddDepartment" method="POST">
-        @csrf
-
-        <div>
-            <label for="department">Check the Department</label>
-            <select id="department" name="department_id">
-                <option value="">Select Department</option>
-                @foreach($departments as $department)
-                <option value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
-            @if($errors->has('department_id'))
-            <span class="text-danger">{{ $errors->first('department_id') }}</span>
-            @endif
-        </div>
-        <div class="row g-4">
-            <div class="col-sm-6 col-xl-6">
-                <div class="fields">
-                    <div class="input-field">
-                        <label>Department</label>
-                        <input type="text" placeholder="Department Name" class="form-control" name="name" value="">
-                        @if($errors->has('name'))
-                        <span class="text-danger">{{ $errors->first('name') }}</span>
-                        @endif
-
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-    </form>
 
 
 
-    <table class="table table-bordered">
-        <thead class="text-dark text-center">
-            <tr class="bg-title">
-                <th class="centered">#</th>
-                <th>Department Name</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody class="text-center">
-            @foreach($departments as $index => $list)
-            <tr>
-                <td class="text-dark">{{ $index + 1 }}</td>
-                <td class="text-dark">{{$list->name}}</td>
-                <td class="text-dark"></td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
 
-    <table class="table table-bordered">
-        <thead class="text-dark text-center">
-            <tr class="bg-title">
-                <td class="centered">Position List</th>
-            </tr>
+    
 
-        </thead>
-        <tbody class="text-center">
-            <tr>
-                <td id="position" class="text-dark"></td>
-            </tr>
-        </tbody>
-    </table>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -145,7 +153,6 @@
         });
     </script>
 
-   
-</body>
 
-@endsection
+
+    @endsection

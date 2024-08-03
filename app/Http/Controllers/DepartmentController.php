@@ -30,20 +30,27 @@ class DepartmentController extends Controller
         GROUP BY
             users.id, users.name, users.lastname, users.email
     ");
-        $search = $request->input('search');
+      
+    $search = $request->input('search');
 
-        $departments = Department::query();
-        if ($search) {
-            $departments->where(function ($q) use ($search) {
-                $q->whereRaw("CONCAT(name, ' ', id) LIKE ?", ["%$search%"]);
-            });
-        }
-
-        $departments->where('deleted', '=', 1);
-
-        $departments = $departments->paginate(10);
+    // Fetch departments that match the search query and are not marked as deleted
+    $departments = Department::where('name', 'LIKE', "%{$search}%")
+        ->where('deleted', 1)
+        ->paginate(10);
+    
+    // Fetch positions that belong to the found departments and are not marked as deleted
+    $departmentIds = $departments->pluck('id');
+    $position = Position::whereIn('department_id', $departmentIds)
+        ->where('deleted', 1)
+        ->where('name', 'LIKE', "%{$search}%")
+        ->paginate(10);
 
         $query = Message::getNotify();
+
+        
+
+        // Fetch positions based on the search query
+       
 
 
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
@@ -58,11 +65,12 @@ class DepartmentController extends Controller
             'notification' => $notification,
             'getNot' => $getNot,
             'departments' => $departments,
+            'position' => $position,
         ]);
     }
 
 
-    public function departmentarchived()
+    public function departmentarchived(Request $request)
     {
         $notification['notify'] = DB::select("
         SELECT
@@ -81,7 +89,21 @@ class DepartmentController extends Controller
             users.id, users.name, users.lastname, users.email
     ");
 
-        $departments = Department::all();
+    $search = $request->input('search');
+
+    // Fetch departments that match the search query and are not marked as deleted
+    $departments = Department::where('name', 'LIKE', "%{$search}%")
+        ->where('deleted', 2)
+        ->paginate(10);
+    
+    // Fetch positions that belong to the found departments and are not marked as deleted
+    $departmentIds = $departments->pluck('id');
+    $position = Position::whereIn('department_id', $departmentIds)
+        ->where('deleted', 2)
+        ->where('name', 'LIKE', "%{$search}%")
+        ->paginate(10);
+
+        
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
@@ -95,6 +117,7 @@ class DepartmentController extends Controller
             'notification' => $notification,
             'getNot' => $getNot,
             'departments' => $departments,
+            'position' => $position,
         ]);
     }
 
@@ -132,6 +155,22 @@ class DepartmentController extends Controller
     
         $department->name = $request->name;
         $department->save();
+    
+        return redirect()->back()->with('success', 'Department successfully updated');
+    }
+
+    public function updateposition($id, Request $request)
+    {
+
+        $position = Position::getId($id);
+        $request->validate([
+            'name' => 'required|string|max:50|unique:departments,name,' . $request->id,
+        ],[
+            'name.unique' => 'This name has already been taken.',
+        ]);
+    
+        $position->name = $request->name;
+        $position->save();
     
         return redirect()->back()->with('success', 'Department successfully updated');
     }
@@ -178,4 +217,16 @@ class DepartmentController extends Controller
 
         return redirect()->back()->with('success', 'Department successfully RESTORED');
     }
+
+    public function deletedposition($id)
+{
+    // Find the position by ID
+    $position = Position::findOrFail($id);
+
+    // Permanently delete the position from the database
+    $position->forceDelete();
+
+    return redirect()->back()->with('success', 'Position successfully deleted');
+}
+   
 }

@@ -95,8 +95,11 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);
     Route::get('/Admin/Department/DepartmentArchived', [DepartmentController::class, 'departmentarchived']);
     Route::get('/Admin/Department/Deleted/{id}', [DepartmentController::class, 'deleted']);
-    Route::get('/Admin/Department/Deletedrestored/{id}', [DepartmentController::class, 'deletedrestored']);
+    Route::get('/Admin/Department/DeletedRestored/{id}', [DepartmentController::class, 'deletedrestored']);
+    Route::get('/Admin/Department/DeletedPosition/{id}', [DepartmentController::class, 'deletedposition']);
+    Route::get('/Admin/Department/DeletedPositionRestored/{id}', [DepartmentController::class, 'deletedpositionrestored']);
     Route::post('/Admin/Department/AddDepartment', [DepartmentController::class, 'adddepartment']);
+    Route::post('/Admin/Department/UpdatePosition/{id}', [DepartmentController::class, 'updateposition']);
     Route::post('/Admin/Department/AddPosition', [DepartmentController::class, 'addposition']);
     Route::get('/Admin/positions/{department_id}', [DepartmentController::class, 'getPositions']);
 
