@@ -58,8 +58,17 @@ Route::group(['middleware' => 'superadmin'], function () {
    
 
     Route::get('/SuperAdmin/Department', [DepartmentController::class, 'department']);
+    Route::post('/SuperAdmin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);
+    Route::get('/SuperAdmin/Department/DepartmentArchived', [DepartmentController::class, 'departmentarchived']);
+    Route::get('/SuperAdmin/Department/Deleted/{id}', [DepartmentController::class, 'deleted']);
+    Route::get('/SuperAdmin/Department/DeletedRestored/{id}', [DepartmentController::class, 'deletedrestored']);
+    Route::get('/SuperAdmin/Department/DeletedPosition/{id}', [DepartmentController::class, 'deletedposition']);
+    Route::get('/SuperAdmin/Department/DeletedPositionRestored/{id}', [DepartmentController::class, 'deletedpositionrestored']);
+    Route::post('/SuperAdmin/Department/AddDepartment', [DepartmentController::class, 'adddepartment']);
+    Route::post('/SuperAdmin/Department/UpdatePosition/{id}', [DepartmentController::class, 'updateposition']);
+    Route::post('/SuperAdmin/Department/AddPosition', [DepartmentController::class, 'addposition']);
     Route::get('/SuperAdmin/positions/{department_id}', [DepartmentController::class, 'getPositions']);
-    
+
     Route::get('/SuperAdmin/Attendance', [AttendanceController::class, 'attendance']);
 });
 

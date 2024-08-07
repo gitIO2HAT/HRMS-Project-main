@@ -53,7 +53,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach($departments as $index => $list)
-                                            <form action="{{ url('/Admin/Department/UpdateDepartment/'.$list->id) }}" method="POST">
+                                            <form action="{{ url('/SuperAdmin/Department/UpdateDepartment/'.$list->id) }}" method="POST">
                                                 @csrf
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
@@ -68,6 +68,9 @@
                                                     </td>
                                                     <td class="text-center">
                                                         @if(Auth::user()->user_type == 0)
+                                                        <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
+                                                            <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
+                                                        </button>
                                                         <a href="{{ url('/SuperAdmin/Department/Deleted/'.$list->id) }}"> <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i></a>
                                                         @elseif(Auth::user()->user_type == 1)
                                                         <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
@@ -102,28 +105,18 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center">#</th>
-                                                <th class="text-center">Department</th>
-                                                <th class="text-center">Positions</th>
+                                                <th class="text-center">Position</th>
                                                 <th class="text-center">Year Published</th>
                                                 <th class="text-center">Action</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($position as $index => $list)
-                                            <form action="{{ url('/Admin/Department/UpdatePosition/'.$list->id) }}" method="POST">
+                                            <form action="{{ url('/SuperAdmin/Department/UpdatePosition/'.$list->id) }}" method="POST">
                                                 @csrf
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
-
-                                                    <td class="text-center">
-                                                    @foreach($departments as $depart)
-
-                                                        @if($list->department_id === $depart->id)
-                                                            {{$depart->name}}
-                                                        @endif
-
-                                                    @endforeach
-                                                    </td>
                                                     <td class="text-center">
                                                         <span id="editable-span-{{ $list->id }}" onclick="toggleEdit('{{$list->id}}')">
                                                             {{ $list->name }}
@@ -133,15 +126,19 @@
                                                     <td class="text-center">
                                                         {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                                     </td>
-                                                    <td class="text-center">
-                                                        @if(Auth::user()->user_type == 0)
-                                                    <td class="text-center"> <a href="{{ url('/Admin/Department/Deleted/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
+
+                                                    
+                                                        
+                                                    <td class="text-center"> 
+                                                    @if(Auth::user()->user_type == 0)
+                                                    <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
+                                                            <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
+                                                        </button>
+                                                    <a href="{{ url('/Admin/Department/Deleted/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
                                                         </a>
                                                         @elseif(Auth::user()->user_type == 1)
-                                                        <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
-                                                            <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
-                                                        </button>
+                                                       
 
                                                         <a href="{{ url('/Admin/Department/DeletedPosition/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
@@ -157,7 +154,10 @@
                                 </div>
                                 {{$position->onEachSide(1)->links()}}
                             </div>
+
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -180,9 +180,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+
                     <!-- Form content here -->
                     <form action="/Admin/Department/AddDepartment" method="POST">
                         @csrf
+
+
                         <div class="text-center">
                             <input type="text" placeholder="Department Name" class="form-control underline-input" name="name">
                             @if($errors->has('name'))
@@ -204,10 +207,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+
                     <!-- Form content here -->
                     <form action="/Admin/Department/AddPosition" method="POST">
                         @csrf
                         <div>
+
                             <select id="department" name="department_id" class="form-control underline-input">
                                 <option value="" disabled selected>Select Department</option>
                                 @foreach($departments as $department)
@@ -218,18 +223,57 @@
                             <span class="text-danger">{{ $errors->first('department_id') }}</span>
                             @endif
                         </div>
+
+
+
                         <div class="row g-4">
+
+
                             <div class="text-center">
+
                                 <input type="text" placeholder="Position Name" class="form-control underline-input" name="name" value="">
                                 @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
                                 <button type="submit" class="btn btn-success mt-2">Add</button>
                             </div>
+
+
                         </div>
+
+
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @endsection

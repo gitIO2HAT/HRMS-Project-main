@@ -216,6 +216,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-success">Submit</button>
                                 <a href="<?php echo e(url('Employee/Dashboard')); ?>" class="btn btn-primary">Done<a>
+                                                </form>
                         </div>
                     </div>
                 </div>

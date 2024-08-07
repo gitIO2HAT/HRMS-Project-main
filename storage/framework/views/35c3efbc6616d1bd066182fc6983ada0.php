@@ -21,24 +21,21 @@
                                         <div class="fields">
                                             <div class="input-field">
                                                 <label>First Name</label>
-                                                <input type="text" placeholder="Enter First Name" class="form-control"
-                                                    name="name" value="" required>
+                                                <input type="text" placeholder="Enter First Name" class="form-control" name="name" value="" required>
                                                 <?php if($errors->has('name')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('name')); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="input-field">
                                                 <label>Middle Name</label>
-                                                <input type="text" placeholder="Enter Middle Name" class="form-control"
-                                                    name="middlename" value="" required>
+                                                <input type="text" placeholder="Enter Middle Name" class="form-control" name="middlename" value="" required>
                                                 <?php if($errors->has('middlename')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('middlename')); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="input-field">
                                                 <label>Last Name</label>
-                                                <input type="text" placeholder="Enter Last Name" class="form-control"
-                                                    name="lastname" value="" required>
+                                                <input type="text" placeholder="Enter Last Name" class="form-control" name="lastname" value="" required>
                                                 <?php if($errors->has('lastname')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('lastname')); ?></span>
                                                 <?php endif; ?>
@@ -75,28 +72,23 @@
                                             </div>
                                             <div class="input-field">
                                                 <label>Birth Date</label>
-                                                <input type="date" placeholder="Enter Birth Date" class="form-control"
-                                                    name="birth_date" id="birth_date" value="" required>
+                                                <input type="date" placeholder="Enter Birth Date" class="form-control" name="birth_date" id="birth_date" value="" required>
                                                 <?php if($errors->has('birth_date')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('birth_date')); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="input-field">
                                                 <label>Age</label>
-                                                <input  class="hide" type="number" placeholder="Enter Age" class="form-control"
-                                                    name="age" id="age" value="" required>
+                                                <input class="hide" type="number" placeholder="Enter Age" class="form-control" name="age" id="age" value="" required>
                                                 <?php if($errors->has('age')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('age')); ?></span>
                                                 <?php endif; ?>
                                             </div>
 
-                                           
+
                                             <div class="input-field">
                                                 <label>Phone Number</label>
-                                                <input type="number" class="form-control" name="phonenumber"
-                                                    pattern="(\+63\s?|0)(\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{3}\s?\d{4})"
-                                                    placeholder="e.g., +63 123 456 7890 or 0912 345 6789" value=""
-                                                    required>
+                                                <input type="number" class="form-control" name="phonenumber" pattern="(\+63\s?|0)(\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{3}\s?\d{4})" placeholder="e.g., +63 123 456 7890 or 0912 345 6789" value="" required>
                                                 <?php if($errors->has('phonenumber')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('phonenumber')); ?></span>
                                                 <?php endif; ?>
@@ -112,56 +104,45 @@
                                                 <span class="text-danger"><?php echo e($errors->first('user_type')); ?></span>
                                                 <?php endif; ?>
                                             </div>
-                                            <div class="input-field">
-                                                <label for="suffix">Department</label>
-                                                <select class="form-control" name="department">
-                                                    <option selected disabled>--Select Department--</option>
-                                                    <option value="Department 1">Department 1</option>
-                                                    <option value="Department 2">Department 2</option>
-                                                    <option value="Department 3">Department 3</option>
-                                                    <option value="Department 4">Department 4</option>
-                                                    <option value="Department 5">Department 5</option>
-                                                    <option value="Department 6">Department 6</option>
-                                                    <option value="Department 7">Department 7</option>
 
-                                                </select>
-                                                <?php if($errors->has('department')): ?>
+                                           
+                                                <div>
+                                                    <label for="department">Department</label>
+                                                    <select id="department" name="department">
+                                                        <option value="">Select Department</option>
+                                                        <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $department): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($department->id); ?>"><?php echo e($department->name); ?></option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </select>
+                                                    <?php if($errors->has('department')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('department')); ?></span>
                                                 <?php endif; ?>
-                                            </div>
-                                            <div class="input-field">
-                                                <label for="suffix">Position</label>
-                                                <select class="form-control" name="position">
-                                                    <option selected disabled>--Select position--</option>
-                                                    <option value="Position 1">Position 1</option>
-                                                    <option value="Position 2">Position 2</option>
-                                                    <option value="Position 3">Position 3</option>
-                                                    <option value="Position 4">Position 4</option>
-                                                    <option value="Position 5">Position 5</option>
-                                                    <option value="Position 6">Position 6</option>
-                                                    <option value="Position 7">Position 7</option>
-                                                    <option value="Position 8">Position 8</option>
-                                                    <option value="Position 9">Position 9</option>
-                                                    <option value="Position 10">Position 10</option>
+                                                </div>
 
-
-                                                </select>
-                                                <?php if($errors->has('position')): ?>
+                                                <div>
+                                                    <label for="position">Position</label>
+                                                    <select id="position" name="position">
+                                                        <option value="">Select Position</option>
+                                                        <?php $__currentLoopData = $position; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $position): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($position->name); ?>"><?php echo e($position->name); ?></option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </select>
+                                                    <?php if($errors->has('position')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('position')); ?></span>
                                                 <?php endif; ?>
-                                            </div>
+                                                </div>
+                                                
+
                                             <div class="input-field">
                                                 <label>Email</label>
-                                                <input type="email" placeholder="Enter Email" class="form-control"
-                                                    name="email" value="" required>
+                                                <input type="email" placeholder="Enter Email" class="form-control" name="email" value="" required>
                                                 <?php if($errors->has('email')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('email')); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="hidden input-field">
                                                 <label>Password</label>
-                                                <input type="password" value="12345" placeholder="Enter Password"
-                                                    class="form-control" name="password" value="" required>
+                                                <input type="password" value="12345" placeholder="Enter Password" class="form-control" name="password" value="" required>
                                                 <?php if($errors->has('password')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('password')); ?></span>
                                                 <?php endif; ?>
@@ -177,8 +158,7 @@
 
                                             <div class="input-field">
                                                 <label>Daily Rate</label>
-                                                <input type="numeric" class="form-control" name="daily_rate"
-                                                    placeholder="e.g., 560" value="" required>
+                                                <input type="numeric" class="form-control" name="daily_rate" placeholder="e.g., 560" value="" required>
                                                 <?php if($errors->has('daily_rate')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('daily_rate')); ?></span>
                                                 <?php endif; ?>

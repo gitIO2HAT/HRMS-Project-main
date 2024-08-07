@@ -163,7 +163,52 @@
         document.getElementById('age').value = age;
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#department').on('change', function() {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.ajax({
+                        url: '/Admin/positions/' + departmentId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#position').empty();
+                            $('#position').append('<option value="">Select Position</option>');
+                            $.each(data, function(key, value) {
+                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                } else {
+                    $('#position').empty();
+                    $('#position').append('<option value="">Select Position</option>');
+                }
+            });
+        });
+    </script>
+    <script>
+        function toggleEdit(id) {
+            var span = document.getElementById('editable-span-' + id);
+            var input = document.getElementById('editable-input-' + id);
 
+            if (span.style.display !== 'none') {
+                // Hide the span and show the input
+                span.style.display = 'none';
+                input.style.display = 'inline';
+                input.focus();
+            } else {
+                // Hide the input and show the span
+                span.style.display = 'inline';
+                input.style.display = 'none';
+                span.innerText = input.value;
+            }
+        }
+    </script>
 
 
 </html>

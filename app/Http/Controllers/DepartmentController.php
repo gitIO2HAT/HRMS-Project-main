@@ -38,13 +38,11 @@ class DepartmentController extends Controller
         ->where('deleted', 1)
         ->paginate(10);
     
-    // Fetch positions that belong to the found departments and are not marked as deleted
+    // Fetch positions that belong to the found departments
     $departmentIds = $departments->pluck('id');
     $position = Position::whereIn('department_id', $departmentIds)
         ->where('deleted', 1)
-        ->where('name', 'LIKE', "%{$search}%")
         ->paginate(10);
-
         $query = Message::getNotify();
 
         
