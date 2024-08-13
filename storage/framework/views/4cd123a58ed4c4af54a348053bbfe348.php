@@ -227,23 +227,7 @@
         <?php endif; ?>
         <?php endif; ?>
     
-        <?php if(Auth::user()->user_type == 2): ?>
-        <?php if(Request::segment(2) == 'Attendance'): ?>
-        <li class="active">
-            <a href="<?php echo e(url('Employee/Attendance')); ?>">
-                <i class="bx far fa-comment-dots" style="color: #000000;"></i>
-                <span class="text">Attendance</span>
-            </a>
-        </li>
-        <?php else: ?>
-        <li>
-            <a href="<?php echo e(url('Employee/Attendance')); ?>">
-                <i class="bx far fa-comment-dots" style="color: #000000;"></i>
-                <span class="text">Attendance</span>
-            </a>
-        </li>
-        <?php endif; ?>
-        <?php endif; ?>
+       
         <?php if(Auth::user()->user_type == 2): ?>
         <?php if(Request::segment(2) == 'MyAccount'): ?>
         <li class="active">

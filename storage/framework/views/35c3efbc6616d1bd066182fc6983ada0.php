@@ -79,13 +79,11 @@
                                             </div>
                                             <div class="input-field">
                                                 <label>Age</label>
-                                                <input class="hide" type="number" placeholder="Enter Age" class="form-control" name="age" id="age" value="" required>
+                                                <input type="number" placeholder="Enter Age" class="form-control" name="age" id="age" value="" required>
                                                 <?php if($errors->has('age')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('age')); ?></span>
                                                 <?php endif; ?>
                                             </div>
-
-
                                             <div class="input-field">
                                                 <label>Phone Number</label>
                                                 <input type="number" class="form-control" name="phonenumber" pattern="(\+63\s?|0)(\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{3}\s?\d{4})" placeholder="e.g., +63 123 456 7890 or 0912 345 6789" value="" required>
@@ -105,33 +103,31 @@
                                                 <?php endif; ?>
                                             </div>
 
-                                           
-                                                <div>
-                                                    <label for="department">Department</label>
-                                                    <select id="department" name="department">
-                                                        <option value="">Select Department</option>
-                                                        <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $department): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                        <option value="<?php echo e($department->id); ?>"><?php echo e($department->name); ?></option>
-                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                    </select>
-                                                    <?php if($errors->has('department')): ?>
+
+                                            <div class="input-field">
+                                                <label for="department">Department</label>
+                                                <select id="department" name="department" class="form-control">
+                                                    <option value="">Select Department</option>
+                                                    <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $department): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($department->id); ?>"><?php echo e($department->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+                                                <?php if($errors->has('department')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('department')); ?></span>
                                                 <?php endif; ?>
-                                                </div>
+                                            </div>
 
-                                                <div>
-                                                    <label for="position">Position</label>
-                                                    <select id="position" name="position">
-                                                        <option value="">Select Position</option>
-                                                        <?php $__currentLoopData = $position; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $position): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                        <option value="<?php echo e($position->name); ?>"><?php echo e($position->name); ?></option>
-                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                    </select>
-                                                    <?php if($errors->has('position')): ?>
+                                            <div class="input-field">
+                                                <label for="position">Position</label>
+                                                <select id="position" name="position" class="form-control">
+                                                    <option value="">Select Position</option>
+                                                </select>
+                                                <?php if($errors->has('position')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('position')); ?></span>
                                                 <?php endif; ?>
-                                                </div>
-                                                
+                                            </div>
+
+
 
                                             <div class="input-field">
                                                 <label>Email</label>
@@ -179,5 +175,34 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#department').on('change', function() {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.ajax({
+                        url: '/Admin/positionsAdmin/' + departmentId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#position').empty();
+                            $('#position').append('<option value="">Select Position</option>');
+                            $.each(data, function(key, value) {
+                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                } else {
+                    $('#position').empty();
+                    $('#position').append('<option value="">Select Position</option>');
+                }
+            });
+        });
+    </script>
     <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/admin/employee/addemployee.blade.php ENDPATH**/ ?>

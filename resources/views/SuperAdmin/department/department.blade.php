@@ -16,7 +16,7 @@
                                 <h2 class="text-dark text-center">DEPARTMENT</h2>
                                 <div class="d-flex align-items-center">
                                     <div class="col-sm-10 ms-5 ">
-                                        <form action="{{url('/Admin/Department')}}" class="me-1">
+                                        <form action="{{url('/SuperAdmin/Department')}}" class="me-1">
                                             @csrf
                                             <input type="search" id="search" class="form-control bg-transparent" name="search" placeholder="Search Here" value="{{ request('search') }}">
                                             <button style="display: none;" class="btn btn-success m-1" type="submit">Search</button>
@@ -134,7 +134,7 @@
                                                     <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
                                                             <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
                                                         </button>
-                                                    <a href="{{ url('/Admin/Department/Deleted/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
+                                                    <a href="{{ url('/SuperAdmin/Department/Deleted/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
                                                         </a>
                                                         @elseif(Auth::user()->user_type == 1)
@@ -182,7 +182,7 @@
                 <div class="modal-body">
 
                     <!-- Form content here -->
-                    <form action="/Admin/Department/AddDepartment" method="POST">
+                    <form action="/SuperAdmin/Department/AddDepartment" method="POST">
                         @csrf
 
 
@@ -203,13 +203,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-dark" id="addPositionModalLabel">Add Position for Department</h5>
+                    <h5 class="modal-title text-dark" id="addPositionModalLabel">Add Position for Department Super</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <!-- Form content here -->
-                    <form action="/Admin/Department/AddPosition" method="POST">
+                    <form action="/SuperAdmin/Department/AddPosition" method="POST">
                         @csrf
                         <div>
 

@@ -290,7 +290,7 @@
                         });
 
                         // Initial display update
-                        setInterval(updateDisplay, 1000);
+                        setInterval(updateDisplay, 60000);
                         updateDisplay();
                     });
                 </script>
@@ -346,7 +346,7 @@
                     }
 
                     // Check every minute if the button should be displayed
-                    setInterval(checkTimeAndDisplayButton, 1000);
+                    setInterval(checkTimeAndDisplayButton, 60000);
 
                     // Initial check when the page loads
                     checkTimeAndDisplayButton();

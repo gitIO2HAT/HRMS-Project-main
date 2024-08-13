@@ -76,12 +76,14 @@
     <?php echo $__env->yieldPushContent('javascript'); ?>
 </body>
 <script>
-        // Clear Search
-        function clearSearch() {
-            document.getElementById('search').value = '';
-            document.querySelector('form').submit();
-        }
-    </script>
+    function clearSearch() {
+        document.getElementById('search').value = '';
+        document.getElementById('from').value = '';
+        document.getElementById('to').value = '';
+        document.getElementById('leave_type').selectedIndex = 0;
+        document.querySelector('form').submit();
+    }
+</script>
    <script>
     function handleImageClick(event) {
         // Prevent the default behavior of the click event on the label
@@ -163,34 +165,7 @@
         document.getElementById('age').value = age;
     });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#department').on('change', function() {
-                var departmentId = $(this).val();
-                if (departmentId) {
-                    $.ajax({
-                        url: '/Admin/positions/' + departmentId,
-                        type: "GET",
-                        dataType: "json",
-                        success: function(data) {
-                            $('#position').empty();
-                            $('#position').append('<option value="">Select Position</option>');
-                            $.each(data, function(key, value) {
-                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error: ' + status + error);
-                        }
-                    });
-                } else {
-                    $('#position').empty();
-                    $('#position').append('<option value="">Select Position</option>');
-                }
-            });
-        });
-    </script>
+
     <script>
         function toggleEdit(id) {
             var span = document.getElementById('editable-span-' + id);
@@ -209,6 +184,10 @@
             }
         }
     </script>
+     
+
+
+
 
 
 </html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/app.blade.php ENDPATH**/ ?>

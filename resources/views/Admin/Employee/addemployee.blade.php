@@ -80,13 +80,11 @@
                                             </div>
                                             <div class="input-field">
                                                 <label>Age</label>
-                                                <input class="hide" type="number" placeholder="Enter Age" class="form-control" name="age" id="age" value="" required>
+                                                <input type="number" placeholder="Enter Age" class="form-control" name="age" id="age" value="" required>
                                                 @if($errors->has('age'))
                                                 <span class="text-danger">{{ $errors->first('age') }}</span>
                                                 @endif
                                             </div>
-
-
                                             <div class="input-field">
                                                 <label>Phone Number</label>
                                                 <input type="number" class="form-control" name="phonenumber" pattern="(\+63\s?|0)(\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{3}\s?\d{4})" placeholder="e.g., +63 123 456 7890 or 0912 345 6789" value="" required>
@@ -106,33 +104,31 @@
                                                 @endif
                                             </div>
 
-                                           
-                                                <div>
-                                                    <label for="department">Department</label>
-                                                    <select id="department" name="department">
-                                                        <option value="">Select Department</option>
-                                                        @foreach($departments as $department)
-                                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if($errors->has('department'))
+
+                                            <div class="input-field">
+                                                <label for="department">Department</label>
+                                                <select id="department" name="department" class="form-control">
+                                                    <option value="">Select Department</option>
+                                                    @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if($errors->has('department'))
                                                 <span class="text-danger">{{ $errors->first('department') }}</span>
                                                 @endif
-                                                </div>
+                                            </div>
 
-                                                <div>
-                                                    <label for="position">Position</label>
-                                                    <select id="position" name="position">
-                                                        <option value="">Select Position</option>
-                                                        @foreach($position as $position)
-                                                        <option value="{{ $position->name }}">{{ $position->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if($errors->has('position'))
+                                            <div class="input-field">
+                                                <label for="position">Position</label>
+                                                <select id="position" name="position" class="form-control">
+                                                    <option value="">Select Position</option>
+                                                </select>
+                                                @if($errors->has('position'))
                                                 <span class="text-danger">{{ $errors->first('position') }}</span>
                                                 @endif
-                                                </div>
-                                                
+                                            </div>
+
+
 
                                             <div class="input-field">
                                                 <label>Email</label>
@@ -180,4 +176,34 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#department').on('change', function() {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.ajax({
+                        url: '/Admin/positionsAdmin/' + departmentId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#position').empty();
+                            $('#position').append('<option value="">Select Position</option>');
+                            $.each(data, function(key, value) {
+                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                } else {
+                    $('#position').empty();
+                    $('#position').append('<option value="">Select Position</option>');
+                }
+            });
+        });
+    </script>
+
+   
     @endsection

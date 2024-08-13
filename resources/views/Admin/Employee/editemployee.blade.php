@@ -21,51 +21,32 @@
 
                                     <div class="col-sm-12 col-xl-12">
                                         <div class="fields">
-                                            <div class="input-field">
-                                                <label for="suffix">Department</label>
-                                                <select class="form-control" name="department">
-                                                    <option selected disabled>--Select Department--</option>
-                                                    <option value="Department 1" @if($getId->department == 'Department 1') selected @endif>Department 1</option>
-                                                    <option value="Department 2" @if($getId->department == 'Department 2') selected @endif>Department 2</option>
-                                                    <option value="Department 3" @if($getId->department == 'Department 3') selected @endif>Department 3</option>
-                                                    <option value="Department 4" @if($getId->department == 'Department 4') selected @endif>Department 4</option>
-                                                    <option value="Department 5" @if($getId->department == 'Department 5') selected @endif>Department 5</option>
-                                                    <option value="Department 6" @if($getId->department == 'Department 6') selected @endif>Department 6</option>
-                                                    <option value="Department 7" @if($getId->department == 'Department 7') selected @endif>Department 7</option>
+
+
+                                        <div class="input-field">
+                                                <label for="department">Department</label>
+                                                <select id="department" name="department" class="form-control">
+                                                    <option value="" disabled selected>{{$getId->department}}</option>
+                                                    @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                    @endforeach
                                                 </select>
                                                 @if($errors->has('department'))
                                                 <span class="text-danger">{{ $errors->first('department') }}</span>
                                                 @endif
                                             </div>
+
                                             <div class="input-field">
-                                                <label for="suffix">Position</label>
-                                                <select class="form-control" name="position">
-                                                    <option selected disabled>--Select position--</option>
-                                                    <option value="Position 1" @if($getId->position == 'Position 1')
-                                                        selected @endif>Position 1</option>
-                                                    <option value="Position 2" @if($getId->position == 'Position 2')
-                                                        selected @endif>Position 2</option>
-                                                    <option value="Position 3" @if($getId->position == 'Position 3')
-                                                        selected @endif>Position 3</option>
-                                                    <option value="Position 4" @if($getId->position == 'Position 4')
-                                                        selected @endif>Position 4</option>
-                                                    <option value="Position 5" @if($getId->position == 'Position 5')
-                                                        selected @endif>Position 5</option>
-                                                    <option value="Position 6" @if($getId->position == 'Position 6')
-                                                        selected @endif>Position 6</option>
-                                                    <option value="Position 7" @if($getId->position == 'Position 7')
-                                                        selected @endif>Position 7</option>
-                                                    <option value="Position 8" @if($getId->position == 'Position 8')
-                                                        selected @endif>Position 8</option>
-                                                    <option value="Position 9" @if($getId->position == 'Position 9')
-                                                        selected @endif>Position 9</option>
-                                                    <option value="Position 10" @if($getId->position == 'Position 10')
-                                                        selected @endif>Position 10</option>
+                                                <label for="position">Position</label>
+                                                <select id="position" name="position" class="form-control">
+                                                    <option value="">{{$getId->position}}</option>
                                                 </select>
                                                 @if($errors->has('position'))
                                                 <span class="text-danger">{{ $errors->first('position') }}</span>
                                                 @endif
                                             </div>
+
+                                            
                                             <div class="input-field">
                                                 <label>End of Contract</label>
                                                 <input type="date" class="form-control" name="end_of_contract"
@@ -82,17 +63,6 @@
                                                 <span class="text-danger">{{ $errors->first('daily_rate') }}</span>
                                                 @endif
                                             </div>
-                                            <div class="input-field">
-                                                <label>Current Credit</label>
-                                                <input type="numeric" class="form-control" name="credit"
-                                                    placeholder="e.g., 560" value="{{$getId->credit}}" required>
-                                                @if($errors->has('credit'))
-                                                <span class="text-danger">{{ $errors->first('credit') }}</span>
-                                                @endif
-                                            </div>
-
-                                           
-            
                                         </div>
                                     </div>
                                 </div>

@@ -35,7 +35,8 @@ class User extends Authenticatable
         'phonenumber',
         'department',
         'daily_rate',
-        'credit',
+        'sick_balance',
+        'vacation_balance',
         'civil_status',
         'fulladdress',
         'emergency_fullname',
@@ -93,6 +94,10 @@ static public function getID($id)
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
     }
 }
 

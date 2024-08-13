@@ -227,23 +227,7 @@
         @endif
         @endif
     
-        @if(Auth::user()->user_type == 2)
-        @if(Request::segment(2) == 'Attendance')
-        <li class="active">
-            <a href="{{url('Employee/Attendance')}}">
-                <i class="bx far fa-comment-dots" style="color: #000000;"></i>
-                <span class="text">Attendance</span>
-            </a>
-        </li>
-        @else
-        <li>
-            <a href="{{url('Employee/Attendance')}}">
-                <i class="bx far fa-comment-dots" style="color: #000000;"></i>
-                <span class="text">Attendance</span>
-            </a>
-        </li>
-        @endif
-        @endif
+       
         @if(Auth::user()->user_type == 2)
         @if(Request::segment(2) == 'MyAccount')
         <li class="active">

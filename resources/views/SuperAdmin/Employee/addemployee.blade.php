@@ -4,7 +4,7 @@
     <div class="row g-4">
         <div class="col-sm-12 col-xl-12">
             <div class="row g-4">
-            @include('layouts._message')
+                @include('layouts._message')
                 <div class="col-sm-12 col-xl-12">
                     <div>
                         <h2 class="text-dark text-start border-bottom border-success">Add New Employee</h2>
@@ -14,32 +14,29 @@
                             <div class="d-flex justify-content-between border-bottom  ">
                                 <a>Admin Controller</a>
                             </div>
-                           
-                            <form method="post" action="" >
-                              @csrf
+
+                            <form method="post" action="">
+                                @csrf
                                 <div class="row g-4">
                                     <div class="col-sm-6 col-xl-6">
                                         <div class="fields">
                                             <div class="input-field">
                                                 <label>First Name</label>
-                                                <input type="text" placeholder="Enter First Name" class="form-control"
-                                                    name="name" value="" required>
+                                                <input type="text" placeholder="Enter First Name" class="form-control" name="name" value="" required>
                                                 @if($errors->has('name'))
                                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif
                                             </div>
                                             <div class="input-field">
                                                 <label>Middle Name</label>
-                                                <input type="text" placeholder="Enter Middle Name" class="form-control"
-                                                    name="middlename" value="" required>
+                                                <input type="text" placeholder="Enter Middle Name" class="form-control" name="middlename" value="" required>
                                                 @if($errors->has('middlename'))
                                                 <span class="text-danger">{{ $errors->first('middlename') }}</span>
                                                 @endif
                                             </div>
                                             <div class="input-field">
                                                 <label>Last Name</label>
-                                                <input type="text" placeholder="Enter Last Name" class="form-control"
-                                                    name="lastname" value="" required>
+                                                <input type="text" placeholder="Enter Last Name" class="form-control" name="lastname" value="" required>
                                                 @if($errors->has('lastname'))
                                                 <span class="text-danger">{{ $errors->first('lastname') }}</span>
                                                 @endif
@@ -76,26 +73,21 @@
                                             </div>
                                             <div class="input-field">
                                                 <label>Birth Date</label>
-                                                <input type="date" placeholder="Enter Birth Date" class="form-control"
-                                                    name="birth_date" id="birth_date" value="" required>
+                                                <input type="date" placeholder="Enter Birth Date" class="form-control" name="birth_date" id="birth_date" value="" required>
                                                 @if($errors->has('birth_date'))
                                                 <span class="text-danger">{{ $errors->first('birth_date') }}</span>
                                                 @endif
                                             </div>
                                             <div class="input-field">
-                                            <label>Age</label>
-                                                <input type="number" placeholder="Enter Age" class="form-control"
-                                                    name="age" id="age" value="" required>
+                                                <label>Age</label>
+                                                <input type="number" placeholder="Enter Age" class="form-control" name="age" id="age" value="" required>
                                                 @if($errors->has('age'))
                                                 <span class="text-danger">{{ $errors->first('age') }}</span>
                                                 @endif
                                             </div>
                                             <div class="input-field">
                                                 <label>Phone Number</label>
-                                                <input type="number" class="form-control" name="phonenumber"
-                                                    pattern="(\+63\s?|0)(\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{3}\s?\d{4})"
-                                                    placeholder="e.g., +63 123 456 7890 or 0912 345 6789" value=""
-                                                    required>
+                                                <input type="number" class="form-control" name="phonenumber" pattern="(\+63\s?|0)(\d{3}\s?\d{3}\s?\d{4}|\d{4}\s?\d{3}\s?\d{4})" placeholder="e.g., +63 123 456 7890 or 0912 345 6789" value="" required>
                                                 @if($errors->has('phonenumber'))
                                                 <span class="text-danger">{{ $errors->first('phonenumber') }}</span>
                                                 @endif
@@ -104,81 +96,66 @@
                                     </div>
                                     <div class="col-sm-12 col-xl-12">
                                         <div class="fields">
-                                        <div class="hidden input-field">
+                                            <div class="hidden input-field">
                                                 <label>Role</label>
-                                                <input  class="form-control" name="user_type" value="2" required>
+                                                <input class="form-control" name="user_type" value="2" required>
                                                 @if($errors->has('user_type'))
                                                 <span class="text-danger">{{ $errors->first('user_type') }}</span>
                                                 @endif
                                             </div>
+
+
                                             <div class="input-field">
-                                                <label for="suffix">Department</label>
-                                                <select class="form-control" name="department">
-                                                    <option selected disabled>--Select Department--</option>
-                                                    <option value="Department 1">Department 1</option>
-                                                    <option value="Department 2">Department 2</option>
-                                                    <option value="Department 3">Department 3</option>
-                                                    <option value="Department 4">Department 4</option>
-                                                    <option value="Department 5">Department 5</option>
-                                                    <option value="Department 6">Department 6</option>
-                                                    <option value="Department 7">Department 7</option>
-                                                    
+                                                <label for="department">Department</label>
+                                                <select id="department" name="department" class="form-control">
+                                                    <option value="">Select Department</option>
+                                                    @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                    @endforeach
                                                 </select>
                                                 @if($errors->has('department'))
                                                 <span class="text-danger">{{ $errors->first('department') }}</span>
                                                 @endif
                                             </div>
-                                            <div class="input-field">
-                                                <label for="suffix">Position</label>
-                                                <select class="form-control" name="position">
-                                                    <option selected disabled>--Select position--</option>
-                                                    <option value="Position 1">Position 1</option>
-                                                    <option value="Position 2">Position 2</option>
-                                                    <option value="Position 3">Position 3</option>
-                                                    <option value="Position 4">Position 4</option>
-                                                    <option value="Position 5">Position 5</option>
-                                                    <option value="Position 6">Position 6</option>
-                                                    <option value="Position 7">Position 7</option>
-                                                    <option value="Position 8">Position 8</option>
-                                                    <option value="Position 9">Position 9</option>
-                                                    <option value="Position 10">Position 10</option>
-                                                    
 
+                                            <div class="input-field">
+                                                <label for="position">Position</label>
+                                                <select id="position" name="position" class="form-control">
+                                                    <option value="">Select Position</option>
                                                 </select>
                                                 @if($errors->has('position'))
                                                 <span class="text-danger">{{ $errors->first('position') }}</span>
                                                 @endif
                                             </div>
+
+
+
                                             <div class="input-field">
                                                 <label>Email</label>
-                                                <input type="email" placeholder="Enter Email" class="form-control"
-                                                    name="email" value="" required>
+                                                <input type="email" placeholder="Enter Email" class="form-control" name="email" value="" required>
                                                 @if($errors->has('email'))
                                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                                                 @endif
                                             </div>
                                             <div class="hidden input-field">
                                                 <label>Password</label>
-                                                <input type="password" value="12345" placeholder="Enter Password" class="form-control"
-                                                    name="password" value="" required>
+                                                <input type="password" value="12345" placeholder="Enter Password" class="form-control" name="password" value="" required>
                                                 @if($errors->has('password'))
                                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                                                 @endif
                                             </div>
                                             <div class="input-field">
                                                 <label>End of Contract</label>
-                                                <input type="date"  class="form-control"
-                                                    name="end_of_contract"  required>
+                                                <input type="date" class="form-control" name="end_of_contract" required>
                                                 @if($errors->has('birth_date'))
                                                 <span class="text-danger">{{ $errors->first('birth_date') }}</span>
                                                 @endif
                                             </div>
-                                            
-                                            
+
+
                                             <div class="input-field">
                                                 <label>Daily Rate</label>
-                                                <input type="numeric" class="form-control" name="daily_rate"
-                                                    placeholder="e.g., 560" value="" required>
+                                                <input type="numeric" class="form-control" name="daily_rate" placeholder="e.g., 560" value="" required>
                                                 @if($errors->has('daily_rate'))
                                                 <span class="text-danger">{{ $errors->first('daily_rate') }}</span>
                                                 @endif
@@ -199,4 +176,33 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#department').on('change', function() {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.ajax({
+                        url: '/SuperAdmin/positionsSuper/' + departmentId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#position').empty();
+                            $('#position').append('<option value="">Select Position</option>');
+                            $.each(data, function(key, value) {
+                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                } else {
+                    $('#position').empty();
+                    $('#position').append('<option value="">Select Position</option>');
+                }
+            });
+        });
+    </script>
     @endsection

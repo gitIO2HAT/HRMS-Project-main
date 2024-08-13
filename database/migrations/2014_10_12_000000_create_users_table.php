@@ -28,18 +28,11 @@ return new class extends Migration
             $table->integer('age')->default(18);
             $table->date('birth_date')->nullable();
             $table->string('phonenumber', 20);
-            $table->enum('department', [
-                'Department 1', 'Department 2', 'Department 3', 
-                'Department 4', 'Department 5', 'Department 6', 
-                'Department 7'
-            ]);
-            $table->enum('position', [
-                'Position 1', 'Position 2', 'Position 3', 'Position 4', 
-                'Position 5', 'Position 6', 'Position 7', 'Position 8', 
-                'Position 9', 'Position 10'
-            ]);
+            $table->string('department')->nullable();
+            $table->string('position')->nullable();
             $table->decimal('daily_rate', 10, 2);
-            $table->decimal('credit', 10, 2)->default(0.00);
+            $table->decimal('sick_balance', 10, 2)->default(0.0);
+            $table->decimal('vacation_balance')->default(100);
             $table->string('custom_id', 20)->unique()->nullable(); // Add custom_id column here
             $table->date('end_of_contract')->nullable();
             $table->enum('is_archive', ['1', '2'])->default('1');

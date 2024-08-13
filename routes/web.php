@@ -23,6 +23,7 @@ use App\Models\Attendance;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', [LoginDashboardController::class, 'login']);
 Route::post('login', [LoginDashboardController::class, 'AuthLogin']);
 Route::get('/logout', [LoginDashboardController::class, 'logoutButton'])->name('logoutButton');
@@ -55,7 +56,7 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/Read/{id}', [AnnouncementController::class, 'read']);
 
 
-   
+
 
     Route::get('/SuperAdmin/Department', [DepartmentController::class, 'department']);
     Route::post('/SuperAdmin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);
@@ -67,7 +68,7 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::post('/SuperAdmin/Department/AddDepartment', [DepartmentController::class, 'adddepartment']);
     Route::post('/SuperAdmin/Department/UpdatePosition/{id}', [DepartmentController::class, 'updateposition']);
     Route::post('/SuperAdmin/Department/AddPosition', [DepartmentController::class, 'addposition']);
-    Route::get('/SuperAdmin/positions/{department_id}', [DepartmentController::class, 'getPositions']);
+    Route::get('/SuperAdmin/positionsSuper/{department_id}', [DepartmentController::class, 'getPositions']);
 
     Route::get('/SuperAdmin/Attendance', [AttendanceController::class, 'attendance']);
 });
@@ -76,7 +77,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Dashboard', [DashboardController::class, 'dashboard']);
 
 
-    
+
     Route::get('/Admin/Employee', [EmployeeController::class, 'employee']);
     Route::get('/Admin/Employee/ArchiveEmployee', [EmployeeController::class, 'archiveemployee']);
     Route::get('/Admin/Employee/AddEmployee', [EmployeeController::class, 'addemployee']);
@@ -110,8 +111,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/Department/AddDepartment', [DepartmentController::class, 'adddepartment']);
     Route::post('/Admin/Department/UpdatePosition/{id}', [DepartmentController::class, 'updateposition']);
     Route::post('/Admin/Department/AddPosition', [DepartmentController::class, 'addposition']);
-    Route::get('/Admin/positions/{department_id}', [DepartmentController::class, 'getPositions']);
-
+    Route::get('/Admin/positionsAdmin/{department_id}', [DepartmentController::class, 'getPositions']);
 });
 
 Route::group(['middleware' => 'employee'], function () {
@@ -119,13 +119,10 @@ Route::group(['middleware' => 'employee'], function () {
     Route::get('/Employee/Leave', [LeaveController::class, 'leave']);
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/Employee/MyAccount', [MyAccountController::class, 'updatemyaccount']);
+    Route::post('/Employee/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::get('/Employee/Read/{id}', [AnnouncementController::class, 'read']);
-
-   
     Route::get('/Employee/Attendance', [AttendanceController::class, 'attendance']);
     Route::post('/Employee/ClockIn', [AttendanceController::class, 'clockIn']);
-Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockOut']);
-Route::get('/current-time', [AttendanceController::class, 'currentTime'])->name('current-time');
-    
-}); 
-
+    Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockOut']);
+    Route::get('/current-time', [AttendanceController::class, 'currentTime'])->name('current-time');
+});
