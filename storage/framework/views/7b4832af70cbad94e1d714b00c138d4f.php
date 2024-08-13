@@ -34,7 +34,7 @@
                         <option value="Sick Leave" <?php echo e(request('leave_type') == 'Sick Leave' ? 'selected' : ''); ?>>Sick Leave</option>
                         <option value="Vacation Leave" <?php echo e(request('leave_type') == 'Vacation Leave' ? 'selected' : ''); ?>>Vacation Leave</option>
                     </select>
-                    
+
 
                     <button class="btn btn-warning m-1" type="submit">Search</button>
                     <button class="btn btn-light m-1" type="button" onclick="clearSearch()">Clear</button>
@@ -56,7 +56,9 @@
                 </tr>
             </thead>
             <tbody>
+
                 <?php $__currentLoopData = $leaves; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
                 <tr>
                     <td><?php echo e($index + 1); ?></td>
                     <td><?php echo e($leave->leave_type); ?></td>
@@ -65,17 +67,18 @@
                     <td><?php echo e($leave->reason); ?></td>
                     <td class="text-center"><span class="rounded-pill shadow p-2">-<?php echo e($leave->leave_days); ?></span></td>
                     <td class="text-center"> <span class="rounded-pill shadow p-2"><?php if($leave->status === 'Pending'): ?>
-                            <i class="far fa-dot-circle" style="color: #B197FC;"></i> <?php echo e($leave->status); ?>
+                            <i class="far fa-dot-circle text-warning"></i> <?php echo e($leave->status); ?>
 
                             <?php elseif($leave->status === 'Approved'): ?>
-                            <i class="far fa-dot-circle" style="color: #63E6BE;"></i> <?php echo e($leave->status); ?>
+                            <i class="far fa-dot-circle text-success"></i> <?php echo e($leave->status); ?>
 
                             <?php elseif($leave->status === 'Declined'): ?>
-                            <i class="far fa-dot-circle" style="color: #f05656;"></i> <?php echo e($leave->status); ?>
+                            <i class="far fa-dot-circle text-danger"></i> <?php echo e($leave->status); ?>
 
                             <?php endif; ?>
                         </span></td>
                 </tr>
+
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </tbody>
         </table>

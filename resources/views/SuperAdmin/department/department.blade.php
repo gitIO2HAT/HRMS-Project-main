@@ -105,6 +105,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center">#</th>
+                                                <th class="text-center">Department</th>
                                                 <th class="text-center">Position</th>
                                                 <th class="text-center">Year Published</th>
                                                 <th class="text-center">Action</th>
@@ -117,6 +118,15 @@
                                                 @csrf
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td class="text-center">
+                                                    @foreach($departments as $depart)
+
+                                                        @if($list->department_id === $depart->id)
+                                                            {{$depart->name}}
+                                                        @endif
+
+                                                    @endforeach
+                                                    </td>
                                                     <td class="text-center">
                                                         <span id="editable-span-{{ $list->id }}" onclick="toggleEdit('{{$list->id}}')">
                                                             {{ $list->name }}

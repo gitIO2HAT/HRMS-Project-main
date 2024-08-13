@@ -46,7 +46,7 @@
 @if(Auth::user()->user_type == '0')
 <body class="bg-white" onclick="window.location='{{ url('SuperAdmin/Employee') }}'" style="cursor: pointer;">
 @elseif(Auth::user()->user_type == '1')
-<body class="bg-white" onclick="window.location='{{ url('SuperAdmin/Employee') }}'" style="cursor: pointer;">
+<body class="bg-white" onclick="window.location='{{ url('Admin/Employee') }}'" style="cursor: pointer;">
 @endif
     <container class="col-12">
         <div class="row g-4">

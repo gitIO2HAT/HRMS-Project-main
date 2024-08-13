@@ -36,7 +36,7 @@
                         <option value="Sick Leave" {{ request('leave_type') == 'Sick Leave' ? 'selected' : '' }}>Sick Leave</option>
                         <option value="Vacation Leave" {{ request('leave_type') == 'Vacation Leave' ? 'selected' : '' }}>Vacation Leave</option>
                     </select>
-                    
+
 
                     <button class="btn btn-warning m-1" type="submit">Search</button>
                     <button class="btn btn-light m-1" type="button" onclick="clearSearch()">Clear</button>
@@ -58,7 +58,9 @@
                 </tr>
             </thead>
             <tbody>
+
                 @foreach($leaves as $index => $leave)
+
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{$leave->leave_type}}</td>
@@ -67,14 +69,15 @@
                     <td>{{$leave->reason}}</td>
                     <td class="text-center"><span class="rounded-pill shadow p-2">-{{$leave->leave_days}}</span></td>
                     <td class="text-center"> <span class="rounded-pill shadow p-2">@if($leave->status === 'Pending')
-                            <i class="far fa-dot-circle" style="color: #B197FC;"></i> {{$leave->status}}
+                            <i class="far fa-dot-circle text-warning"></i> {{$leave->status}}
                             @elseif ($leave->status === 'Approved')
-                            <i class="far fa-dot-circle" style="color: #63E6BE;"></i> {{$leave->status}}
+                            <i class="far fa-dot-circle text-success"></i> {{$leave->status}}
                             @elseif ($leave->status === 'Declined')
-                            <i class="far fa-dot-circle" style="color: #f05656;"></i> {{$leave->status}}
+                            <i class="far fa-dot-circle text-danger"></i> {{$leave->status}}
                             @endif
                         </span></td>
                 </tr>
+
                 @endforeach
             </tbody>
         </table>

@@ -28,7 +28,13 @@ class Leave extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'employee_id', 'custom_id');
     }
-   
+
+    
+    static public function getID($id)
+    {
+        return self::find($id);
+    }
+
 }

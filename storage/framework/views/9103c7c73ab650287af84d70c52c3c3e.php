@@ -34,8 +34,14 @@
 </head>
 
 <body>
+    <div id="loader" style="display: none;">
+        <div class="loading-overlay">
+            <div class="spinner"></div>
+            <p>Please wait a moment...</p>
+        </div>
+    </div>
     <div class="container-fluid position-relative d-flex p-0 ">
-       
+
 
         <!-- sidebar-menu Start -->
         <?php echo $__env->make('layouts.sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -54,11 +60,11 @@
             <?php echo $__env->yieldContent('content'); ?>
 
             <!-- Dashboard end -->
-            
+
         </div>
 
     </div>
-    
+
     </div>
 
     <!-- JavaScript Libraries -->
@@ -84,7 +90,7 @@
         document.querySelector('form').submit();
     }
 </script>
-   <script>
+<script>
     function handleImageClick(event) {
         // Prevent the default behavior of the click event on the label
         event.preventDefault();
@@ -96,7 +102,7 @@
     function displayImage(input) {
         var reader = new FileReader();
 
-        reader.onload = function (e) {
+        reader.onload = function(e) {
             document.getElementById('profilePicture').src = e.target.result;
         };
 
@@ -166,25 +172,25 @@
     });
 </script>
 
-    <script>
-        function toggleEdit(id) {
-            var span = document.getElementById('editable-span-' + id);
-            var input = document.getElementById('editable-input-' + id);
+<script>
+    function toggleEdit(id) {
+        var span = document.getElementById('editable-span-' + id);
+        var input = document.getElementById('editable-input-' + id);
 
-            if (span.style.display !== 'none') {
-                // Hide the span and show the input
-                span.style.display = 'none';
-                input.style.display = 'inline';
-                input.focus();
-            } else {
-                // Hide the input and show the span
-                span.style.display = 'inline';
-                input.style.display = 'none';
-                span.innerText = input.value;
-            }
+        if (span.style.display !== 'none') {
+            // Hide the span and show the input
+            span.style.display = 'none';
+            input.style.display = 'inline';
+            input.focus();
+        } else {
+            // Hide the input and show the span
+            span.style.display = 'inline';
+            input.style.display = 'none';
+            span.innerText = input.value;
         }
-    </script>
-     
+    }
+</script>
+
 
 
 

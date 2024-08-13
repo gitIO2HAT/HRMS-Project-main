@@ -48,6 +48,8 @@ Route::group(['middleware' => 'superadmin'], function () {
 
 
     Route::get('/SuperAdmin/Leave', [LeaveController::class, 'leave']);
+    Route::post('/SuperAdmin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
+
 
 
 
@@ -90,6 +92,7 @@ Route::group(['middleware' => 'admin'], function () {
 
 
     Route::get('/Admin/Leave', [LeaveController::class, 'leave']);
+    Route::post('/Admin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
 
 
 
