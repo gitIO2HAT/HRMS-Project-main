@@ -16,7 +16,7 @@
                                 <h2 class="text-dark text-center">DEPARTMENT ARCHIVED</h2>
                                 <div class="d-flex align-items-center">
                                     <div class="col-sm-10 ms-5 ">
-                                        <form action="{{url('/Admin/Department')}}" class="me-1">
+                                        <form action="{{url('/Admin/Department/DepartmentArchived')}}" class="me-1">
                                             @csrf
                                             <input type="search" id="search" class="form-control bg-transparent" name="search" placeholder="Search Here" value="{{ request('search') }}">
                                             <button style="display: none;" class="btn btn-success m-1" type="submit">Search</button>

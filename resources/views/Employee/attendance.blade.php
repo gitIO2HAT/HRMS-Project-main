@@ -92,7 +92,7 @@
                             <div class="bg-white rounded-3 h-100 p-4">
                                 <h6 class="mb-4">Bordered Table</h6>
 
-                                <table class="table table-responsive table-bordered">
+                                <table class="table table-striped table-hover table-responsive table-bordered">
                                     <thead class="text-dark text-center">
                                         <tr>
                                             <th class="bg-head" scope="col" colspan="7">Attendance History</th>
@@ -148,7 +148,7 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
                                 {{$getPunch->onEachSide(1)->links()}}
@@ -298,12 +298,12 @@
                 <script>
                     async function fetchInternetTime() {
                         try {
-                            const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Manila');
+                            const response = await fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=INQ8VCI2UGFC&format=json&by=zone&zone=Asia/Manila`);
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }
                             const data = await response.json();
-                            return new Date(data.datetime);
+                            return new Date(data.formatted);
                         } catch (error) {
                             console.error('There was a problem with the fetch operation:', error);
                             return null;
@@ -332,7 +332,7 @@
                             (hours === 7 && minutes >= 0 && minutes <= 59) ||
                             (hours === 8 && minutes >= 0 && minutes <= 15) ||
                             (hours === 12 && minutes >= 31 && minutes <= 59) ||
-                            (hours === 13 &&  minutes >= 0 && minutes <= 15)
+                            (hours === 13 && minutes >= 0 && minutes <= 15)
                         );
 
                         const isClockOutTime = (
@@ -351,5 +351,6 @@
                     // Initial check when the page loads
                     checkTimeAndDisplayButton();
                 </script>
+
 
                 @endsection

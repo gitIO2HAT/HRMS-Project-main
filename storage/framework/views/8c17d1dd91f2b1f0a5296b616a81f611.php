@@ -42,12 +42,16 @@
 
     /* Additional styles for your content go here */
 </style>
+<?php
+    $redirectUrl = '';
+    if (Auth::user()->user_type == '0') {
+        $redirectUrl = url('/SuperAdmin/Employee');
+    } elseif (Auth::user()->user_type == '1') {
+        $redirectUrl = url('/Admin/Employee');
+    }
+?>
 
-<?php if(Auth::user()->user_type == '0'): ?>
-<body class="bg-white" onclick="window.location='<?php echo e(url('SuperAdmin/Employee')); ?>'" style="cursor: pointer;">
-<?php elseif(Auth::user()->user_type == '1'): ?>
-<body class="bg-white" onclick="window.location='<?php echo e(url('SuperAdmin/Employee')); ?>'" style="cursor: pointer;">
-<?php endif; ?>
+<body class="bg-white" onclick="window.location='<?php echo e($redirectUrl); ?>'" style="cursor: pointer;">
     <container class="col-12">
         <div class="row g-4">
             <div class="col-sm-4 col-xl-4 text-center d-flex justify-content-around align-items-center">
@@ -118,9 +122,13 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm-8 col-xl-8 text-start text-dark ">
+                    <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Department:</p>
                         <p><?php echo e($getId->department); ?></p>
+                    </div>
+                    <div class="col-sm-4 col-xl-4 text-start text-dark ">
+                        <p>Position:</p>
+                        <p><?php echo e($getId->position); ?></p>
                     </div>
                    
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">

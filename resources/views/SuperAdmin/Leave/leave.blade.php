@@ -96,16 +96,3 @@
 @endsection
 
 
-<script>
-    function changeStatus(status, leaveId) {
-        if (confirm('Are you sure you want to change the status?')) {
-            const form = document.querySelector(`form[action*="${leaveId}"]`);
-            if (form) {
-                form.querySelector(`#statusInput${leaveId}`).value = status;
-                form.submit();
-            } else {
-                console.error('Form not found for leaveId:', leaveId);
-            }
-        }
-    }
-</script>

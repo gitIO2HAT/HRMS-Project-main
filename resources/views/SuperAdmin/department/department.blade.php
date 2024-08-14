@@ -138,7 +138,7 @@
                                                     </td>
 
                                                     
-                                                        
+                                                
                                                     <td class="text-center"> 
                                                     @if(Auth::user()->user_type == 0)
                                                     <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
@@ -148,8 +148,6 @@
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
                                                         </a>
                                                         @elseif(Auth::user()->user_type == 1)
-                                                       
-
                                                         <a href="{{ url('/Admin/Department/DeletedPosition/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
                                                         </a>
@@ -158,16 +156,12 @@
                                                 </tr>
                                             </form>
                                             @endforeach
-
                                         </tbody>
                                     </table>
                                 </div>
                                 {{$position->onEachSide(1)->links()}}
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -213,7 +207,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-dark" id="addPositionModalLabel">Add Position for Department Super</h5>
+                    <h5 class="modal-title text-dark" id="addPositionModalLabel">Add Position for Department</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

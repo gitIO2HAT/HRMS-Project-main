@@ -14,7 +14,7 @@
                                 <h2 class="text-dark text-center">DEPARTMENT ARCHIVED</h2>
                                 <div class="d-flex align-items-center">
                                     <div class="col-sm-10 ms-5 ">
-                                        <form action="{{url('/SuperAdmin/Department')}}" class="me-1">
+                                        <form action="{{url('/SuperAdmin/Department/DepartmentArchived')}}" class="me-1">
                                             @csrf
                                             <input type="search" id="search" class="form-control bg-transparent" name="search" placeholder="Search Here" value="{{ request('search') }}">
                                             <button style="display: none;" class="btn btn-success m-1" type="submit">Search</button>
@@ -52,14 +52,17 @@
                                             <td class="text-center">
                                                 {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                             </td>
+                                           
+                                                
                                             <td class="text-center">
-                                                @if(Auth::user()->user_type == 0)
-                                            <td class="text-center"><a href="{{ url('/SuperAdmin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                            @if(Auth::user()->user_type == 0)
+                                                <a href="{{ url('/SuperAdmin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
                                                 @elseif(Auth::user()->user_type == 1)
 
                                                 <a href="{{ url('/Admin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                                @endif
                                             </td>
-                                            @endif
+                                         
                                         </tr>
                                         @endforeach
                                     </tbody>

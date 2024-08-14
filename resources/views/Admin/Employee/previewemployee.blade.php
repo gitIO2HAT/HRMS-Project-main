@@ -124,11 +124,14 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm-8 col-xl-8 text-start text-dark ">
+                    <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Department:</p>
                         <p>{{$getId->department}}</p>
                     </div>
-                   
+                    <div class="col-sm-4 col-xl-4 text-start text-dark ">
+                        <p>Position:</p>
+                        <p>{{$getId->position}}</p>
+                    </div>
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Daily Rate:</p>
                         <p>{{$getId->daily_rate}}</p>

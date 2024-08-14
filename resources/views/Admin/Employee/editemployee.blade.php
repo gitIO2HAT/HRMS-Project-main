@@ -79,5 +79,32 @@
             </div>
         </div>
     </div>
-   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#department').on('change', function() {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.ajax({
+                        url: '/Admin/positionsAdmin/' + departmentId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#position').empty();
+                            $('#position').append('<option value="">Select Position</option>');
+                            $.each(data, function(key, value) {
+                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                } else {
+                    $('#position').empty();
+                    $('#position').append('<option value="">Select Position</option>');
+                }
+            });
+        });
+    </script>
     @endsection

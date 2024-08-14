@@ -79,6 +79,33 @@
             </div>
         </div>
     </div>
-   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#department').on('change', function() {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.ajax({
+                        url: '/Admin/positionsAdmin/' + departmentId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#position').empty();
+                            $('#position').append('<option value="">Select Position</option>');
+                            $.each(data, function(key, value) {
+                                $('#position').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                } else {
+                    $('#position').empty();
+                    $('#position').append('<option value="">Select Position</option>');
+                }
+            });
+        });
+    </script>
     <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/admin/employee/editemployee.blade.php ENDPATH**/ ?>

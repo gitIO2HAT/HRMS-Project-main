@@ -34,14 +34,15 @@
 </head>
 
 <body>
-    <div id="loader" style="display: none;">
-        <div class="loading-overlay">
-            <div class="spinner"></div>
-            <p>Please wait a moment...</p>
-        </div>
-    </div>
-    <div class="container-fluid position-relative d-flex p-0 ">
 
+    <div class="container-fluid position-relative d-flex p-0 ">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Please Wait...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
 
         <!-- sidebar-menu Start -->
         @include('layouts.sidebar')
@@ -193,6 +194,19 @@
 
 
 
+<script>
+    function changeStatus(status, leaveId) {
+        if (confirm('Are you sure you want to change the status?')) {
+            const form = document.querySelector(`form[action*="${leaveId}"]`);
+            if (form) {
+                form.querySelector(`#statusInput${leaveId}`).value = status;
+                form.submit();
+            } else {
+                console.error('Form not found for leaveId:', leaveId);
+            }
+        }
+    }
+</script>
 
 
 

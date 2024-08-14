@@ -6807,7 +6807,7 @@ fieldset:disabled .btn {
     border: .25em solid currentColor;
     border-right-color: transparent;
     border-radius: 50%;
-    animation: .75s linear infinite spinner-border
+    animation: 2s linear infinite spinner-border
 }
 
 .spinner-border-sm {
@@ -8454,7 +8454,7 @@ fieldset:disabled .btn {
     background-color: #3cb371 !important
 }
 .bg-title {
-    background-color: #32cd32 !important
+    background-color: #98fb98 !important
 }
 
 .bg-morning {
@@ -8465,16 +8465,17 @@ fieldset:disabled .btn {
 }
 
 .bg-today {
-    background-color: #90ee90 !important
+    background-color: 
+    #fdc01a !important
 }
 .bg-week {
-    background-color: #90ee90 !important
+    background-color: #ff7f1c !important
 }
 .bg-month {
-    background-color: #90ee90 !important
+    background-color: #f25214 !important
 }
 .bg-remaining {
-    background-color: #90ee90 !important
+    background-color: #fe2e2e !important
 }
 .pe-none {
     pointer-events: none !important

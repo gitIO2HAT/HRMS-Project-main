@@ -61,7 +61,7 @@
                                                 <td>{{ $employee->email}}</td>
                                                 <td>{{ $employee->department}}</td>
                                                 <td>{{ $employee->position}}</td>
-                                                <td>{{ $employee->date_archive}}</td>
+                                                <td>{{ \Carbon\Carbon::parse( $employee->date_archive)->format('Y, M d - g:i A') }}</td>
                                                 @if(Auth::user()->user_type == 0)
                                                 <td>
                                                     <a class=" rounded-1"  href="{{ url('SuperAdmin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>

@@ -4,7 +4,7 @@
     <?php echo $__env->make('layouts._message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="card p-3 rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <form action="<?php echo e(url('/Employee/Leave')); ?>" class="w-100" method="GET">
+            <form action="<?php echo e(url('/SuperAdmin/Leave')); ?>" class="w-100" method="GET">
                 <?php echo csrf_field(); ?>
                 <div class="input-group mb-3">
                     <a type="button" class="btn btn-success mx-4 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addPositionModal">
@@ -95,18 +95,6 @@
 <?php $__env->stopSection(); ?>
 
 
-<script>
-    function changeStatus(status, leaveId) {
-        if (confirm('Are you sure you want to change the status?')) {
-            const form = document.querySelector(`form[action*="${leaveId}"]`);
-            if (form) {
-                form.querySelector(`#statusInput${leaveId}`).value = status;
-                form.submit();
-            } else {
-                console.error('Form not found for leaveId:', leaveId);
-            }
-        }
-    }
-</script>
+
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/admin/leave/leave.blade.php ENDPATH**/ ?>

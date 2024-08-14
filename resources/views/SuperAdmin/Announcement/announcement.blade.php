@@ -23,7 +23,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -38,16 +38,16 @@
                                             <tr>
                                                 <th class="border-bottom border-white" scope="row">{{ $counter++ }}</th>
                                                 <td class="border-bottom border-white">{{$announce->title}}</td>
-                                                <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
+                                                <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
                                                     strtotime($announce->scheduled_date)) }}</td>
-                                                <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
+                                                <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
                                                     strtotime($announce->scheduled_end)) }}</td>
                                                 <td class="border-bottom border-white">
                                                     @if($announce->scheduled_date > $currentDateTime)
-                                                    Ongoing
+                                                    <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-warning"></i> Ongoing</span>
 
                                                     @elseif($announce->scheduled_date <= $currentDateTime && $announce->scheduled_end >= $currentDateTime)
-                                                        Inprogress
+                                                    <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-danger"></i> In Progress</span>
                                                         @endif
                                                 </td>
 
@@ -76,7 +76,7 @@
                                 <h5 class="text-dark">Announcement Board Completed</h5>
 
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -91,10 +91,12 @@
                                                 <th class="border-bottom border-white" scope="row">{{ $counters++ }}
                                                 </th>
                                                 <td class="border-bottom border-white">{{$announce->title}}</td>
-                                                <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
+                                                <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
                                                     strtotime($announce->scheduled_date)) }}</td>
                                                 <td class="border-bottom border-white">
-                                                    @if($announce->scheduled_end < $currentDateTime) Completed @endif </td>
+                                                    @if($announce->scheduled_end < $currentDateTime)
+                                                    <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-success"></i> Completed</span>
+                                                     @endif </td>
                                             </tr>
                                             @endforeach
                                         </tbody>

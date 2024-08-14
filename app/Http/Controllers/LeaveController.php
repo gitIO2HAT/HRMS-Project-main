@@ -84,7 +84,8 @@ class LeaveController extends Controller
         ]);
     }
 
-    public function addleave(Request $request)
+
+public function addleave(Request $request)
 {
     // Validate the incoming request data
     $validatedData = $request->validate([
@@ -103,50 +104,66 @@ class LeaveController extends Controller
     $sickBalance = $user->sick_balance;
     $vacationBalance = $user->vacation_balance;
 
-    try {
-        // Get the current time from the external API
-        $response = Http::get('http://worldtimeapi.org/api/timezone/Asia/Manila');
-        $internetTime = Carbon::parse($response->json()['datetime']);
+    // TimeZoneDB API details
+    $apiUrl = "https://api.timezonedb.com/v2.1/list-time-zone";
+    $apiKey = 'INQ8VCI2UGFC'; // Your TimeZoneDB API Key
 
-        // Calculate the number of leave days
-        $fromDate = Carbon::parse($validatedData['from']);
-        $toDate = Carbon::parse($validatedData['to']);
-        $leaveDays = $toDate->diffInDays($fromDate) + 1; // Include the start date in the count
+    // Make the request to TimeZoneDB API
+    $response = Http::get($apiUrl, [
+        'key' => $apiKey,
+        'format' => 'json',
+        'zone' => 'Asia/Manila',
+        'fields' => 'zoneName,gmtOffset'
+    ]);
 
-        // Check if the leave starts in the future
-        if ($fromDate->lessThan($internetTime)) {
-            return redirect()->back()->with('error','Leave start date must be in the future.');
-        }
-
-        // Check if the balance is sufficient for the requested leave type
-        if ($validatedData['leave_type'] == 'Sick Leave' && $sickBalance < $leaveDays) {
-            return redirect()->back()->with('error', 'Insufficient Balance in Sick Leave Credit');
-        }
-
-        if ($validatedData['leave_type'] == 'Vacation Leave' && $vacationBalance < $leaveDays) {
-            return redirect()->back()->with('error', 'Insufficient Balance in Vacation Leave Credit');
-        }
-
-        // Create a new Leave instance and assign validated data
-        $leave = new Leave([
-            'employee_id' => $user->custom_id, // Correctly set employee_id here
-            'leave_type' => $validatedData['leave_type'],
-            'from' => $validatedData['from'],
-            'to' => $validatedData['to'],
-            'reason' => $validatedData['reason'],
-            'leave_days' => $leaveDays, // Assuming you have a column in your table to store leave days
-        ]);
-
-        // Save the leave record
-        $leave->save();
-
-        return redirect()->back()->with('success', 'Leave successfully added');
-
-    } catch (\Exception $e) {
-        // Handle any unexpected exceptions
-        return redirect()->back()-with('error', 'Leave successfully added');;
+    // Check if the response is successful
+    if (!$response->successful()) {
+        return redirect()->back()->with('error', 'Unable to retrieve time information.');
     }
+
+    $data = $response->json();
+
+    // Get the GMT offset from the API response
+    $gmtOffset = $data['zones'][0]['gmtOffset'];
+
+    // Calculate the current time using the offset
+    $internetTime = Carbon::now()->utc()->addSeconds($gmtOffset);
+
+    // Calculate the number of leave days
+    $fromDate = Carbon::parse($validatedData['from']);
+    $toDate = Carbon::parse($validatedData['to']);
+    $leaveDays = $toDate->diffInDays($fromDate) + 1; // Include the start date in the count
+
+    // Check if the leave starts in the future
+    if ($fromDate->lessThan($internetTime)) {
+        return redirect()->back()->with('error', 'Leave start date must be in the future.');
+    }
+
+    // Check if the balance is sufficient for the requested leave type
+    if ($validatedData['leave_type'] == 'Sick Leave' && $sickBalance < $leaveDays) {
+        return redirect()->back()->with('error', 'Insufficient Balance in Sick Leave Credit');
+    }
+
+    if ($validatedData['leave_type'] == 'Vacation Leave' && $vacationBalance < $leaveDays) {
+        return redirect()->back()->with('error', 'Insufficient Balance in Vacation Leave Credit');
+    }
+
+    // Create a new Leave instance and assign validated data
+    $leave = new Leave([
+        'employee_id' => $user->custom_id, // Correctly set employee_id here
+        'leave_type' => $validatedData['leave_type'],
+        'from' => $validatedData['from'],
+        'to' => $validatedData['to'],
+        'reason' => $validatedData['reason'],
+        'leave_days' => $leaveDays, // Assuming you have a column in your table to store leave days
+    ]);
+
+    // Save the leave record
+    $leave->save();
+
+    return redirect()->back()->with('success', 'Leave successfully added');
 }
+
 
 
     public function updaterequest(Request $request, $id)

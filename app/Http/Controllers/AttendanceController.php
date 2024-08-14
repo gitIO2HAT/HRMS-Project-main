@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -13,6 +12,8 @@ use App\Models\User;
 
 class AttendanceController extends Controller
 {
+    private $timeZoneDbApiKey = 'INQ8VCI2UGFC'; // Your TimeZoneDB API Key
+
     public function attendance(Request $request)
     {
         // Get notifications
@@ -101,7 +102,7 @@ class AttendanceController extends Controller
 
         // Add the is_archive condition
         $employeeRecords->where('is_archive', '=', 1)
-                 ->whereNotIn('custom_id', ['1', '2']);
+            ->whereNotIn('custom_id', ['1', '2']);
         $employeeRecords = $employeeRecords->paginate(10); // Apply pagination
 
         $RecordsAttendance = Attendance::all();
@@ -130,11 +131,23 @@ class AttendanceController extends Controller
         ]);
     }
 
-
-    public function getInternetTime()
+    private function getInternetTime()
     {
-        $response = Http::get('http://worldtimeapi.org/api/timezone/Asia/Manila');
-        return Carbon::parse($response->json()['datetime']);
+        // Use the TimeZoneDB API to get the current time in Asia/Manila
+        $response = Http::get('https://api.timezonedb.com/v2.1/list-time-zone', [
+            'key' => $this->timeZoneDbApiKey,
+            'format' => 'json',
+            'zone' => 'Asia/Manila',
+            'fields' => 'zoneName,gmtOffset'
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $gmtOffset = $data['zones'][0]['gmtOffset'];
+            return Carbon::now()->utc()->addSeconds($gmtOffset);
+        }
+
+        throw new \Exception('Unable to retrieve time information.');
     }
 
     public function clockIn()
@@ -205,7 +218,6 @@ class AttendanceController extends Controller
 
         return redirect()->back()->with('success', 'Clock Out successfully!');
     }
-
 
     public function currentTime()
     {

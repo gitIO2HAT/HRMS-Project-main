@@ -95,18 +95,5 @@
 <?php $__env->stopSection(); ?>
 
 
-<script>
-    function changeStatus(status, leaveId) {
-        if (confirm('Are you sure you want to change the status?')) {
-            const form = document.querySelector(`form[action*="${leaveId}"]`);
-            if (form) {
-                form.querySelector(`#statusInput${leaveId}`).value = status;
-                form.submit();
-            } else {
-                console.error('Form not found for leaveId:', leaveId);
-            }
-        }
-    }
-</script>
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/superadmin/leave/leave.blade.php ENDPATH**/ ?>

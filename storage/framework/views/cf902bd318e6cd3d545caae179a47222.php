@@ -64,17 +64,17 @@
                                                 <td><?php echo e($employee->end_of_contract); ?></td>
                                                 <?php if(Auth::user()->user_type == 0): ?>
                                                 <td>
-                                                    <a class="bg-skyblue rounded-1"  href="<?php echo e(url('SuperAdmin/Employee/EditEmployee/'.$employee->id)); ?>"> <i class="fas fa-user-edit" style="color: #ffffff;"></i></a>
+                                                    <a class=" rounded-1"  href="<?php echo e(url('SuperAdmin/Employee/EditEmployee/'.$employee->id)); ?>"> <i class="far fa-edit" style="color: #161717;"></i></a>
                                                 </td>
-                                                <td> <a class=" rounded-1" href="<?php echo e(url('SuperAdmin/Employee/PreviewEmployee/'.$employee->id)); ?>"> <i class="far fa-file-pdf" style="color: #000000;"></i></a></td>
-                                                <td><a class="bg-danger rounded-1" href="<?php echo e(url('SuperAdmin/Employee/Archive/'.$employee->id)); ?>"> <i class="fas fa-user-times" style="color: #ffffff;"></i></a></td>
+                                                <td> <a class=" rounded-1" href="<?php echo e(url('SuperAdmin/Employee/PreviewEmployee/'.$employee->id)); ?>"> <i class="far fa-eye" style="color: #19191a;"></i></a></td>
+                                                <td><a class=" rounded-1" href="<?php echo e(url('SuperAdmin/Employee/Archive/'.$employee->id)); ?>"> <i class="fas fa-user-times" style="color:#fe2e2e;"></i></a></td>
                                                 <?php elseif(Auth::user()->user_type == 1): ?>
                                                 <td>
-                                                    <a class="bg-skyblue rounded-1"  href="<?php echo e(url('Admin/Employee/EditEmployee/'.$employee->id)); ?>"> <i class="fas fa-user-edit" style="color: #ffffff;"></i></a>
+                                                    <a class=" rounded-1"  href="<?php echo e(url('Admin/Employee/EditEmployee/'.$employee->id)); ?>"> <i class="far fa-edit" style="color: #161717;"></i></a>
                                                    
                                                 </td>
-                                                <td> <a class=" rounded-1" href="<?php echo e(url('Admin/Employee/PreviewEmployee/'.$employee->id)); ?>"> <i class="far fa-file-pdf" style="color: #000000;"></i></a></td>
-                                                <td><a class="bg-danger rounded-1" href="<?php echo e(url('Admin/Employee/Archive/'.$employee->id)); ?>"> <i class="fas fa-user-times" style="color: #ffffff;"></i></a></td>
+                                                <td> <a class=" rounded-1" href="<?php echo e(url('Admin/Employee/PreviewEmployee/'.$employee->id)); ?>"> <i class="far fa-eye" style="color: #19191a;"></i></a></td>
+                                                <td><a class=" rounded-1" href="<?php echo e(url('Admin/Employee/Archive/'.$employee->id)); ?>"> <i class="fas fa-user-times" style="color: #fe2e2e;"></i></a></td>
                                                 <?php endif; ?>
                                             </tr>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

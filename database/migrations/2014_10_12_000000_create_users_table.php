@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('position')->nullable();
             $table->decimal('daily_rate', 10, 2);
             $table->decimal('sick_balance', 10, 2)->default(0.0);
-            $table->decimal('vacation_balance')->default(100);
+            $table->decimal('vacation_balance', 10, 2)->default(0.0);
             $table->string('custom_id', 20)->unique()->nullable(); // Add custom_id column here
             $table->date('end_of_contract')->nullable();
             $table->enum('is_archive', ['1', '2'])->default('1');
@@ -60,10 +60,7 @@ return new class extends Migration
                 'age' => 30,
                 'birth_date' => '1992-05-15',
                 'phonenumber' => '1234567890',
-                'department' => 'Department 1',
-                'position' => 'Position 1',
                 'daily_rate' => 100.00,
-                'credit' => 50.00,
                 'custom_id' => '1',
                 'end_of_contract' => '2023-12-31',
                 'is_archive' => '1',
@@ -89,10 +86,7 @@ return new class extends Migration
                 'age' => 35,
                 'birth_date' => '1987-08-20',
                 'phonenumber' => '9876543210',
-                'department' => 'Department 2',
-                'position' => 'Position 2',
                 'daily_rate' => 120.00,
-                'credit' => 75.00,
                 'custom_id' => '2',
                 'end_of_contract' => '2024-06-30',
                 'is_archive' => '1',
