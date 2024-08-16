@@ -48,7 +48,7 @@
                                                 <th class="text-center">#</th>
                                                 <th class="text-center">Department</th>
                                                 <th class="text-center">Year Published</th>
-                                                <th class="text-center">Actionsss</th>
+                                                <th class="text-center">Actionsssss</th>
                                             </tr>
                                         </thead>
                                         <tbody>
