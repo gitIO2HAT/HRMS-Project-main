@@ -49,6 +49,9 @@ Route::group(['middleware' => 'superadmin'], function () {
 
     Route::get('/SuperAdmin/Leave', [LeaveController::class, 'leave']);
     Route::post('/SuperAdmin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
+    Route::post('/SuperAdmin/Leave', [LeaveController::class, 'addcredit']);
+
+
 
 
 
@@ -90,17 +93,13 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Employee/Archive/{id}', [EmployeeController::class, 'archive']);
     Route::get('/Admin/Employee/Restore/{id}', [EmployeeController::class, 'restore']);
 
-
     Route::get('/Admin/Leave', [LeaveController::class, 'leave']);
     Route::post('/Admin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
-
-
+    Route::post('/Admin/Leave', [LeaveController::class, 'addcredit']);
 
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('Admin/Announcement', [AnnouncementController::class, 'save_task']);
     Route::get('/Admin/Read/{id}', [AnnouncementController::class, 'read']);
-
-
 
     Route::get('/Admin/Attendance', [AttendanceController::class, 'attendance']);
 

@@ -44,6 +44,11 @@ class LeaveController extends Controller
             $query = Leave::where('employee_id', Auth::user()->custom_id);
         }
 
+        // Fetch departments that match the search query and are not marked as deleted
+        $users = User::where('user_type', 2)
+            ->where('is_archive', 1)
+
+            ->get();
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -81,147 +86,181 @@ class LeaveController extends Controller
             'notification' => $notification,
             'getNot' => $getNot,
             'leaves' => $leaves,
+            'users' => $users,
         ]);
     }
 
 
-public function addleave(Request $request)
+    public function addleave(Request $request)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'leave_type' => 'required|in:Sick Leave,Vacation Leave',
+            'from' => 'required|date',
+            'to' => 'required|date|after_or_equal:from',
+            'reason' => 'required|string',
+        ], [
+            'leave_type.required' => 'The leave type field is required.',
+            'from.required' => 'This field is required.',
+            'to.required' => 'This field is required.',
+            'reason.required' => 'The reason field is required.',
+        ]);
+
+        $user = Auth::user();
+        $sickBalance = $user->sick_balance;
+        $vacationBalance = $user->vacation_balance;
+
+        // TimeZoneDB API details
+        $apiUrl = "https://api.timezonedb.com/v2.1/list-time-zone";
+        $apiKey = 'INQ8VCI2UGFC'; // Your TimeZoneDB API Key
+
+        // Make the request to TimeZoneDB API
+        $response = Http::get($apiUrl, [
+            'key' => $apiKey,
+            'format' => 'json',
+            'zone' => 'Asia/Manila',
+            'fields' => 'zoneName,gmtOffset'
+        ]);
+
+        // Check if the response is successful
+        if (!$response->successful()) {
+            return redirect()->back()->with('error', 'Unable to retrieve time information.');
+        }
+
+        $data = $response->json();
+
+        // Get the GMT offset from the API response
+        $gmtOffset = $data['zones'][0]['gmtOffset'];
+
+        // Calculate the current time using the offset
+        $internetTime = Carbon::now()->utc()->addSeconds($gmtOffset);
+
+        // Calculate the number of leave days, excluding Saturdays and Sundays
+        $fromDate = Carbon::parse($validatedData['from']);
+        $toDate = Carbon::parse($validatedData['to']);
+        $leaveDays = 0;
+
+        for ($date = $fromDate; $date->lte($toDate); $date->addDay()) {
+            if (!$date->isWeekend()) {
+                $leaveDays++;
+            }
+        }
+
+        // Check if the leave starts in the future
+        if ($fromDate->lessThan($internetTime)) {
+            return redirect()->back()->with('error', 'Leave start date must be in the future.');
+        }
+
+        // Check if the balance is sufficient for the requested leave type
+        if ($validatedData['leave_type'] == 'Sick Leave' && $sickBalance < $leaveDays) {
+            return redirect()->back()->with('error', 'Insufficient Balance in Sick Leave Credit');
+        }
+
+        if ($validatedData['leave_type'] == 'Vacation Leave' && $vacationBalance < $leaveDays) {
+            return redirect()->back()->with('error', 'Insufficient Balance in Vacation Leave Credit');
+        }
+
+        // Create a new Leave instance and assign validated data
+        $leave = new Leave([
+            'employee_id' => $user->custom_id, // Correctly set employee_id here
+            'leave_type' => $validatedData['leave_type'],
+            'from' => $validatedData['from'],
+            'to' => $validatedData['to'],
+            'reason' => $validatedData['reason'],
+            'leave_days' => $leaveDays, // Assuming you have a column in your table to store leave days
+        ]);
+
+        // Save the leave record
+        $leave->save();
+
+        return redirect()->back()->with('success', 'Leave successfully added');
+    }
+
+
+
+public function addcredit(Request $request)
 {
-    // Validate the incoming request data
+    // Validate the input
     $validatedData = $request->validate([
-        'leave_type' => 'required|in:Sick Leave,Vacation Leave',
-        'from' => 'required|date',
-        'to' => 'required|date|after_or_equal:from',
-        'reason' => 'required|string',
-    ], [
-        'leave_type.required' => 'The leave type field is required.',
-        'from.required' => 'This field is required.',
-        'to.required' => 'This field is required.',
-        'reason.required' => 'The reason field is required.',
+        'user_id' => 'required|exists:users,id',
+        'leave_type' => 'required|string',
+        'quantity' => 'required|numeric|min:-1000|max:100',
     ]);
 
-    $user = Auth::user();
-    $sickBalance = $user->sick_balance;
-    $vacationBalance = $user->vacation_balance;
+    $user = User::find($validatedData['user_id']);
 
-    // TimeZoneDB API details
-    $apiUrl = "https://api.timezonedb.com/v2.1/list-time-zone";
-    $apiKey = 'INQ8VCI2UGFC'; // Your TimeZoneDB API Key
-
-    // Make the request to TimeZoneDB API
-    $response = Http::get($apiUrl, [
-        'key' => $apiKey,
-        'format' => 'json',
-        'zone' => 'Asia/Manila',
-        'fields' => 'zoneName,gmtOffset'
-    ]);
-
-    // Check if the response is successful
-    if (!$response->successful()) {
-        return redirect()->back()->with('error', 'Unable to retrieve time information.');
+    // Update the appropriate balance based on leave_type
+    if ($validatedData['leave_type'] === 'sick_balance') {
+        $user->sick_balance += $validatedData['quantity'];
+    } elseif ($validatedData['leave_type'] === 'vacation_balance') {
+        $user->vacation_balance += $validatedData['quantity'];
     }
 
-    $data = $response->json();
+    $user->save();
 
-    // Get the GMT offset from the API response
-    $gmtOffset = $data['zones'][0]['gmtOffset'];
-
-    // Calculate the current time using the offset
-    $internetTime = Carbon::now()->utc()->addSeconds($gmtOffset);
-
-    // Calculate the number of leave days
-    $fromDate = Carbon::parse($validatedData['from']);
-    $toDate = Carbon::parse($validatedData['to']);
-    $leaveDays = $toDate->diffInDays($fromDate) + 1; // Include the start date in the count
-
-    // Check if the leave starts in the future
-    if ($fromDate->lessThan($internetTime)) {
-        return redirect()->back()->with('error', 'Leave start date must be in the future.');
-    }
-
-    // Check if the balance is sufficient for the requested leave type
-    if ($validatedData['leave_type'] == 'Sick Leave' && $sickBalance < $leaveDays) {
-        return redirect()->back()->with('error', 'Insufficient Balance in Sick Leave Credit');
-    }
-
-    if ($validatedData['leave_type'] == 'Vacation Leave' && $vacationBalance < $leaveDays) {
-        return redirect()->back()->with('error', 'Insufficient Balance in Vacation Leave Credit');
-    }
-
-    // Create a new Leave instance and assign validated data
-    $leave = new Leave([
-        'employee_id' => $user->custom_id, // Correctly set employee_id here
-        'leave_type' => $validatedData['leave_type'],
-        'from' => $validatedData['from'],
-        'to' => $validatedData['to'],
-        'reason' => $validatedData['reason'],
-        'leave_days' => $leaveDays, // Assuming you have a column in your table to store leave days
-    ]);
-
-    // Save the leave record
-    $leave->save();
-
-    return redirect()->back()->with('success', 'Leave successfully added');
+    return redirect()->back()->with('success', 'Successfully updated credit');
 }
 
 
-
-    public function updaterequest(Request $request, $id)
-    {
-        Log::info('Updating leave request', ['leave_id' => $id, 'status' => $request->input('status')]);
-
-        $leave = Leave::find($id);
-        if (!$leave) {
-            return redirect()->back()->with('Error', 'Leave request not found.');
-        }
-
-        $request->validate([
-            'status' => 'nullable|in:Pending,Approved,Declined',
-        ], [
-            'status.required' => 'The status field is required to select.',
-        ]);
-
-        $user = User::where('custom_id', $leave->employee_id)->first();
-        if (!$user) {
-            return redirect()->back()->with('Error', 'User not found.');
-        }
-
-        $previousStatus = $leave->status;
-        $status = $request->input('status');
-
-        // Check if status is changing
-        Log::info('Previous Status: ' . $previousStatus . ' New Status: ' . $status);
-
-        if ($status === 'Approved') {
-            if ($previousStatus !== 'Approved') {
-                if ($leave->leave_type === 'Sick Leave') {
-                    $user->sick_balance -= $leave->leave_days;
-                } elseif ($leave->leave_type === 'Vacation Leave') {
-                    $user->vacation_balance -= $leave->leave_days;
-                }
-            }
-        } elseif ($status === 'Declined') {
-            if ($previousStatus === 'Approved') {
-                if ($leave->leave_type === 'Sick Leave') {
-                    $user->sick_balance += $leave->leave_days;
-                } elseif ($leave->leave_type === 'Vacation Leave') {
-                    $user->vacation_balance += $leave->leave_days;
-                }
-            }
-        } elseif ($status === 'Pending') {
-            if ($previousStatus === 'Approved') {
-                if ($leave->leave_type === 'Sick Leave') {
-                    $user->sick_balance += $leave->leave_days;
-                } elseif ($leave->leave_type === 'Vacation Leave') {
-                    $user->vacation_balance += $leave->leave_days;
-                }
-            }
-        }
-
-        $leave->status = $status;
-        $leave->save();
-        $user->save();
-
-        return redirect()->back()->with('Success', 'Leave request successfully updated');
+public function updaterequest(Request $request, $id)
+{
+    $leave = Leave::find($id);
+    if (!$leave) {
+        return redirect()->back()->with('error', 'Leave request not found.');
     }
+
+    // Ensure status is never null
+    $status = $request->input('status', 'Pending'); // Default to 'Pending' if not provided
+    $request->merge(['status' => $status]);
+
+    $request->validate([
+        'status' => 'nullable|in:Pending,Approved,Declined',
+    ], [
+        'status.required' => 'The status field is required to select.',
+    ]);
+
+    $user = User::where('custom_id', $leave->employee_id)->first();
+    if (!$user) {
+        return redirect()->back()->with('error', 'User not found.');
+    }
+
+    $previousStatus = $leave->status;
+
+    // Check if status is changing
+    Log::info('Previous Status: ' . $previousStatus . ' New Status: ' . $status);
+
+    // Check if user has enough balance before approving the leave
+    if ($status === 'Approved' && $previousStatus !== 'Approved') {
+        if ($leave->leave_type === 'Sick Leave') {
+            if ($user->sick_balance < $leave->leave_days) {
+                return redirect()->back()->with('error', 'Insufficient sick leave balance.');
+            }
+            $user->sick_balance -= $leave->leave_days;
+        } elseif ($leave->leave_type === 'Vacation Leave') {
+            if ($user->vacation_balance < $leave->leave_days) {
+                return redirect()->back()->with('error', 'Insufficient vacation leave balance.');
+            }
+            $user->vacation_balance -= $leave->leave_days;
+        }
+    } elseif ($status === 'Declined' && $previousStatus === 'Approved') {
+        if ($leave->leave_type === 'Sick Leave') {
+            $user->sick_balance += $leave->leave_days;
+        } elseif ($leave->leave_type === 'Vacation Leave') {
+            $user->vacation_balance += $leave->leave_days;
+        }
+    } elseif ($status === 'Pending' && $previousStatus === 'Approved') {
+        if ($leave->leave_type === 'Sick Leave') {
+            $user->sick_balance += $leave->leave_days;
+        } elseif ($leave->leave_type === 'Vacation Leave') {
+            $user->vacation_balance += $leave->leave_days;
+        }
+    }
+
+    $leave->status = $status;
+    $leave->save();
+    $user->save();
+
+    return redirect()->back()->with('success', 'Leave request successfully updated');
+}
+
 }

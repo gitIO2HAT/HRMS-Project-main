@@ -193,21 +193,39 @@
 </script>
 
 
+<script>
+    document.querySelector('.increment').addEventListener('click', function(event) {
+     event.preventDefault(); // Prevent form submission
+     var quantityInput = document.getElementById('quantity');
+     var currentValue = parseFloat(quantityInput.value);
+     if (currentValue < quantityInput.max) {
+         quantityInput.value = (currentValue + parseFloat(quantityInput.step)).toFixed(2);
+     }
+ });
+
+ document.querySelector('.decrement').addEventListener('click', function(event) {
+     event.preventDefault(); // Prevent form submission
+     var quantityInput = document.getElementById('quantity');
+     var currentValue = parseFloat(quantityInput.value);
+     if (currentValue > quantityInput.min) {
+         quantityInput.value = (currentValue - parseFloat(quantityInput.step)).toFixed(2);
+     }
+ });
+
+
+ </script>
+
 
 <script>
-    function changeStatus(status, leaveId) {
-        if (confirm('Are you sure you want to change the status?')) {
-            const form = document.querySelector(`form[action*="${leaveId}"]`);
-            if (form) {
-                form.querySelector(`#statusInput${leaveId}`).value = status;
-                form.submit();
-            } else {
-                console.error('Form not found for leaveId:', leaveId);
-            }
-        }
+    function updateStatus(id, status) {
+        const form = document.getElementById('statusForm' + id);
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'status';
+        hiddenInput.value = status;
+        form.appendChild(hiddenInput);
+        form.submit();
     }
 </script>
-
-
 
 </html>
