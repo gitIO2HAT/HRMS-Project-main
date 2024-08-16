@@ -210,4 +210,5 @@
 
 
 
-</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/app.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/app.blade.php ENDPATH**/ ?>

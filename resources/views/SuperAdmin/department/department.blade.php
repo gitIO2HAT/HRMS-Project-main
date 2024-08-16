@@ -58,10 +58,10 @@
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td class="text-center">
-                                                        <span id="editable-span-{{ $list->id }}" onclick="toggleEdit('{{$list->id}}')">
+                                                        <span id="editable-span-dept-{{ $list->id }}" onclick="toggleEdit('dept-{{$list->id}}')">
                                                             {{ $list->name }}
                                                         </span>
-                                                        <input type="text" id="editable-input-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control text-center" style="display:none;" onblur="toggleEdit('{{$list->id}}')">
+                                                        <input type="text" id="editable-input-dept-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control text-center" style="display:none;" onblur="toggleEdit('dept-{{$list->id}}')">
                                                     </td>
                                                     <td class="text-center">
                                                         {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
@@ -128,23 +128,23 @@
                                                     @endforeach
                                                     </td>
                                                     <td class="text-center">
-                                                        <span id="editable-span-{{ $list->id }}" onclick="toggleEdit('{{$list->id}}')">
+                                                        <span id="editable-span-pos-{{ $list->id }}" onclick="toggleEdit('pos-{{$list->id}}')">
                                                             {{ $list->name }}
                                                         </span>
-                                                        <input type="text" id="editable-input-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control text-center" style="display:none;" onblur="toggleEdit('{{$list->id}}')">
+                                                        <input type="text" id="editable-input-pos-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control text-center" style="display:none;" onblur="toggleEdit('pos-{{$list->id}}')">
                                                     </td>
                                                     <td class="text-center">
                                                         {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                                     </td>
 
-                                                    
-                                                
-                                                    <td class="text-center"> 
+
+
+                                                    <td class="text-center">
                                                     @if(Auth::user()->user_type == 0)
                                                     <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
                                                             <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
                                                         </button>
-                                                    <a href="{{ url('/SuperAdmin/Department/Deleted/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
+                                                    <a href="{{ url('/SuperAdmin/Department/DeletedPosition/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
                                                         </a>
                                                         @elseif(Auth::user()->user_type == 1)
@@ -168,14 +168,6 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
     <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -188,8 +180,6 @@
                     <!-- Form content here -->
                     <form action="/SuperAdmin/Department/AddDepartment" method="POST">
                         @csrf
-
-
                         <div class="text-center">
                             <input type="text" placeholder="Department Name" class="form-control underline-input" name="name">
                             @if($errors->has('name'))
@@ -216,7 +206,6 @@
                     <form action="/SuperAdmin/Department/AddPosition" method="POST">
                         @csrf
                         <div>
-
                             <select id="department" name="department_id" class="form-control underline-input">
                                 <option value="" disabled selected>Select Department</option>
                                 @foreach($departments as $department)
@@ -228,56 +217,21 @@
                             @endif
                         </div>
 
-
-
                         <div class="row g-4">
-
-
                             <div class="text-center">
-
                                 <input type="text" placeholder="Position Name" class="form-control underline-input" name="name" value="">
                                 @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
                                 <button type="submit" class="btn btn-success mt-2">Add</button>
                             </div>
-
-
                         </div>
-
-
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 
+@endsection
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @endsection
