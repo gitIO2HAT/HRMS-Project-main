@@ -45,6 +45,7 @@
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Department</th>
                                                 <th scope="col">Position</th>
+                                                <th scope="col">Role</th>
                                                 <th scope="col">End of Contract</th>
                                                 <th scope="col">Edit</th>
                                                 <th scope="col">Preview</th>
@@ -57,10 +58,16 @@
                                                 <th scope="row"><?php echo e($counter++); ?></th>
                                                 <td><?php echo e($employee->custom_id); ?></td>
                                                 <td><?php echo e($employee->name); ?> <?php echo e($employee->lastname); ?></td>
-                                             
+
                                                 <td><?php echo e($employee->email); ?></td>
                                                 <td><?php echo e($employee->department); ?></td>
                                                 <td><?php echo e($employee->position); ?></td>
+                                                <td><?php if($employee->user_type === 1): ?>
+                                                    Admin
+                                                    <?php elseif($employee->user_type === 2): ?>
+                                                    Employee
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td><?php echo e($employee->end_of_contract); ?></td>
                                                 <?php if(Auth::user()->user_type == 0): ?>
                                                 <td>
@@ -71,7 +78,7 @@
                                                 <?php elseif(Auth::user()->user_type == 1): ?>
                                                 <td>
                                                     <a class=" rounded-1"  href="<?php echo e(url('Admin/Employee/EditEmployee/'.$employee->id)); ?>"> <i class="far fa-edit" style="color: #161717;"></i></a>
-                                                   
+
                                                 </td>
                                                 <td> <a class=" rounded-1" href="<?php echo e(url('Admin/Employee/PreviewEmployee/'.$employee->id)); ?>"> <i class="far fa-eye" style="color: #19191a;"></i></a></td>
                                                 <td><a class=" rounded-1" href="<?php echo e(url('Admin/Employee/Archive/'.$employee->id)); ?>"> <i class="fas fa-user-times" style="color: #fe2e2e;"></i></a></td>
@@ -92,4 +99,5 @@
         </div>
 
         <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/superadmin/employee/employee.blade.php ENDPATH**/ ?>

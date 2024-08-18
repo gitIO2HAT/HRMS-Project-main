@@ -32,7 +32,29 @@ class MyAccountController extends Controller
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
 
-       
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
 
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.dashboard'
@@ -40,21 +62,19 @@ class MyAccountController extends Controller
                 ? 'admin.dashboard'
                 : 'employee.myaccount.myaccount');
 
-        
+
         return view($viewPath,[
             'notification' => $notification,
             'getNot' => $getNot,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
-
     public function updatemyaccount(Request $request)
     {
         // Debugging: Dump and Die to inspect the incoming request
-      
-    
-      
             $id = Auth::user()->id;
-    
+
             $messages = [
                 'name.required' => 'The name field is required.',
                 'middlename.required' => 'The middlename field is required.',
@@ -81,7 +101,7 @@ class MyAccountController extends Controller
                 'emergency_phonenumber.required' => 'The emergency contact phone number field is required.',
                 'emergency_relationship.required' => 'The emergency contact relationship field is required.',
             ];
-            
+
             $request->validate([
                 'name' => 'required|string|max:30',
                 'middlename' => 'required|string|max:30',
@@ -100,10 +120,10 @@ class MyAccountController extends Controller
                 'emergency_phonenumber' => 'required|string|max:20',
                 'emergency_relationship' => 'required|string|max:50',
             ], $messages);
-            
-    
+
+
             $user = User::getId($id);
-    
+
             $user->name = trim($request->name);
             $user->middlename = trim($request->middlename);
             $user->lastname = trim($request->lastname);
@@ -119,11 +139,11 @@ class MyAccountController extends Controller
             $user->emergency_fulladdress = $request->emergency_fulladdress;
             $user->emergency_phonenumber = trim($request->emergency_phonenumber);
             $user->emergency_relationship = $request->emergency_relationship;
-    
+
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
             }
-          
+
             if (!empty($request->file('profile_pic'))) {
                 $ext = $request->file('profile_pic')->getClientOriginalExtension();
                 $file = $request->file('profile_pic');
@@ -132,10 +152,10 @@ class MyAccountController extends Controller
                 $file->move('public/accountprofile/', $filename);
                 $user->profile_pic = $filename;
             }
-    
+
             $user->save();
             return redirect()->back()->with('success', 'Your Profile successfully update');
-       
+
     }
-    
+
 }

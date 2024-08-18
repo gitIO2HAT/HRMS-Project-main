@@ -54,6 +54,31 @@ class EmployeeController extends Controller
 
         $data['getEmployee'] = $query->orderBy('id', 'desc')->paginate(10);
 
+
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+    // Calculate growth rate for each year
+    $growthRates = [];
+    $years = array_keys($employeeData);
+    for ($i = 1; $i < count($years); $i++) {
+    $previousYearEmployees = $employeeData[$years[$i - 1]];
+    $currentYearEmployees = $employeeData[$years[$i]];
+    $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+    $growthRates[$years[$i]] = $growthRate;
+    }
+
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.employee.employee'
             : (Auth::user()->user_type == 1
@@ -63,6 +88,8 @@ class EmployeeController extends Controller
         return view($viewPath, $data, [
             'notification' => $notification,
             'getNot' => $getNot,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
 
@@ -99,6 +126,32 @@ class EmployeeController extends Controller
             ->where('name', 'LIKE', "%{$search}%")
             ->paginate(10);
 
+
+            if(Auth::user()->user_type === 0){
+                $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            }else{
+                $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            }
+
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+        $previousYearEmployees = $employeeData[$years[$i - 1]];
+        $currentYearEmployees = $employeeData[$years[$i]];
+        $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+        $growthRates[$years[$i]] = $growthRate;
+        }
+
+
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
@@ -113,6 +166,8 @@ class EmployeeController extends Controller
             'getNot' => $getNot,
             'departments' => $departments,
             'position' => $position,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
 
@@ -231,6 +286,32 @@ class EmployeeController extends Controller
             users.id, users.name, users.lastname, users.email
     ");
 
+
+    if(Auth::user()->user_type === 0){
+        $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+        ->where('user_type', '!=', 0)
+        ->groupBy('year')
+        ->pluck('total', 'year')
+        ->toArray();
+    }else{
+        $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+        ->whereNotIn('user_type', [0, 1])
+        ->groupBy('year')
+        ->pluck('total', 'year')
+        ->toArray();
+    }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
+
+
         $departments = Department::all();
         $positions = Position::all();
         $query = Message::getNotify();
@@ -250,6 +331,8 @@ class EmployeeController extends Controller
                 'departments' => $departments,
                 'positions' => $positions,
                 'getNot' => $getNot,
+                'growthRates' => $growthRates,
+                'employeeData' => $employeeData,
             ]);
         } else {
             abort(404);
@@ -324,6 +407,30 @@ class EmployeeController extends Controller
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $data['getId'] = User::getId($id);
 
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
+
         if (!empty($data['getId'])) {
             $viewPath = Auth::user()->user_type == 0
                 ? 'superadmin.employee.previewemployee'
@@ -335,6 +442,8 @@ class EmployeeController extends Controller
             return view($viewPath, $data, [
                 'notification' => $notification,
                 'getNot' => $getNot,
+                'growthRates' => $growthRates,
+                'employeeData' => $employeeData,
             ]);
         } else {
             abort(404);
@@ -398,6 +507,29 @@ class EmployeeController extends Controller
 
         $data['getEmployee'] = $query->orderBy('id', 'desc')->paginate(10);
 
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
 
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.employee.archiveemployee'
@@ -409,6 +541,8 @@ class EmployeeController extends Controller
         return view($viewPath, $data, [
             'notification' => $notification,
             'getNot' => $getNot,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
 }

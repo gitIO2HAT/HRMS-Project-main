@@ -211,10 +211,7 @@
          quantityInput.value = (currentValue - parseFloat(quantityInput.step)).toFixed(2);
      }
  });
-
-
  </script>
-
 
 <script>
     function updateStatus(id, status) {
@@ -226,6 +223,58 @@
         form.appendChild(hiddenInput);
         form.submit();
     }
+</script>
+
+<script>
+    var ctx = document.getElementById('growthChart').getContext('2d');
+    var growthChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode(array_keys($employeeData)); ?>, // years
+            datasets: [{
+                label: 'Number of Employees',
+                data: <?php echo json_encode(array_values($employeeData)); ?>, // employee counts
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Growth Rate (%)',
+                data: <?php echo json_encode(array_values($growthRates)); ?>, // growth rates
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                type: 'line',
+                yAxisID: 'growthRate'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value; // show employee count
+                        }
+                    }
+                },
+                growthRate: {
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%'; // show percentage
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
 </script>
 
 </html>

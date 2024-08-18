@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Message;
+use App\Models\User;
+
 
 class DepartmentController extends Controller
 {
@@ -30,14 +32,14 @@ class DepartmentController extends Controller
         GROUP BY
             users.id, users.name, users.lastname, users.email
     ");
-      
+
     $search = $request->input('search');
 
     // Fetch departments that match the search query and are not marked as deleted
     $departments = Department::where('name', 'LIKE', "%{$search}%")
         ->where('deleted', 1)
         ->paginate(10);
-    
+
     // Fetch positions that belong to the found departments
     $departmentIds = $departments->pluck('id');
     $position = Position::whereIn('department_id', $departmentIds)
@@ -45,10 +47,32 @@ class DepartmentController extends Controller
         ->paginate(10);
         $query = Message::getNotify();
 
-        
+
 
         // Fetch positions based on the search query
-       
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
 
 
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
@@ -64,6 +88,9 @@ class DepartmentController extends Controller
             'getNot' => $getNot,
             'departments' => $departments,
             'position' => $position,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
+
         ]);
     }
 
@@ -93,7 +120,7 @@ class DepartmentController extends Controller
     $departments = Department::where('name', 'LIKE', "%{$search}%")
         ->where('deleted', 2)
         ->paginate(10);
-    
+
     // Fetch positions that belong to the found departments and are not marked as deleted
     $departmentIds = $departments->pluck('id');
     $position = Position::whereIn('department_id', $departmentIds)
@@ -101,7 +128,31 @@ class DepartmentController extends Controller
         ->where('name', 'LIKE', "%{$search}%")
         ->paginate(10);
 
-        
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
+
+
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
@@ -116,6 +167,8 @@ class DepartmentController extends Controller
             'getNot' => $getNot,
             'departments' => $departments,
             'position' => $position,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
 
@@ -150,10 +203,10 @@ class DepartmentController extends Controller
         ],[
             'name.unique' => 'This name has already been taken.',
         ]);
-    
+
         $department->name = $request->name;
         $department->save();
-    
+
         return redirect()->back()->with('success', 'Department successfully updated');
     }
 
@@ -166,13 +219,13 @@ class DepartmentController extends Controller
         ],[
             'name.unique' => 'This name has already been taken.',
         ]);
-    
+
         $position->name = $request->name;
         $position->save();
-    
+
         return redirect()->back()->with('success', 'Department successfully updated');
     }
-    
+
 
     public function addposition(Request $request)
     {
@@ -226,5 +279,5 @@ class DepartmentController extends Controller
 
     return redirect()->back()->with('success', 'Position successfully deleted');
 }
-   
+
 }

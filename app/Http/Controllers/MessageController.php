@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Message;
+use App\Models\User;
 class MessageController extends Controller
 {
     public function message()
@@ -34,7 +35,7 @@ class MessageController extends Controller
                 ? 'admin.dashboard'
                 : 'employee.message');
 
-     
+
         return view($viewPath,[
             'notification' => $notification,
             'getNot' => $getNot,

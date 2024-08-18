@@ -74,6 +74,30 @@ class LeaveController extends Controller
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
 
+
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
+
         // Determine view path based on user type
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.leave.leave'
@@ -87,6 +111,8 @@ class LeaveController extends Controller
             'getNot' => $getNot,
             'leaves' => $leaves,
             'users' => $users,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
 

@@ -96,12 +96,16 @@
                                     </div>
                                     <div class="col-sm-12 col-xl-12">
                                         <div class="fields">
-                                            <div class="hidden input-field">
+                                            <div class=" input-field">
                                                 <label>Role</label>
-                                                <input class="form-control" name="user_type" value="2" required>
-                                                @if($errors->has('user_type'))
-                                                <span class="text-danger">{{ $errors->first('user_type') }}</span>
-                                                @endif
+                                                <select id="user_type" class="form-control" name="user_type" required>
+                                                    <option selected disabled>--Select User Type--</option>
+                                                    <option value="1">Admin</option>
+                                                    <option value="2">Employee</option>
+                                                    @if($errors->has('user_type'))
+                                                    <span class="text-danger">{{ $errors->first('user_type') }}</span>
+                                                    @endif
+                                                </select>
                                             </div>
 
 

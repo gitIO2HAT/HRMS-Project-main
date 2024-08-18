@@ -100,6 +100,30 @@ class AttendanceController extends Controller
             });
         }
 
+
+        if(Auth::user()->user_type === 0){
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->where('user_type', '!=', 0)
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }else{
+            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->whereNotIn('user_type', [0, 1])
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
         // Add the is_archive condition
         $employeeRecords->where('is_archive', '=', 1)
             ->whereNotIn('custom_id', ['1', '2']);
@@ -128,6 +152,8 @@ class AttendanceController extends Controller
             'selectedYear' => $selectedYear,
             'selectedMonth' => $selectedMonth,
             'RecordsAttendance' => $RecordsAttendance,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
         ]);
     }
 

@@ -54,6 +54,29 @@ $currentDateTime['currentDateTime'] = Carbon::now()->setTimezone('Asia/Manila');
         $getCompleted['getCompleted'] = $query->orderby('scheduled_date', 'asc')->paginate(10);
 
 
+        if(Auth::user()->user_type === 0){
+        $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+        ->where('user_type', '!=', 0)
+        ->groupBy('year')
+        ->pluck('total', 'year')
+        ->toArray();
+    }else{
+        $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+        ->whereNotIn('user_type', [0, 1])
+        ->groupBy('year')
+        ->pluck('total', 'year')
+        ->toArray();
+    }
+
+// Calculate growth rate for each year
+$growthRates = [];
+$years = array_keys($employeeData);
+for ($i = 1; $i < count($years); $i++) {
+$previousYearEmployees = $employeeData[$years[$i - 1]];
+$currentYearEmployees = $employeeData[$years[$i]];
+$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+$growthRates[$years[$i]] = $growthRate;
+}
 
 
 
@@ -70,7 +93,9 @@ $currentDateTime['currentDateTime'] = Carbon::now()->setTimezone('Asia/Manila');
             'getAnn' => $getAnn['getAnn'],
             'getCompleted' => $getCompleted['getCompleted'],
             'currentDateTime' => $currentDateTime['currentDateTime'],
-            'users' => $users['users'], // Access the 'users' array directly
+            'users' => $users['users'],
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData, // Access the 'users' array directly
         ]);
     }
 
