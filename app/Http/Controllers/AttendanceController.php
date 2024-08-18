@@ -91,7 +91,8 @@ class AttendanceController extends Controller
 
         // Search for employee records
         $search = $request->input('search');
-        $employeeRecords = User::query(); // Initialize query builder
+
+        $employeeRecords = User::query();
 
         if ($search) {
             $employeeRecords->where(function ($q) use ($search) {
@@ -125,8 +126,14 @@ $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearE
 $growthRates[$years[$i]] = $growthRate;
 }
         // Add the is_archive condition
-        $employeeRecords->where('is_archive', '=', 1)
-            ->whereNotIn('custom_id', ['1', '2']);
+        if(Auth::user()->user_type === 0){
+            $employeeRecords->where('is_archive', '=', 1)
+            ->where('user_type', '!=', 0);
+        }else{
+            $employeeRecords->where('is_archive', '=', 1)
+            ->where('user_type', '=', 2);;
+        }
+
         $employeeRecords = $employeeRecords->paginate(10); // Apply pagination
 
         $RecordsAttendance = Attendance::all();

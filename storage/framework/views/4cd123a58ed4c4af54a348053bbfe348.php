@@ -9,7 +9,7 @@
 
     <div class="sidebar-main">
         <div class="sidebar-user">
-            
+
             <img src="<?php echo e(asset('public/accountprofile/' . Auth::user()->profile_pic)); ?>" alt="Employee">
         </div>
         <div class="name">
@@ -67,14 +67,14 @@
         <li class="active">
             <a href="<?php echo e(url('SuperAdmin/Employee')); ?>">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Admins & Employees</span>
             </a>
         </li>
         <?php else: ?>
         <li>
             <a href="<?php echo e(url('SuperAdmin/Employee')); ?>">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Admins & Employees</span>
             </a>
         </li>
         <?php endif; ?>
@@ -109,7 +109,7 @@
         </li>
         <?php endif; ?>
 
-        
+
         <?php elseif(Auth::user()->user_type == 1): ?>
 
         <?php if(Request::segment(2)== 'Dashboard'): ?>
@@ -146,14 +146,14 @@
         <li class="active">
             <a href="<?php echo e(url('Admin/Employee')); ?>">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Employees</span>
             </a>
         </li>
         <?php else: ?>
         <li>
             <a href="<?php echo e(url('Admin/Employee')); ?>">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Employees</span>
             </a>
         </li>
         <?php endif; ?>
@@ -187,7 +187,7 @@
             </a>
         </li>
         <?php endif; ?>
-        
+
         <?php endif; ?>
 
 
@@ -226,8 +226,8 @@
         </li>
         <?php endif; ?>
         <?php endif; ?>
-    
-       
+
+
         <?php if(Auth::user()->user_type == 2): ?>
         <?php if(Request::segment(2) == 'MyAccount'): ?>
         <li class="active">
@@ -297,14 +297,15 @@
     </ul>
 
     <ul class="side-menu bottom">
-      
+
 
 
         <li>
             <a href="<?php echo e(route('logoutButton')); ?>" class="logout">
                 <i class="bx fas fa-sign-out-alt" style="color: #b30303;"></i>
-                <span class="text">Logout</span>
+                <span class="text" onclick="return confirm('Are you sure you want to Logout?');">Logout</span>
             </a>
         </li>
     </ul>
-</div><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
+</div>
+<?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>

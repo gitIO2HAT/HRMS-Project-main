@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -72,7 +73,7 @@ $growthRates[$years[$i]] = $growthRate;
     }
     public function updatemyaccount(Request $request)
     {
-        // Debugging: Dump and Die to inspect the incoming request
+        try {
             $id = Auth::user()->id;
 
             $messages = [
@@ -121,6 +122,8 @@ $growthRates[$years[$i]] = $growthRate;
                 'emergency_relationship' => 'required|string|max:50',
             ], $messages);
 
+            // Log that validation was successful
+            Log::info('Validation passed for user ID: ' . $id);
 
             $user = User::getId($id);
 
@@ -154,8 +157,17 @@ $growthRates[$years[$i]] = $growthRate;
             }
 
             $user->save();
-            return redirect()->back()->with('success', 'Your Profile successfully update');
 
-    }
+            // Log successful save
+            Log::info('User profile updated successfully for user ID: ' . $id);
 
+            return redirect()->back()->with('success', 'Your Profile successfully updated');
+
+        } catch (\Exception $e) {
+            // Log the error message
+            Log::error('Error updating profile for user ID: ' . $id . ' - ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'An error occurred while updating your profile.' . ' - ' . $e->getMessage());
+        }
+}
 }

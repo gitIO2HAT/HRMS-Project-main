@@ -7,7 +7,10 @@
             <form action="<?php echo e(url('/Admin/Leave')); ?>" class="w-100" method="GET">
                 <?php echo csrf_field(); ?>
                 <div class="input-group mb-3">
-                    <a type="button" class="btn btn-success mx-4 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addCreditModal">
+                    <a type="button" class=" btn btn-success  d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addLeaveModal">
+                        Add Leave
+                    </a>
+                    <a type="button" class="btn btn-success mx-1 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addCreditModal">
                         Credit
                     </a>
                     <span class="input-group-text bg-white border-end">
@@ -37,7 +40,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Employee ID</th>
+                    <th>Employees Name</th>
                     <th>Leave Type</th>
                     <th>From</th>
                     <th>To</th>
@@ -50,7 +53,13 @@
                 <?php $__currentLoopData = $leaves; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                     <td><?php echo e($index + 1); ?></td>
-                    <td><?php echo e($leave->employee_id); ?></td>
+                    <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($leave->employee_id === $user->custom_id): ?>
+                    <td><img class="rounded-circle me-lg-2"
+                        src="<?php echo e(asset('public/accountprofile/' . $user->profile_pic)); ?>" alt=""
+                        style="width: 40px; height: 40px;"> <?php echo e($user->name); ?> <?php echo e($user->lastname); ?></td>
+                    <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <td><?php echo e($leave->leave_type); ?></td>
                     <td><?php echo e(\Carbon\Carbon::parse($leave->from)->format('Y, F j')); ?></td>
                     <td><?php echo e(\Carbon\Carbon::parse($leave->to)->format('Y, F j')); ?></td>
@@ -136,6 +145,70 @@
                 </form>
 
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addLeaveModal" tabindex="-1" aria-labelledby="addLeaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="addLeaveModalLabel">Add Leave</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/Admin/Leave/AddLeave" method="POST">
+                    <?php echo csrf_field(); ?>
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="leave_type">Leave Type*</label>
+                        <select id="leave_type" name="leave_type" class="form-control underline-input" required>
+                            <option value="" disabled selected>Select Leave Type</option>
+                            <option value="Sick Leave">Sick Leave</option>
+                            <option value="Vacation Leave">Vacation Leave</option>
+                        </select>
+                        <?php if($errors->has('leave_type')): ?>
+                        <span class="text-danger"><?php echo e($errors->first('leave_type')); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="from">From*</label>
+                        <input type="date" name="from" class="form-control" id="from" required>
+                        <?php if($errors->has('from')): ?>
+                        <span class="text-danger"><?php echo e($errors->first('from')); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="to">To*</label>
+                        <input type="date" name="to" class="form-control" id="to" required>
+                        <?php if($errors->has('to')): ?>
+                        <span class="text-danger"><?php echo e($errors->first('to')); ?></span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="reason">Reason*</label>
+                        <input type="text" name="reason" class="form-control underline-input" required>
+                        <?php if($errors->has('reason')): ?>
+                        <span class="text-danger"><?php echo e($errors->first('reason')); ?></span>
+                        <?php endif; ?>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+                        <div class="form-group my-1 text-dark">
+                            <Label for="sick_balance">Sick Balance:</Label>
+                            <span class="text-dark" id="sick_balance"><?php echo e(Auth::user()->sick_balance); ?></span>
+                        </div>
+                        <div class="form-group my-1 text-dark">
+                            <Label for="vacation_balance">Vacation Balance:</Label>
+                            <span class="text-dark" id="vacation_balance"><?php echo e(Auth::user()->vacation_balance); ?></span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success mt-2">Add</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -20,7 +20,8 @@ class Leave extends Model
         'deleted',
         'status',     // Ensure this column exists in your database
         'leave_type',
-        'leave_days', 
+        'user_type',
+        'leave_days',
     ];
 
     /**
@@ -31,7 +32,7 @@ class Leave extends Model
         return $this->belongsTo(User::class, 'employee_id', 'custom_id');
     }
 
-    
+
     static public function getID($id)
     {
         return self::find($id);

@@ -37,8 +37,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Employee ID</th>
+                    <th>Admins & Employees Name</th>
                     <th>Leave Type</th>
+                    <th>Role</th>
                     <th>From</th>
                     <th>To</th>
                     <th>Reason</th>
@@ -50,8 +51,19 @@
                 <?php $__currentLoopData = $leaves; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                     <td><?php echo e($index + 1); ?></td>
-                    <td><?php echo e($leave->employee_id); ?></td>
+                    <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($leave->employee_id === $user->custom_id): ?>
+                    <td><img class="rounded-circle me-lg-2"
+                        src="<?php echo e(asset('public/accountprofile/' . $user->profile_pic)); ?>" alt=""
+                        style="width: 40px; height: 40px;"> <?php echo e($user->name); ?> <?php echo e($user->lastname); ?></td>
+                    <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <td><?php echo e($leave->leave_type); ?></td>
+                    <td><?php if($leave->user_type === 1): ?>
+                        Admin
+                        <?php elseif($leave->user_type === 2): ?>
+                        Employee
+                        <?php endif; ?></td>
                     <td><?php echo e(\Carbon\Carbon::parse($leave->from)->format('Y, F j')); ?></td>
                     <td><?php echo e(\Carbon\Carbon::parse($leave->to)->format('Y, F j')); ?></td>
                     <td><?php echo e($leave->reason); ?></td>

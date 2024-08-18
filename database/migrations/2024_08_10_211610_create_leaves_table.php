@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('from');
             $table->date('to');
             $table->string('reason');
+            $table->tinyInteger('user_type');
             $table->enum('status', ['Pending', 'Approved', 'Declined'])->default('Pending');
             $table->enum('leave_type', ['Sick Leave', 'Vacation Leave']);
             $table->integer('leave_days')->nullable();

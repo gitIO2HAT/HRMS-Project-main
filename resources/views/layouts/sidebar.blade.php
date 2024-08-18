@@ -9,7 +9,7 @@
 
     <div class="sidebar-main">
         <div class="sidebar-user">
-            
+
             <img src="{{ asset('public/accountprofile/' . Auth::user()->profile_pic) }}" alt="Employee">
         </div>
         <div class="name">
@@ -67,14 +67,14 @@
         <li class="active">
             <a href="{{url('SuperAdmin/Employee')}}">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Admins & Employees</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('SuperAdmin/Employee')}}">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Admins & Employees</span>
             </a>
         </li>
         @endif
@@ -109,7 +109,7 @@
         </li>
         @endif
 
-        
+
         @elseif(Auth::user()->user_type == 1)
 
         @if(Request::segment(2)== 'Dashboard')
@@ -146,14 +146,14 @@
         <li class="active">
             <a href="{{url('Admin/Employee')}}">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Employees</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('Admin/Employee')}}">
                 <i class="bx fas fa-users" style="color: #080808;"></i>
-                <span class="text">Employee</span>
+                <span class="text">Employees</span>
             </a>
         </li>
         @endif
@@ -187,7 +187,7 @@
             </a>
         </li>
         @endif
-        
+
         @endif
 
 
@@ -226,8 +226,8 @@
         </li>
         @endif
         @endif
-    
-       
+
+
         @if(Auth::user()->user_type == 2)
         @if(Request::segment(2) == 'MyAccount')
         <li class="active">
@@ -297,13 +297,13 @@
     </ul>
 
     <ul class="side-menu bottom">
-      
+
 
 
         <li>
             <a href="{{route('logoutButton')}}" class="logout">
                 <i class="bx fas fa-sign-out-alt" style="color: #b30303;"></i>
-                <span class="text">Logout</span>
+                <span class="text" onclick="return confirm('Are you sure you want to Logout?');">Logout</span>
             </a>
         </li>
     </ul>

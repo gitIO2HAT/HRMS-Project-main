@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Auth;
 Use Carbon\Carbon;
 
 class User extends Authenticatable
@@ -66,16 +67,28 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public static function getEmployee()
+
+   public static function getEmployee()
 {
-    return self::where('user_type', '=', 2)
-    ->where('is_archive', '=', 1);
+    if (Auth::user()->user_type === 0) {
+        return self::where('user_type', '!=', 0)
+            ->where('is_archive', '=', 1);
+    } else {
+        return self::where('user_type', '=', 2)
+            ->where('is_archive', '=', 1);
+    }
+
 }
 
 public static function getArchiveEmployee()
 {
-    return self::where('user_type', '=', 2)
-    ->where('is_archive', '=', 2);
+    if (Auth::user()->user_type === 0) {
+        return self::where('user_type', '!=', 0)
+            ->where('is_archive', '=', 2);
+    } else {
+        return self::where('user_type', '=', 2)
+            ->where('is_archive', '=', 2);
+    }
 }
 static public function getID($id)
     {

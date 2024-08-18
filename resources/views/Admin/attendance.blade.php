@@ -15,7 +15,7 @@
                                         @csrf
                                         <label class="text-dark" for="search">Employee Name:</label>
                                         <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Search by Name" class="modify">
-                                        
+
                                         <label class="text-dark" for="month">Select Month:</label>
                                         <select name="month" id="month" class="modify">
                                             @for ($m = 1; $m <= 12; $m++) <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
@@ -49,8 +49,10 @@
                                     <tbody class="text-center">
                                         @foreach ($employeeRecords as $record)
                                         <tr>
-                                            <td class="text-dark">
-                                                {{ $record->name }} {{ $record->lastname }}
+                                            <td class="text-dark  d-flex aling-items-center">
+                                                <img class="rounded-circle me-lg-2"
+                                                src="{{ asset('public/accountprofile/' . $record->profile_pic) }}" alt=""
+                                                style="width: 40px; height: 40px;"> {{ $record->name }} {{ $record->lastname }}
                                             </td>
                                             @foreach($dailySeries as $date => $duration)
                                             <td class="text-dark centered">

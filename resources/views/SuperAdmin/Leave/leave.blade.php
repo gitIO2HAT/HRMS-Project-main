@@ -39,8 +39,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Employee ID</th>
+                    <th>Admins & Employees Name</th>
                     <th>Leave Type</th>
+                    <th>Role</th>
                     <th>From</th>
                     <th>To</th>
                     <th>Reason</th>
@@ -52,8 +53,19 @@
                 @foreach($leaves as $index => $leave)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $leave->employee_id }}</td>
+                    @foreach($users as $user)
+                    @if($leave->employee_id === $user->custom_id)
+                    <td><img class="rounded-circle me-lg-2"
+                        src="{{ asset('public/accountprofile/' . $user->profile_pic) }}" alt=""
+                        style="width: 40px; height: 40px;"> {{ $user->name }} {{ $user->lastname }}</td>
+                    @endif
+                    @endforeach
                     <td>{{ $leave->leave_type }}</td>
+                    <td>@if($leave->user_type === 1)
+                        Admin
+                        @elseif($leave->user_type === 2)
+                        Employee
+                        @endif</td>
                     <td>{{ \Carbon\Carbon::parse($leave->from)->format('Y, F j') }}</td>
                     <td>{{ \Carbon\Carbon::parse($leave->to)->format('Y, F j') }}</td>
                     <td>{{ $leave->reason }}</td>

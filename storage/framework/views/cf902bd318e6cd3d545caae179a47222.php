@@ -12,7 +12,7 @@
                             <div class="bg-white rounded h-100 p-4">
                             <?php echo $__env->make('layouts._message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class=" text-dark ">List of Employees</h6>
+                                    <h6 class=" text-dark ">List of Admins & Employees</h6>
 
 
                                     <div class="d-flex justify-content-between align-items-center">

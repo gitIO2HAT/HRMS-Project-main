@@ -14,7 +14,7 @@
                             <div class="bg-white rounded h-100 p-4">
                             @include('layouts._message')
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class=" text-dark ">List of Employees</h6>
+                                    <h6 class=" text-dark ">List of Admins & Employees</h6>
 
 
                                     <div class="d-flex justify-content-between align-items-center">

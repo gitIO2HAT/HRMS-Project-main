@@ -96,6 +96,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Leave', [LeaveController::class, 'leave']);
     Route::post('/Admin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
     Route::post('/Admin/Leave', [LeaveController::class, 'addcredit']);
+    Route::post('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
 
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('Admin/Announcement', [AnnouncementController::class, 'save_task']);

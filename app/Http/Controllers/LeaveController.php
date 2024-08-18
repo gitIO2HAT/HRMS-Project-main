@@ -37,18 +37,24 @@ class LeaveController extends Controller
 
         // Initialize query for leaves
         if (Auth::user()->user_type == 0) {
-            $query = Leave::query();
+            $query = Leave::where('user_type', '!=', 0);
         } elseif (Auth::user()->user_type == 1) {
-            $query = Leave::query();
+            $query = Leave::where('user_type', 2);
         } elseif (Auth::user()->user_type == 2) {
             $query = Leave::where('employee_id', Auth::user()->custom_id);
         }
 
         // Fetch departments that match the search query and are not marked as deleted
-        $users = User::where('user_type', 2)
+        if(Auth::user()->user_type === 0){
+            $users = User::where('user_type', '!=', 0)
             ->where('is_archive', 1)
-
             ->get();
+        }else{
+            $users = User::where('user_type', 2)
+            ->where('is_archive', 1)
+            ->get();
+        }
+
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -64,8 +70,6 @@ class LeaveController extends Controller
         if ($request->filled('leave_type')) {
             $query->where('leave_type', $request->input('leave_type'));
         }
-
-
 
         // Paginate the results
         $leaves = $query->orderBy('id', 'desc')->paginate(10);
@@ -190,6 +194,7 @@ $growthRates[$years[$i]] = $growthRate;
         $leave = new Leave([
             'employee_id' => $user->custom_id, // Correctly set employee_id here
             'leave_type' => $validatedData['leave_type'],
+            'user_type' => Auth::user()->user_type,
             'from' => $validatedData['from'],
             'to' => $validatedData['to'],
             'reason' => $validatedData['reason'],

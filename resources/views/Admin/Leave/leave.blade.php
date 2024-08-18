@@ -9,7 +9,10 @@
             <form action="{{ url('/Admin/Leave') }}" class="w-100" method="GET">
                 @csrf
                 <div class="input-group mb-3">
-                    <a type="button" class="btn btn-success mx-4 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addCreditModal">
+                    <a type="button" class=" btn btn-success  d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addLeaveModal">
+                        Add Leave
+                    </a>
+                    <a type="button" class="btn btn-success mx-1 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addCreditModal">
                         Credit
                     </a>
                     <span class="input-group-text bg-white border-end">
@@ -39,7 +42,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Employee ID</th>
+                    <th>Employees Name</th>
                     <th>Leave Type</th>
                     <th>From</th>
                     <th>To</th>
@@ -52,7 +55,13 @@
                 @foreach($leaves as $index => $leave)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $leave->employee_id }}</td>
+                    @foreach($users as $user)
+                    @if($leave->employee_id === $user->custom_id)
+                    <td><img class="rounded-circle me-lg-2"
+                        src="{{ asset('public/accountprofile/' . $user->profile_pic) }}" alt=""
+                        style="width: 40px; height: 40px;"> {{ $user->name }} {{ $user->lastname }}</td>
+                    @endif
+                    @endforeach
                     <td>{{ $leave->leave_type }}</td>
                     <td>{{ \Carbon\Carbon::parse($leave->from)->format('Y, F j') }}</td>
                     <td>{{ \Carbon\Carbon::parse($leave->to)->format('Y, F j') }}</td>
@@ -137,6 +146,70 @@
                 </form>
 
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addLeaveModal" tabindex="-1" aria-labelledby="addLeaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="addLeaveModalLabel">Add Leave</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/Admin/Leave/AddLeave" method="POST">
+                    @csrf
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="leave_type">Leave Type*</label>
+                        <select id="leave_type" name="leave_type" class="form-control underline-input" required>
+                            <option value="" disabled selected>Select Leave Type</option>
+                            <option value="Sick Leave">Sick Leave</option>
+                            <option value="Vacation Leave">Vacation Leave</option>
+                        </select>
+                        @if($errors->has('leave_type'))
+                        <span class="text-danger">{{ $errors->first('leave_type') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="from">From*</label>
+                        <input type="date" name="from" class="form-control" id="from" required>
+                        @if($errors->has('from'))
+                        <span class="text-danger">{{ $errors->first('from') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="to">To*</label>
+                        <input type="date" name="to" class="form-control" id="to" required>
+                        @if($errors->has('to'))
+                        <span class="text-danger">{{ $errors->first('to') }}</span>
+                        @endif
+                    </div>
+
+                    <div class="form-group my-1">
+                        <label class="text-dark" for="reason">Reason*</label>
+                        <input type="text" name="reason" class="form-control underline-input" required>
+                        @if($errors->has('reason'))
+                        <span class="text-danger">{{ $errors->first('reason') }}</span>
+                        @endif
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+                        <div class="form-group my-1 text-dark">
+                            <Label for="sick_balance">Sick Balance:</Label>
+                            <span class="text-dark" id="sick_balance">{{Auth::user()->sick_balance}}</span>
+                        </div>
+                        <div class="form-group my-1 text-dark">
+                            <Label for="vacation_balance">Vacation Balance:</Label>
+                            <span class="text-dark" id="vacation_balance">{{Auth::user()->vacation_balance}}</span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success mt-2">Add</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
