@@ -190,10 +190,8 @@
                     </div>
 
                     <div class="remember-forgot">
-                        <label>
-                            <input type="checkbox" name="remember"> Remember me
-                        </label>
-                        <a href="{{url('/ForgetPassword')}}">Forgot Password?</a>
+
+
                     </div>
 
                     <div class="login">
