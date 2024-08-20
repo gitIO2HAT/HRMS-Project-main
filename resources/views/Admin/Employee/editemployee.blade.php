@@ -46,11 +46,11 @@
                                                 @endif
                                             </div>
 
-                                            
+
                                             <div class="input-field">
                                                 <label>End of Contract</label>
                                                 <input type="date" class="form-control" name="end_of_contract"
-                                                    value="{{$getId->end_of_contract}}" required>
+                                                    value="{{$getId->end_of_contract}}" >
                                                 @if($errors->has('birth_date'))
                                                 <span class="text-danger">{{ $errors->first('birth_date') }}</span>
                                                 @endif
@@ -58,7 +58,7 @@
                                             <div class="input-field">
                                                 <label>Daily Rate</label>
                                                 <input type="numeric" class="form-control" name="daily_rate"
-                                                    placeholder="e.g., 560" value="{{$getId->daily_rate}}" required>
+                                                    placeholder="e.g., 560" value="{{$getId->daily_rate}}" >
                                                 @if($errors->has('daily_rate'))
                                                 <span class="text-danger">{{ $errors->first('daily_rate') }}</span>
                                                 @endif

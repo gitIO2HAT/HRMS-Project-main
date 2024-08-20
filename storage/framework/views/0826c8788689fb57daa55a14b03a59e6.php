@@ -332,14 +332,14 @@
                         const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
                         const isClockInTime = (
-                            (hours === 7 && minutes >= 0 && minutes <= 59) ||
+                            (hours === 21 && minutes >= 0 && minutes <= 59) ||
                             (hours === 8 && minutes >= 0 && minutes <= 15) ||
                             (hours === 12 && minutes >= 31 && minutes <= 59) ||
                             (hours === 13 && minutes >= 0 && minutes <= 15)
                         );
 
                         const isClockOutTime = (
-                            (hours === 12 && minutes >= 0 && minutes <= 30) ||
+                            (hours === 21 && minutes >= 0 && minutes <= 59) ||
                             (hours === 17 && minutes >= 0 && minutes <= 59) ||
                             (hours === 18 && minutes === 0)
                         );
@@ -357,4 +357,5 @@
 
 
                 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/employee/attendance.blade.php ENDPATH**/ ?>

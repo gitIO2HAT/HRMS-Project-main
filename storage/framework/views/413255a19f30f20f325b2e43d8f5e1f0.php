@@ -47,7 +47,7 @@
                                             <div class="input-field">
                                                 <label>End of Contract</label>
                                                 <input type="date" class="form-control" name="end_of_contract"
-                                                    value="<?php echo e($getId->end_of_contract); ?>" required>
+                                                    value="<?php echo e($getId->end_of_contract); ?>" >
                                                 <?php if($errors->has('birth_date')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('birth_date')); ?></span>
                                                 <?php endif; ?>
@@ -55,7 +55,7 @@
                                             <div class="input-field">
                                                 <label>Daily Rate</label>
                                                 <input type="numeric" class="form-control" name="daily_rate"
-                                                    placeholder="e.g., 560" value="<?php echo e($getId->daily_rate); ?>" required>
+                                                    placeholder="e.g., 560" value="<?php echo e($getId->daily_rate); ?>" >
                                                 <?php if($errors->has('daily_rate')): ?>
                                                 <span class="text-danger"><?php echo e($errors->first('daily_rate')); ?></span>
                                                 <?php endif; ?>
@@ -105,6 +105,7 @@
         });
     </script>
 
-   
+
     <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/superadmin/employee/editemployee.blade.php ENDPATH**/ ?>

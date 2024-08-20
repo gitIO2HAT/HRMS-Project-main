@@ -58,9 +58,9 @@ $growthRates[$years[$i]] = $growthRate;
 }
 
         $viewPath = Auth::user()->user_type == 0
-            ? 'superadmin.dashboard'
+            ? 'superadmin.myaccount.myaccount'
             : (Auth::user()->user_type == 1
-                ? 'admin.dashboard'
+                ? 'admin.myaccount.myaccount'
                 : 'employee.myaccount.myaccount');
 
 

@@ -341,40 +341,37 @@ $growthRates[$years[$i]] = $growthRate;
 
     public function updateemployee($id, Request $request)
     {
+        $user = User::find($id); // Assuming you're finding the user by ID
 
-
-        $user = User::getId($id);
-
-        // Create a new user instance
+        // Validate the input fields
         $request->validate([
-
-            'department' => 'required|integer', // Validate as integer if using IDs
-            'position' => 'required|integer',   // Validate as integer if using IDs
-            'end_of_contract' => 'required|date',
+            'department' => 'nullable|integer', // Validate as integer if using IDs
+            'position' => 'nullable|integer',   // Validate as integer if using IDs
+            'end_of_contract' => 'nullable|date',
         ], [
-
-            'department.required' => 'The department field is required.',
             'department.integer' => 'Invalid value for department.',
-            'daily_rate.required' => 'The daily rate field is required.',
             'daily_rate.numeric' => 'Invalid value for daily rate.',
             'daily_rate.min' => 'The daily rate must be at least 0.',
         ]);
 
-        // Assign values to user properties
-
-        $department = Department::find($request->department);
-        if ($department) {
-            $user->department = $department->name;
-        } else {
-            return redirect()->back()->withErrors(['department' => 'Department not found']);
+        // Check if the department field is provided in the request
+        if ($request->filled('department')) {
+            $department = Department::find($request->department);
+            if ($department) {
+                $user->department = $department->name;
+            } else {
+                return redirect()->back()->withErrors(['department' => 'Department not found']);
+            }
         }
 
-        // Find the position by ID and assign the name
-        $position = Position::find($request->position);
-        if ($position) {
-            $user->position = $position->name;
-        } else {
-            return redirect()->back()->withErrors(['position' => 'Position not found']);
+        // Check if the position field is provided in the request
+        if ($request->filled('position')) {
+            $position = Position::find($request->position);
+            if ($position) {
+                $user->position = $position->name;
+            } else {
+                return redirect()->back()->withErrors(['position' => 'Position not found']);
+            }
         }
 
         $user->end_of_contract = $request->input('end_of_contract') ? trim($request->input('end_of_contract')) : null;
@@ -382,8 +379,9 @@ $growthRates[$years[$i]] = $growthRate;
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Employee successfully update');
+        return redirect()->back()->with('success', 'Employee successfully updated');
     }
+
 
     public function previewemployee($id)
     {

@@ -51,8 +51,8 @@ body {
     line-height: 1.5;
     color: #6C7293;
     background-color: #000;
-  
-   
+
+
 }
 
 hr {
@@ -158,7 +158,7 @@ abbr[title],
 abbr[data-bs-original-title] {
     text-decoration: underline dotted;
     cursor: help;
-  
+
 }
 
 address {
@@ -232,12 +232,12 @@ sup {
 }
 
 a {
-    color: #EB1616;
+    color: #4a4949;
     text-decoration: none
 }
 
 a:hover {
-    color: #bc1212
+    color: #12db5c
 }
 
 a:not([href]):not([class]),
@@ -319,7 +319,7 @@ caption {
 
 th {
     text-align: inherit;
-  
+
 }
 
 thead,
@@ -2155,41 +2155,41 @@ progress {
 
 .table-responsive {
     overflow-x: auto;
-  
+
 }
 
 @media (max-width: 575.98px) {
     .table-responsive-sm {
         overflow-x: auto;
-    
+
     }
 }
 
 @media (max-width: 767.98px) {
     .table-responsive-md {
         overflow-x: auto;
-        
+
     }
 }
 
 @media (max-width: 991.98px) {
     .table-responsive-lg {
         overflow-x: auto;
-        
+
     }
 }
 
 @media (max-width: 1199.98px) {
     .table-responsive-xl {
         overflow-x: auto;
-        
+
     }
 }
 
 @media (max-width: 1399.98px) {
     .table-responsive-xxl {
         overflow-x: auto;
-       
+
     }
 }
 
@@ -2491,7 +2491,7 @@ textarea.form-control-lg {
     background-size: contain;
     border: 1px solid rgba(0, 0, 0, 0.25);
     appearance: none;
-   
+
 }
 
 .form-check-input[type="checkbox"] {
@@ -5053,7 +5053,7 @@ fieldset:disabled .btn {
     background-color: #000;
     border: 0;
     border-radius: 0;
-  
+
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-radius 0.15s ease
 }
 
@@ -5203,7 +5203,7 @@ fieldset:disabled .btn {
     color: #1c9445;
     background-color: #fff;
     border: 1px solid #1c9445;
-  
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5224,7 +5224,7 @@ fieldset:disabled .btn {
     color: white;
     background-color: #1c9445;
     outline: 0;
-    
+
 }
 
 .page-item:not(:first-child) .page-link {
@@ -5432,7 +5432,7 @@ fieldset:disabled .btn {
     font-size: .75rem;
     background-color: #f0f0f0!;
     border-radius: 5px
-   
+
 }
 
 .progress-bar {
@@ -5450,7 +5450,7 @@ fieldset:disabled .btn {
 
 @media (prefers-reduced-motion: reduce) {
     .progress-bar {
-       
+
         transition: none
     }
 }
@@ -5902,7 +5902,7 @@ fieldset:disabled .btn {
 .btn-close:disabled,
 .btn-close.disabled {
     pointer-events: none;
-    
+
     opacity: .25
 }
 
@@ -6024,7 +6024,7 @@ fieldset:disabled .btn {
 
 .modal-dialog-centered {
     display: flex;
-    
+
     align-items: center;
     min-width: calc(100% - 1rem);
     min-height: calc(100% - 1rem)
@@ -6034,7 +6034,7 @@ fieldset:disabled .btn {
     position: relative;
     display: flex;
     flex-direction: column;
-  
+
     pointer-events: auto;
     background-color: #fff;
     background-clip: padding-box;
@@ -6042,7 +6042,7 @@ fieldset:disabled .btn {
     border-radius: .3rem;
     outline: 0
 
-    
+
 }
 
 .modal-backdrop {
@@ -8465,7 +8465,7 @@ fieldset:disabled .btn {
 }
 
 .bg-today {
-    background-color: 
+    background-color:
     #fdc01a !important
 }
 .bg-week {

@@ -37,11 +37,7 @@
 
     <div class="container-fluid position-relative d-flex p-0 ">
         <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Please Wait...</span>
-            </div>
-        </div>
+
         <!-- Spinner End -->
 
         <!-- sidebar-menu Start -->
@@ -214,15 +210,24 @@
  </script>
 
 <script>
-    function updateStatus(id, status) {
-        const form = document.getElementById('statusForm' + id);
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'status';
-        hiddenInput.value = status;
-        form.appendChild(hiddenInput);
-        form.submit();
+  function updateStatus(id, status) {
+    console.log("Updating status for ID:", id, "with status:", status);
+    const form = document.getElementById('statusForm' + id);
+    if (!form) {
+        console.error("Form not found for ID:", id);
+        return;
     }
+    console.log("Form found. Appending hidden input for status.");
+
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'status';
+    hiddenInput.value = status;
+    form.appendChild(hiddenInput);
+
+    console.log("Submitting form with status:", hiddenInput.value);
+    form.submit();
+}
 </script>
 
 <script>
@@ -274,6 +279,47 @@
                 }
             }
         }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.employee-checkbox');
+        const exportBtn = document.getElementById('export-btn');
+        const selectAllBtn = document.getElementById('select-all');
+        const deselectAllBtn = document.getElementById('deselect-all');
+
+        function toggleButtons() {
+            const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            exportBtn.style.display = anyChecked ? 'inline-block' : 'none';
+            selectAllBtn.style.display = 'inline-block';
+            deselectAllBtn.style.display = 'inline-block';
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', toggleButtons);
+        });
+
+        selectAllBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            toggleButtons();
+        });
+
+        deselectAllBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            toggleButtons();
+        });
+
+        exportBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('export-form').submit();
+        });
     });
 </script>
 
