@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+@if(Auth::user()->end_of_contract == \Carbon\Carbon::today()->toDateString())
+<div class="col-sm-12 col-xl-12 bg-warning text-center py-3">
+    <i class="fas fa-bell" style="font-size: 24px;"></i>
+    <span class="ml-2 font-weight-bold">Reminder: Your contract is ending soon! Don't hesitate to contact the administrator.</span>
+</div>
+@endif
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-sm-12 col-xl-12">
@@ -61,13 +67,69 @@
                 </div>
                 <div class=" pt-4 px-4 ">
                     <div class="row g-4">
-                        <div class="col-sm-12 col-xl-7 rounded">
-                            <div class="bg-white rounded-3  h-100 p-4">
-                                <h6 class="mb-4 text-center text-dark">Employee Growth Rate</h6>
-                                <canvas id="Male-chart" width="400" height="400"></canvas>
+                        <div class="col-sm-12 col-xl-12">
+            <div class="row g-4">
+
+                <div class="col-sm-12 col-xl-8">
+                    <div class="row g-4">
+                        <div class="col-sm-12 col-xl-12">
+                            <div class="bg-white text-center rounded-3  p-4">
+                                @php
+                                $counter = 1;
+                                $counters = 1;
+                                @endphp
+
+                                <div class="col-12">
+                                    <div class="bg-white rounded h-100 p-4">
+                                        <h5 class="text-dark">Announcement Board</h5>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Title</th>
+                                                        <th scope="col">Start</th>
+                                                        <th scope="col">End</th>
+                                                        <th scope="col">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($getAnn as $announce)
+                                                    <tr>
+                                                        <th class="border-bottom border-white" scope="row">{{ $counter++ }}</th>
+                                                        <td class="border-bottom border-white">{{$announce->title}}</td>
+                                                        <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
+                                                            strtotime($announce->scheduled_date)) }}</td>
+                                                        <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
+                                                            strtotime($announce->scheduled_end)) }}</td>
+                                                        <td class="border-bottom border-white">
+                                                            @if($announce->scheduled_date > $currentDateTime)
+                                                            <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-warning"></i> Ongoing</span>
+
+                                                            @elseif($announce->scheduled_date <= $currentDateTime && $announce->scheduled_end >= $currentDateTime)
+                                                            <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-danger"></i> In Progress</span>
+                                                                @endif
+                                                        </td>
+
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+
+                                            {{$getAnn->onEachSide(1)->links()}}
+
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <div class="col-sm-12 col-xl-5 rounded">
+                    </div>
+                </div>
+
+
+                        <div class="col-sm-12 col-xl-4 rounded">
                             <div class="bg-white rounded-3 h-100 p-4">
                                 <h6 class="mb-4 fs-2 text-primary">Today's Birthday</h6>
 

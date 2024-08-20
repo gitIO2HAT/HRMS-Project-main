@@ -15,7 +15,7 @@
                                 <a>Personal Details</a>
                             </div>
 
-                            <form method="post" action="" enctype="multipart/form-data">
+                            <form method="POST" action="{{url('/Employee/MyAccount/Update')}}" enctype="multipart/form-data">
                                @csrf
                                 <div class="row g-4">
                                     <div class="col-sm-3 col-xl-3 border-end  border-bottom">

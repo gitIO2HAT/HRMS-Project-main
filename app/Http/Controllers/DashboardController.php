@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
+use App\Models\Task;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Models\Department;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -76,6 +78,10 @@ $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearE
 $growthRates[$years[$i]] = $growthRate;
 }
 
+date_default_timezone_set('Asia/Manila');
+
+// Get the current date and time in Asia/Manila timezone
+$currentDateTime['currentDateTime'] = Carbon::now()->setTimezone('Asia/Manila');
         // Notification query
         $notification['notify'] = DB::select("
             SELECT
@@ -93,7 +99,11 @@ $growthRates[$years[$i]] = $growthRate;
             GROUP BY
                 users.id, users.name, users.lastname, users.email
         ");
+        $gettask = Task::getTask();
+        $getAnn['getAnn'] = $gettask->orderby('scheduled_date', 'asc')->paginate(10);
 
+        $task = Task::getCompleted();
+        $getCompleted['getCompleted'] = $task->orderby('scheduled_date', 'asc')->paginate(10);
         // Get notifications (latest 10)
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
@@ -112,6 +122,9 @@ $growthRates[$years[$i]] = $growthRate;
             'birthdayUsers' => $birthdayUsers,
             'employeeCount' => $employeeCount,
             'departmentCount' => $departmentCount,
+            'getAnn' => $getAnn['getAnn'],
+            'getCompleted' => $getCompleted['getCompleted'],
+            'currentDateTime' => $currentDateTime['currentDateTime'],
             'growthRates' => $growthRates,
             'employeeData' => $employeeData, // Pass the birthday users to the view
         ]);

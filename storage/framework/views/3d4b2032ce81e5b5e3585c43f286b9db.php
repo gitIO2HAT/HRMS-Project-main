@@ -1,4 +1,12 @@
 <?php $__env->startSection('content'); ?>
+<?php if(Auth::user()->end_of_contract == \Carbon\Carbon::today()->toDateString()): ?>
+<div class="col-sm-12 col-xl-12 bg-warning text-center py-3">
+    <i class="fas fa-bell" style="font-size: 24px;"></i>
+    <span class="ml-2 font-weight-bold">Reminder: Your contract is ending soon! Don't hesitate to contact the administrator.</span>
+</div>
+<?php endif; ?>
+
+
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-sm-12 col-xl-12">

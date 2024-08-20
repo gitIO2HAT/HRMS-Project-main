@@ -144,10 +144,10 @@ class AttendanceController extends Controller
         $RecordsAttendance = Attendance::all();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $viewPath = Auth::user()->user_type == 0
-            ? 'superadmin.attendance'
+            ? 'superadmin.attendance.attendance'
             : (Auth::user()->user_type == 1
-                ? 'admin.attendance'
-                : 'employee.attendance');
+                ? 'admin.attendance.attendance'
+                : 'employee.attendance.attendance');
 
         return view($viewPath, [
             'notification' => $notification,

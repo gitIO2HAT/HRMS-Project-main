@@ -14,7 +14,7 @@
                                 <a>Personal Details</a>
                             </div>
 
-                            <form method="post" action="" enctype="multipart/form-data">
+                            <form method="POST" action="<?php echo e(url('/Employee/MyAccount/Update')); ?>" enctype="multipart/form-data">
                                <?php echo csrf_field(); ?>
                                 <div class="row g-4">
                                     <div class="col-sm-3 col-xl-3 border-end  border-bottom">
@@ -224,4 +224,5 @@
         </div>
     </div>
     <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/employee/myaccount/myaccount.blade.php ENDPATH**/ ?>

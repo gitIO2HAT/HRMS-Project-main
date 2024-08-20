@@ -52,8 +52,8 @@
                                             <td class="text-center">
                                                 {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                             </td>
-                                           
-                                                
+
+
                                             <td class="text-center">
                                             @if(Auth::user()->user_type == 0)
                                                 <a href="{{ url('/SuperAdmin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
@@ -62,7 +62,7 @@
                                                 <a href="{{ url('/Admin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
                                                 @endif
                                             </td>
-                                         
+
                                         </tr>
                                         @endforeach
                                     </tbody>

@@ -11,6 +11,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyAccountController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Models\Attendance;
 
 /*
@@ -26,7 +27,13 @@ use App\Models\Attendance;
 
 Route::get('/', [LoginDashboardController::class, 'login']);
 Route::post('login', [LoginDashboardController::class, 'AuthLogin']);
+Route::get('/ForgetPassword', [LoginDashboardController::class, 'forgetpassword']);
+Route::post('/ForgetPassword/Reset', [LoginDashboardController::class, 'sendResetLinkEmail']);
 Route::get('/logout', [LoginDashboardController::class, 'logoutButton'])->name('logoutButton');
+
+// Routes for password reset
+Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 
 
@@ -78,6 +85,12 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/positionsSuper/{department_id}', [DepartmentController::class, 'getPositions']);
 
     Route::get('/SuperAdmin/Attendance', [AttendanceController::class, 'attendance']);
+    Route::post('/SuperAdmin/ClockIn', [AttendanceController::class, 'clockIn']);
+    Route::post('/SuperAdmin/ClockOut', [AttendanceController::class, 'clockOut']);
+    Route::get('/current-time-superadmin', [AttendanceController::class, 'currentTime'])->name('current-time-superadmin');
+
+    Route::get('/SuperAdmin/MyAccount', [MyAccountController::class, 'myaccount']);
+    Route::post('/SuperAdmin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
 });
 
 Route::group(['middleware' => 'admin'], function () {
@@ -108,6 +121,9 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Read/{id}', [AnnouncementController::class, 'read']);
 
     Route::get('/Admin/Attendance', [AttendanceController::class, 'attendance']);
+    Route::post('/Admin/ClockIn', [AttendanceController::class, 'clockIn']);
+    Route::post('/Admin/ClockOut', [AttendanceController::class, 'clockOut']);
+    Route::get('/current-time-admin', [AttendanceController::class, 'currentTime'])->name('current-time-admin');
 
     Route::get('/Admin/Department', [DepartmentController::class, 'department']);
     Route::post('/Admin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);
@@ -120,17 +136,22 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/Department/UpdatePosition/{id}', [DepartmentController::class, 'updateposition']);
     Route::post('/Admin/Department/AddPosition', [DepartmentController::class, 'addposition']);
     Route::get('/Admin/positionsAdmin/{department_id}', [DepartmentController::class, 'getPositions']);
+
+    Route::get('/Admin/MyAccount', [MyAccountController::class, 'myaccount']);
+    Route::post('/Admin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
 });
 
 Route::group(['middleware' => 'employee'], function () {
     Route::get('/Employee/Dashboard', [DashboardController::class, 'dashboard']);
     Route::get('/Employee/Leave', [LeaveController::class, 'leave']);
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);
-    Route::post('/Employee/MyAccount', [MyAccountController::class, 'updatemyaccount']);
+    Route::post('/Employee/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
     Route::post('/Employee/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::get('/Employee/Read/{id}', [AnnouncementController::class, 'read']);
     Route::get('/Employee/Attendance', [AttendanceController::class, 'attendance']);
     Route::post('/Employee/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockOut']);
-    Route::get('/current-time', [AttendanceController::class, 'currentTime'])->name('current-time');
+    Route::get('/current-time-employee', [AttendanceController::class, 'currentTime'])->name('current-time-employee');
 });
+
+

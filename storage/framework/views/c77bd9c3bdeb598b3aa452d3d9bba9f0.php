@@ -193,7 +193,7 @@
                         <label>
                             <input type="checkbox" name="remember"> Remember me
                         </label>
-                        <a href="#">Forgot Password?</a>
+                        <a href="<?php echo e(url('/ForgetPassword')); ?>">Forgot Password?</a>
                     </div>
 
                     <div class="login">
@@ -206,4 +206,5 @@
 
 </body>
 
-</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>

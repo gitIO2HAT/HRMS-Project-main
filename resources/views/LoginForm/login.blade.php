@@ -193,7 +193,7 @@
                         <label>
                             <input type="checkbox" name="remember"> Remember me
                         </label>
-                        <a href="#">Forgot Password?</a>
+                        <a href="{{url('/ForgetPassword')}}">Forgot Password?</a>
                     </div>
 
                     <div class="login">

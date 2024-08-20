@@ -228,24 +228,9 @@
         @endif
 
 
-        @if(Auth::user()->user_type == 2)
-        @if(Request::segment(2) == 'MyAccount')
-        <li class="active">
-            <a href="{{url('Employee/MyAccount')}}">
-                <i class="bx far fa-user" style="color: #000000;"></i>
-                <span class="text">My Account</span>
-            </a>
-        </li>
-        @else
-        <li>
-            <a href="{{url('Employee/MyAccount')}}">
-                <i class="bx far fa-user" style="color: #000000;"></i>
-                <span class="text">My Account</span>
-            </a>
-        </li>
-        @endif
-        @endif
+
         @if(Auth::user()->user_type == 0)
+
         @if(Request::segment(2) == 'Attendance')
         <li class="active">
             <a href="{{url('SuperAdmin/Attendance')}}">
@@ -262,6 +247,7 @@
         </li>
         @endif
         @elseif(Auth::user()->user_type == 1)
+
         @if(Request::segment(2) == 'Attendance')
         <li class="active">
             <a href="{{url('Admin/Attendance')}}">
@@ -298,7 +284,57 @@
 
     <ul class="side-menu bottom">
 
+        @if(Auth::user()->user_type == 0)
 
+        @if(Request::segment(2) == 'MyAccount')
+        <li class="active">
+            <a href="{{url('/SuperAdmin/MyAccount')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Account</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('/SuperAdmin/MyAccount')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">MyAccount</span>
+            </a>
+        </li>
+        @endif
+        @elseif(Auth::user()->user_type == 1)
+
+        @if(Request::segment(2) == 'MyAccount')
+        <li class="active">
+            <a href="{{url('/Admin/MyAccount')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">MyAccount</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('/Admin/MyAccount')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">MyAccount</span>
+            </a>
+        </li>
+        @endif
+        @elseif(Auth::user()->user_type == 2)
+        @if(Request::segment(2) == 'MyAccount')
+        <li class="active">
+            <a href="{{url('Employee/MyAccount')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">MyAccount</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('Employee/MyAccount')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">MyAccount</span>
+            </a>
+        </li>
+        @endif
+        @endif
 
         <li>
             <a href="{{route('logoutButton')}}" class="logout">

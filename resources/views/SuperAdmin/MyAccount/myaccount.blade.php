@@ -15,7 +15,7 @@
                                 <a>Personal Details</a>
                             </div>
 
-                            <form method="post" action="" enctype="multipart/form-data">
+                            <form method="post" action="{{url('/SuperAdmin/MyAccount/Update')}}" enctype="multipart/form-data">
                                @csrf
                                 <div class="row g-4">
                                     <div class="col-sm-3 col-xl-3 border-end  border-bottom">
@@ -218,7 +218,7 @@
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-success">Submit</button>
-                                <a href="{{url('Employee/Dashboard')}}" class="btn btn-primary">Done<a>
+                                <a href="{{url('/SuperAdmin/Dashboard')}}" class="btn btn-primary">Done<a>
                                                 </form>
                         </div>
                     </div>
