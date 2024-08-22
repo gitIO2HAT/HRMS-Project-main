@@ -102,19 +102,35 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm-3 col-xl-3 text-start text-dark ">
+                    <div class="col-sm- col-xl-2 text-start text-dark ">
                         <p>Title:</p>
                         <p>{{$getId->position}}</p>
                     </div>
-                    <div class="col-sm-3 col-xl-3 text-dark">
+                    <div class="col-sm-2 col-xl-2 text-dark">
                         <p>Employee ID:</p>
                         <p>{{$getId->custom_id}}</p>
                     </div>
-                    <div class="col-sm-3 col-xl-3 text-start text-dark ">
+                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
                         <p>{{$getId->created_at}}</p>
                     </div>
-                    <div class="col-sm-3 col-xl-3 text-start text-dark ">
+                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
+                        <p>Contract:</p>
+                        <p>
+                            @if($getId->contract == 1)
+                            Regular
+                            @elseif($getId->contract == 2)
+                            Casual
+                            @elseif($getId->contract == 3)
+                            Contractual
+                            @elseif($getId->contract == 4)
+                            Job Order
+                            @elseif($getId->contract == 5)
+                            Seasonal
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>End of Contract:</p>
                         <p>{{$getId->end_of_contract}}</p>
                     </div>
@@ -126,11 +142,13 @@
                         <p>Department:</p>
                         <p>{{$getId->department}}</p>
                     </div>
+
+
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Position:</p>
                         <p>{{$getId->position}}</p>
                     </div>
-                   
+
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Daily Rate:</p>
                         <p>{{$getId->daily_rate}}</p>

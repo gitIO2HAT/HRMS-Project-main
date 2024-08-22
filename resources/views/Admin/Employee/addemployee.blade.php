@@ -65,7 +65,6 @@
                                                     <option selected disabled>--Select Sex--</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
-                                                    <option value="Other">Other</option>
                                                     @if($errors->has('sex'))
                                                     <span class="text-danger">{{ $errors->first('sex') }}</span>
                                                     @endif
@@ -104,6 +103,18 @@
                                                 @endif
                                             </div>
 
+                                            <select id="contract" class="form-control" name="contract" required>
+                                                <option selected disabled>--Select Contract--</option>
+                                                <option value="1">Regular</option>
+                                                <option value="2">Casual</option>
+                                                <option value="3">Contractual</option>
+                                                <option value="4">Job Order</option>
+                                                <option value="5">Seasonal</option>
+                                                @if ($errors->has('contract'))
+                                                    <span
+                                                        class="text-danger">{{ $errors->first('contract') }}</span>
+                                                @endif
+                                            </select>
 
                                             <div class="input-field">
                                                 <label for="department">Department</label>
@@ -205,5 +216,5 @@
         });
     </script>
 
-   
+
     @endsection

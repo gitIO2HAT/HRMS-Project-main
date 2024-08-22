@@ -45,7 +45,10 @@
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Department</th>
                                                 <th scope="col">Position</th>
+                                                <th scope="col">Contract</th>
                                                 <th scope="col">Role</th>
+
+
                                                 <th scope="col">End of Contract</th>
                                                 <th scope="col">Edit</th>
                                                 <th scope="col">Preview</th>
@@ -62,6 +65,19 @@
                                                 <td><?php echo e($employee->email); ?></td>
                                                 <td><?php echo e($employee->department); ?></td>
                                                 <td><?php echo e($employee->position); ?></td>
+                                                <td>
+                                                <?php if($employee->contract == 1): ?>
+                                                Regular
+                                                <?php elseif($employee->contract == 2): ?>
+                                                Casual
+                                                <?php elseif($employee->contract == 3): ?>
+                                                Contractual
+                                                <?php elseif($employee->contract == 4): ?>
+                                                Job Order
+                                                <?php elseif($employee->contract == 5): ?>
+                                                Seasonal
+                                                <?php endif; ?>
+                                            </td>
                                                 <td><?php if($employee->user_type === 1): ?>
                                                     Admin
                                                     <?php elseif($employee->user_type === 2): ?>

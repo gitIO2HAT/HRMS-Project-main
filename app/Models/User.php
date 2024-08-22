@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Auth;
-Use Carbon\Carbon;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -40,6 +40,7 @@ class User extends Authenticatable
         'vacation_balance',
         'civil_status',
         'fulladdress',
+        'contract',
         'emergency_fullname',
         'emergency_phonenumber',
         'emergency_relationship',
@@ -68,29 +69,28 @@ class User extends Authenticatable
     ];
 
 
-   public static function getEmployee()
-{
-    if (Auth::user()->user_type === 0) {
-        return self::where('user_type', '!=', 0)
-            ->where('is_archive', '=', 1);
-    } else {
-        return self::where('user_type', '=', 2)
-            ->where('is_archive', '=', 1);
+    public static function getEmployee()
+    {
+        if (Auth::user()->user_type === 0) {
+            return self::where('user_type', '!=', 0)
+                ->where('is_archive', '=', 1);
+        } else {
+            return self::where('user_type', '=', 2)
+                ->where('is_archive', '=', 1);
+        }
     }
 
-}
-
-public static function getArchiveEmployee()
-{
-    if (Auth::user()->user_type === 0) {
-        return self::where('user_type', '!=', 0)
-            ->where('is_archive', '=', 2);
-    } else {
-        return self::where('user_type', '=', 2)
-            ->where('is_archive', '=', 2);
+    public static function getArchiveEmployee()
+    {
+        if (Auth::user()->user_type === 0) {
+            return self::where('user_type', '!=', 0)
+                ->where('is_archive', '=', 2);
+        } else {
+            return self::where('user_type', '=', 2)
+                ->where('is_archive', '=', 2);
+        }
     }
-}
-static public function getID($id)
+    static public function getID($id)
     {
         return self::find($id);
     }
@@ -112,5 +112,8 @@ static public function getID($id)
     {
         return $this->hasMany(Leave::class);
     }
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department', 'name');
+    }
 }
-

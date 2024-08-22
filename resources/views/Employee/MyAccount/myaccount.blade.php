@@ -32,6 +32,17 @@
                                                 <h5 class="text-dark">{{Auth::user()->name}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</h5>
                                                 <h6 class="text-light">{{Auth::user()->position}}</h6>
                                                 <h6 class="text-light">{{Auth::user()->department}}</h6>
+                                                <h6 class="text-light"> @if(Auth::user()->contract == 1)
+                                                    Regular
+                                                    @elseif(Auth::user()->contract == 2)
+                                                    Casual
+                                                    @elseif(Auth::user()->contract == 3)
+                                                    Contractual
+                                                    @elseif(Auth::user()->contract == 4)
+                                                    Job Order
+                                                    @elseif(Auth::user()->contract == 5)
+                                                    Seasonal
+                                                    @endif</h6>
                                             </div>
                                             <div>
                                                 <div class="mt-2">
@@ -95,7 +106,6 @@
                                                     <option selected disabled>--Select Sex--</option>
                                                     <option value="Male" @if(Auth::user()->sex == 'Male') selected @endif>Male</option>
                                                     <option value="Female" @if(Auth::user()->sex == 'Female') selected @endif>Female</option>
-                                                    <option value="Other" @if(Auth::user()->sex == 'Other') selected @endif>Other</option>
                                                     @if($errors->has('sex'))
                                                     <span class="text-danger">{{ $errors->first('sex') }}</span>
                                                     @endif

@@ -47,7 +47,10 @@
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Department</th>
                                                 <th scope="col">Position</th>
+                                                <th scope="col">Contract</th>
                                                 <th scope="col">Role</th>
+
+
                                                 <th scope="col">End of Contract</th>
                                                 <th scope="col">Edit</th>
                                                 <th scope="col">Preview</th>
@@ -64,6 +67,19 @@
                                                 <td>{{ $employee->email}}</td>
                                                 <td>{{ $employee->department}}</td>
                                                 <td>{{ $employee->position}}</td>
+                                                <td>
+                                                @if($employee->contract == 1)
+                                                Regular
+                                                @elseif($employee->contract == 2)
+                                                Casual
+                                                @elseif($employee->contract == 3)
+                                                Contractual
+                                                @elseif($employee->contract == 4)
+                                                Job Order
+                                                @elseif($employee->contract == 5)
+                                                Seasonal
+                                                @endif
+                                            </td>
                                                 <td>@if($employee->user_type === 1)
                                                     Admin
                                                     @elseif($employee->user_type === 2)

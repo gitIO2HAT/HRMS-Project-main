@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use ZipArchive;
 
 use App\Models\Message;
 use App\Models\Leave;
@@ -102,12 +103,190 @@ class LeaveController extends Controller
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
+                $employeeCount = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
+
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
+
+            $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+            ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+            ->where('user_type', '!=', 0)->count();
+
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+        $totalEmployeesAtEnd = User::count();
+        // Calculate the number of employees who have left (assuming archived employees have left)
+        $employeesLeft = User::where('is_archive', 2)
+        ->where('user_type', '!=', 0)
+        ->count();
+
+        // Calculate the average number of employees
+        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+        } else {
+            $averageEmployees = 0;
+        }
+
+        // Handle division by zero
+        if ($averageEmployees > 0) {
+            // Calculate turnover rate
+            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+        } else {
+            $turnoverRate = 0;
+        }
         } else {
             $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
                 ->whereNotIn('user_type', [0, 1])
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
+                $employeeCount = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
+
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
+
+            $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+            ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+            ->where('user_type', '!=', 0)->count();
+
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+        $totalEmployeesAtEnd = User::count();
+        // Calculate the number of employees who have left (assuming archived employees have left)
+        $employeesLeft = User::where('is_archive', 2)
+        ->where('user_type', '!=', 0)
+        ->count();
+
+        // Calculate the average number of employees
+        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+        } else {
+            $averageEmployees = 0;
+        }
+
+        // Handle division by zero
+        if ($averageEmployees > 0) {
+            // Calculate turnover rate
+            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+        } else {
+            $turnoverRate = 0;
+        }
         }
         // Calculate growth rate for each year
         $growthRates = [];
@@ -134,6 +313,24 @@ class LeaveController extends Controller
             'users' => $users,
             'growthRates' => $growthRates,
             'employeeData' => $employeeData,
+            'employeefemale' => $employeefemale,
+            'employeemale' => $employeemale,
+            'employee1822' => $employee1822,
+            'employee2327' => $employee2327,
+            'employee2833' => $employee2833,
+            'employee3438' => $employee3438,
+            'employee3943' => $employee3943,
+            'employee4448' => $employee4448,
+            'employee4953' => $employee4953,
+            'employee5460' => $employee5460,
+            'departments' => $departments,
+            'counts' => $counts,
+            'employeesStayed' => $employeesStayed,
+            'totalEmployeesAtStart' => $totalEmployeesAtStart,
+            'retentionRate' => $retentionRate,
+            'averageEmployees' => $averageEmployees,
+            'employeesLeft' => $employeesLeft,
+            'turnoverRate' => $turnoverRate,
         ]);
     }
 
@@ -252,6 +449,16 @@ class LeaveController extends Controller
 
     public function updaterequest(Request $request, $id)
     {
+        Log::info('Request Data:', $request->all());
+
+        $employeeIds = $request->input('employee_ids');
+
+        if (is_null($employeeIds)) {
+            Log::error('employee_ids is null');
+        } else {
+            Log::info('employee_ids:', $employeeIds);
+        }
+
         $leave = Leave::find($id);
         if (!$leave) {
             return redirect()->back()->with('error', 'Leave request not found.');
@@ -266,17 +473,13 @@ class LeaveController extends Controller
         ], [
             'status.required' => 'The status field is required to select.',
         ]);
-
         $user = User::where('custom_id', $leave->employee_id)->first();
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
-
         $previousStatus = $leave->status;
-
         // Check if status is changing
         Log::info('Previous Status: ' . $previousStatus . ' New Status: ' . $status);
-
         // Check if user has enough balance before approving the leave
         if ($status === 'Approved' && $previousStatus !== 'Approved') {
             if ($leave->leave_type === 'Sick Leave') {
@@ -303,41 +506,88 @@ class LeaveController extends Controller
                 $user->vacation_balance += $leave->leave_days;
             }
         }
-
         $leave->status = $status;
         $leave->save();
         $user->save();
-
         return redirect()->back()->with('success', 'Leave request successfully updated');
     }
-
     public function exportexcel(Request $request)
 {
-    $employeeIds = $request->input('employee_ids');
+    // Ensure $employeeIds is an array, or set it to an empty array if null
+    $employeeIds = $request->input('employee_ids', []);
 
-    // Fetch all approved and declined leave records for the selected employee IDs
-    $leaves = Leave::whereIn('employee_id', $employeeIds)
-        ->whereIn('status', ['Declined', 'Approved'])
-        ->with('user')
-        ->get();
+    // Check if $employeeIds is empty
+    if (empty($employeeIds)) {
+        return response()->json(['error' => 'No employee IDs provided.'], 400);
+    }
 
-    // Map the leave records to the desired export format
-    $data = $leaves->map(function ($leave) {
-        return [
-            'Employee' => $leave->user->name . ' ' . $leave->user->lastname,
-            'Leave Type' => $leave->leave_type,
-            'Reason' => $leave->reason,
-            'Start Date' => \Carbon\Carbon::parse($leave->from)->format('Y, F j'), // Format as "2024, January 26"
-            'End Date' => \Carbon\Carbon::parse($leave->to)->format('Y, F j'), // Format as "2024, January 26"
-            'Leave Days' => $leave->leave_days, // Ensure consistency with the heading 'Leave Days'
-            'Status' => $leave->status,
-        ];
-    });
+    $tempDir = storage_path('app/public/temp_leave_exports');
 
-    // Return the Excel download
-    return \Maatwebsite\Excel\Facades\Excel::download(new LeavesExport($data), 'leaves.xlsx');
+    // Create the temp directory if it doesn't exist
+    if (!file_exists($tempDir)) {
+        if (!mkdir($tempDir, 0777, true)) {
+            Log::error('Unable to create directory: ' . $tempDir);
+            return response()->json(['error' => 'Unable to create directory.'], 500);
+        }
+    }
+
+    $files = [];
+
+    foreach ($employeeIds as $employeeId) {
+        $leaves = Leave::where('employee_id', $employeeId)
+            ->whereIn('status', ['Declined', 'Approved'])
+            ->with('user')
+            ->get();
+
+        if ($leaves->isEmpty()) {
+            continue;
+        }
+
+        $user = $leaves->first()->user;
+
+        $data = $leaves->map(function ($leave) {
+            return [
+                'Employee' => $leave->user->name . ' ' . $leave->user->lastname,
+                'Leave Type' => $leave->leave_type,
+                'Reason' => $leave->reason,
+                'Start Date' => \Carbon\Carbon::parse($leave->from)->format('Y, F j'),
+                'End Date' => \Carbon\Carbon::parse($leave->to)->format('Y, F j'),
+                'Leave Days' => $leave->leave_days,
+                'Status' => $leave->status,
+            ];
+        })->toArray();
+
+        $fileName = $user->name . '_' . $user->lastname . '_leaves.xlsx';
+        $filePath = $tempDir . DIRECTORY_SEPARATOR . $fileName;
+
+        Excel::store(new LeavesExport($data), 'public/temp_leave_exports/' . $fileName);
+        $files[] = $filePath;
+    }
+
+    // Check if no files were created
+    if (empty($files)) {
+        return response()->json(['error' => 'No leave records to export.'], 404);
+    }
+
+    $zipFileName = 'leave_records.zip';
+    $zipFilePath = $tempDir . DIRECTORY_SEPARATOR . $zipFileName;
+
+    $zip = new ZipArchive;
+    if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+        foreach ($files as $file) {
+            $zip->addFile($file, basename($file));
+        }
+        $zip->close();
+    } else {
+        Log::error('Unable to create ZIP file: ' . $zipFilePath);
+        return response()->json(['error' => 'Unable to create ZIP file.'], 500);
+    }
+
+    foreach ($files as $file) {
+        unlink($file);
+    }
+
+    return response()->download($zipFilePath)->deleteFileAfterSend(true);
 }
-
-
 
 }

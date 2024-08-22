@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('lastname', 255);
             $table->string('middlename', 30);
             $table->enum('suffix', ['Jr.', 'Sr.', 'I', 'II', 'III'])->nullable();
+            $table->enum('contract', ['1', '2', '3', '4', '5']);
             $table->enum('sex', ['Male', 'Female', 'Other']);
             $table->integer('age')->default(18);
             $table->date('birth_date')->nullable();
@@ -64,6 +65,7 @@ return new class extends Migration
                 'custom_id' => '1',
                 'end_of_contract' => '2023-12-31',
                 'is_archive' => '1',
+                'contract' => '1',
                 'civil_status' => 'Single',
                 'fulladdress' => '123 Main St, City, Country',
                 'emergency_fullname' => 'Emergency Contact',

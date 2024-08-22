@@ -95,7 +95,6 @@
         // Trigger file input click when the image is clicked
         document.getElementById('profileImage').click();
     }
-
     function displayImage(input) {
         var reader = new FileReader();
 
@@ -108,14 +107,6 @@
         }
     }
 </script>
-
-
-
-
-
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Get all checkboxes
@@ -187,8 +178,6 @@
         }
     }
 </script>
-
-
 <script>
     document.querySelector('.increment').addEventListener('click', function(event) {
      event.preventDefault(); // Prevent form submission
@@ -208,7 +197,6 @@
      }
  });
  </script>
-
 <script>
   function updateStatus(id, status) {
     console.log("Updating status for ID:", id, "with status:", status);
@@ -229,7 +217,6 @@
     form.submit();
 }
 </script>
-
 <script>
     var ctx = document.getElementById('growthChart').getContext('2d');
     var growthChart = new Chart(ctx, {
@@ -283,6 +270,211 @@
 </script>
 
 <script>
+    var ctx = document.getElementById('genderChart').getContext('2d');
+    var genderChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                label: 'Gender Distribution',
+                data: <?php echo json_encode([$employeemale, $employeefemale]); ?>, // male and female counts
+                backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('ageChart').getContext('2d');
+    var ageChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['18-22', '23-27', '28-33', '34-38', '39-43', '44-48', '49-53', '54-60'],
+            datasets: [{
+                label: 'Number of Employees per Age Group',
+                data: <?php echo json_encode([$employee1822, $employee2327, $employee2833, $employee3438, $employee3943, $employee4448, $employee4953, $employee5460]); ?>,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)',
+                    'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)', 'rgba(201, 203, 207, 0.2)',
+                    'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)',
+                    'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)', 'rgba(201, 203, 207, 1)',
+                    'rgba(255, 205, 86, 1)', 'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var allDepartments = <?php echo json_encode($departments); ?>;
+    var allCounts = <?php echo json_encode($counts); ?>;
+
+    var ctx = document.getElementById('departmentChart').getContext('2d');
+    var departmentChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: allDepartments, // all department names
+            datasets: [{
+                label: 'Number of Employees per Department',
+                data: allCounts, // total employee counts
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            onClick: function(event, elements) {
+                if (elements.length > 0) {
+                    var clickedElementIndex = elements[0].index;
+                    var department = this.data.labels[clickedElementIndex];
+                    var employeeCount = this.data.datasets[0].data[clickedElementIndex];
+
+                    // Display the department and count in a styled alert
+                    alert(department + " has " + employeeCount + " employees.");
+
+                    // Highlight the clicked department by setting other data points to 0
+                    var filteredData = this.data.datasets[0].data.map((count, index) => {
+                        return index === clickedElementIndex ? count : 0;
+                    });
+
+                    // Update the chart with filtered data
+                    this.data.datasets[0].data = filteredData;
+                    this.update();
+
+                    // Show the reset button
+                    document.getElementById('resetChartBtn').style.display = 'inline';
+                }
+            }
+        }
+    });
+
+    // Reset button functionality
+    document.getElementById('resetChartBtn').addEventListener('click', function() {
+        // Reset the chart data to the original counts
+        departmentChart.data.datasets[0].data = allCounts;
+        departmentChart.update();
+
+        // Hide the reset button
+        this.style.display = 'none';
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById('retentionRateChart').getContext('2d');
+
+    var retentionRate = <?php echo json_encode($retentionRate); ?>;
+    var totalEmployeesAtStart = <?php echo json_encode($totalEmployeesAtStart); ?>;
+    var employeesStayed = <?php echo json_encode($employeesStayed); ?>;
+
+    var data = {
+        labels: ['Total Employees at Start', 'Employees Stayed'],
+        datasets: [{
+            label: 'Retention Rate (%)',
+            data: [totalEmployeesAtStart, employeesStayed],
+            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)'],
+            borderWidth: 1
+        }]
+    };
+
+    var options = {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        if (context.label === 'Employees Stayed') {
+                            return 'Retention Rate: ' + retentionRate.toFixed(2) + '%';
+                        }
+                        return context.raw;
+                    }
+                }
+            }
+        }
+    };
+
+    var retentionRateChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+    });
+</script>
+<script>
+    var ctx = document.getElementById('turnoverRateChart').getContext('2d');
+
+    var turnoverRate = <?php echo json_encode($turnoverRate); ?>;
+    var employeesLeft = <?php echo json_encode($employeesLeft); ?>;
+    var averageEmployees = <?php echo json_encode($averageEmployees); ?>;
+
+    var data = {
+        labels: ['Employees Left', 'Average Employees'],
+        datasets: [{
+            label: 'Turnover Rate (%)',
+            data: [employeesLeft, averageEmployees],
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+            borderWidth: 1
+        }]
+    };
+    var options = {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        if (context.label === 'Employees Left') {
+                            return 'Turnover Rate: ' + turnoverRate.toFixed(2) + '%';
+                        }
+                        return context.raw;
+                    }
+                }
+            }
+        }
+    };
+    var turnoverRateChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+    });
+</script>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         const checkboxes = document.querySelectorAll('.employee-checkbox');
         const exportBtn = document.getElementById('export-btn');
@@ -322,6 +514,5 @@
         });
     });
 </script>
-
 </html>
 <?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/app.blade.php ENDPATH**/ ?>

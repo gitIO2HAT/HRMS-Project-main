@@ -44,6 +44,22 @@
                                                 @endif
                                             </div>
 
+                                            <div class=" input-field">
+                                                <label>Contract</label>
+                                                <select id="contract" class="form-control" name="contract" required>
+                                                    <option selected disabled>--Select Contract--</option>
+                                                    <option value="1" @if($getId->contract == '1') selected @endif>Regular</option>
+                                                    <option value="2" @if($getId->contract == '2') selected @endif>Casual</option>
+                                                    <option value="3" @if($getId->contract== '3') selected @endif>Contractual</option>
+                                                    <option value="4" @if($getId->contract== '4') selected @endif>Job Order</option>
+                                                    <option value="5" @if($getId->contract == '5') selected @endif>Seasonal</option>
+                                                    @if ($errors->has('contract'))
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('contract') }}</span>
+                                                    @endif
+                                                </select>
+                                            </div>
+
                                             <div class="input-field">
                                                 <label>End of Contract</label>
                                                 <input type="date" class="form-control" name="end_of_contract"

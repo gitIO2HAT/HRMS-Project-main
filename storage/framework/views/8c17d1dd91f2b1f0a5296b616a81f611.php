@@ -102,19 +102,35 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm-3 col-xl-3 text-start text-dark ">
+                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
                         <p>Title:</p>
                         <p><?php echo e($getId->position); ?></p>
                     </div>
-                    <div class="col-sm-3 col-xl-3 text-dark">
+                    <div class="col-sm-3 col-xl-2 text-dark">
                         <p>Employee ID:</p>
                         <p><?php echo e($getId->custom_id); ?></p>
                     </div>
-                    <div class="col-sm-3 col-xl-3 text-start text-dark ">
+                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
                         <p><?php echo e($getId->created_at); ?></p>
                     </div>
-                    <div class="col-sm-3 col-xl-3 text-start text-dark ">
+                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
+                        <p>Contract:</p>
+                        <p>
+                            <?php if($getId->contract == 1): ?>
+                            Regular
+                            <?php elseif($getId->contract == 2): ?>
+                            Casual
+                            <?php elseif($getId->contract == 3): ?>
+                            Contractual
+                            <?php elseif($getId->contract == 4): ?>
+                            Job Order
+                            <?php elseif($getId->contract == 5): ?>
+                            Seasonal
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
                         <p>End of Contract:</p>
                         <p><?php echo e($getId->end_of_contract); ?></p>
                     </div>
@@ -126,11 +142,13 @@
                         <p>Department:</p>
                         <p><?php echo e($getId->department); ?></p>
                     </div>
+
+
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Position:</p>
                         <p><?php echo e($getId->position); ?></p>
                     </div>
-                   
+
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Daily Rate:</p>
                         <p><?php echo e($getId->daily_rate); ?></p>
@@ -175,4 +193,5 @@
 <!-- Template Javascript -->
 <script src="<?php echo e(asset('js/main.js')); ?>"></script>
 
-</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/superadmin/employee/previewemployee.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/superadmin/employee/previewemployee.blade.php ENDPATH**/ ?>
