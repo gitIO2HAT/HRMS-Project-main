@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\AttendanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -93,7 +94,8 @@ class AttendanceController extends Controller
 
         // Get recent punches
         $getPunch = Attendance::where('user_id', $userId)->orderBy('created_at', 'desc')->take(10)->paginate(10);
-
+        $getall = Attendance::with('user')
+        ->where('user_id', '!=', 1)->orderBy('created_at', 'desc')->take(10)->paginate(10);
         // Search for employee records
         $search = $request->input('search');
 
@@ -108,13 +110,16 @@ class AttendanceController extends Controller
 
 
         if (Auth::user()->user_type === 0) {
+            $users = user::where('user_type', '!=', 0)
+                ->where('is_archive', 1)
+                ->get();
             $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
                 ->where('user_type', '!=', 0)
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
 
-                $employeeCount = User::where('is_archive', 1)
+            $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
                 ->count();
@@ -171,9 +176,9 @@ class AttendanceController extends Controller
             $counts = $departmentCounts->pluck('total');
 
             $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
 
             // Handle division by zero
             if ($totalEmployeesAtStart > 0) {
@@ -183,33 +188,40 @@ class AttendanceController extends Controller
                 // Set retention rate to 0 or handle it differently
                 $retentionRate = 0;
             }
-        $totalEmployeesAtEnd = User::count();
-        // Calculate the number of employees who have left (assuming archived employees have left)
-        $employeesLeft = User::where('is_archive', 2)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        // Calculate the average number of employees
-        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-        } else {
-            $averageEmployees = 0;
-        }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-        // Handle division by zero
-        if ($averageEmployees > 0) {
-            // Calculate turnover rate
-            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         } else {
-            $turnoverRate = 0;
-        }
-        } else {
+            $usersadmin = user::where('user_type', 2)
+            ->where('is_archive', 1)
+                ->get();
+
+            $users = user::where('user_type', [0, 1])
+                ->where('is_archive', 1)
+                ->get();
             $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
                 ->whereNotIn('user_type', [0, 1])
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
-                $employeeCount = User::where('is_archive', 1)
+            $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
                 ->count();
@@ -266,9 +278,9 @@ class AttendanceController extends Controller
             $counts = $departmentCounts->pluck('total');
 
             $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
 
             // Handle division by zero
             if ($totalEmployeesAtStart > 0) {
@@ -278,26 +290,26 @@ class AttendanceController extends Controller
                 // Set retention rate to 0 or handle it differently
                 $retentionRate = 0;
             }
-        $totalEmployeesAtEnd = User::count();
-        // Calculate the number of employees who have left (assuming archived employees have left)
-        $employeesLeft = User::where('is_archive', 2)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        // Calculate the average number of employees
-        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-        } else {
-            $averageEmployees = 0;
-        }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-        // Handle division by zero
-        if ($averageEmployees > 0) {
-            // Calculate turnover rate
-            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-        } else {
-            $turnoverRate = 0;
-        }
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         }
 
         // Calculate growth rate for each year
@@ -363,6 +375,15 @@ class AttendanceController extends Controller
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
             'turnoverRate' => $turnoverRate,
+            'getall' => $getall,
+            'usersadmin' => $usersadmin,
+            'users' => $users
+
+
+
+
+
+
         ]);
     }
 
@@ -472,111 +493,65 @@ class AttendanceController extends Controller
         return response()->json(['totalDuration' => $totalDuration]);
     }
 
-
-
-
-    public function exportexcelattendance(Request $request)
+    public function generateReports(Request $request)
     {
-        $employeeIds = $request->input('custom_ids');
-        $month = $request->input('month');
-        $year = $request->input('year');
+        // Retrieve input values for the date range and employee ID
+        $timeframeStart = $request->input('timeframeStart');
+        $timeframeEnd = $request->input('timeframeEnd');
+        $employeeIds = $request->input('employeeIds');
 
-        $tempDir = storage_path('app/public/temp_attendance_exports');
 
-        if (!file_exists($tempDir)) {
-            if (!mkdir($tempDir, 0777, true)) {
-                Log::error('Unable to create directory: ' . $tempDir);
-                return response()->json(['error' => 'Unable to create directory.'], 500);
+        // Initialize the Leave query with the user relationship
+
+
+        if (Auth::user()->user_type == 0) {
+            $attendancedata = Attendance::query()->with('user');
             }
-        }
-
-        $files = [];
-
-        foreach ($employeeIds as $employeeId) {
-            $attendance = Attendance::where('user_id', $employeeId)
-                ->whereYear('date', $year)
-                ->whereMonth('date', $month)
-                ->with('user')
-                ->get();
-
-            if ($attendance->isEmpty()) {
-                continue;
-            }
-
-            $user = $attendance->first()->user;
-
-            // Initialize total sum
-            $total = 0;
-
-            $data = $attendance->map(function ($record) use (&$total) {
-                $format = 'F, j Y, g:i a';
-
-                $amFirstPunch = $record->punch_in_am_first ? Carbon::parse($record->punch_in_am_first)->format($format) : 'N/A';
-                $amSecondPunch = $record->punch_in_am_second ? Carbon::parse($record->punch_in_am_second)->format($format) : 'N/A';
-                $pmFirstPunch = $record->punch_in_pm_first ? Carbon::parse($record->punch_in_pm_first)->format($format) : 'N/A';
-                $pmSecondPunch = $record->punch_in_pm_second ? Carbon::parse($record->punch_in_pm_second)->format($format) : 'N/A';
-
-                // Calculate total based on AM and PM statuses
-                $dayTotal = 0;
-                if ($record->punch_in_am_first && $record->punch_in_pm_first) {
-                    $dayTotal = 1; // Full day
-                } elseif (!$record->punch_in_am_first && $record->punch_in_pm_first) {
-                    $dayTotal = 0.5; // Half day
+            if (Auth::user()->user_type == 1) {
+                $attendancedata = Attendance::query()->where('user_id','!=', 1)->with('user');
                 }
 
-                // Add day total to the overall total
-                $total += $dayTotal;
+        $dateNow = $this->getInternetTime();
 
-                return [
-                    'Employee Name' => $record->user->name . ' ' . $record->user->lastname,
-                    'Date' => Carbon::parse($record->date)->format('F, j Y'),
-                    'AM First Punch' => $amFirstPunch,
-                    'AM Second Punch' => $amSecondPunch,
-                    'PM First Punch' => $pmFirstPunch,
-                    'PM Second Punch' => $pmSecondPunch,
-                    'Total' => $dayTotal, // Include the calculated total for the day
-                ];
-            })->toArray();
-
-            // Add a final row to show the sum of all totals for the employee
-            $data[] = [
-                'Employee Name' => 'Total Days of ' . $user->name . ' ' . $user->lastname,
-                'Date' => '',
-                'AM First Punch' => '',
-                'AM Second Punch' => '',
-                'PM First Punch' => '',
-                'PM Second Punch' => '',
-                'Total' => $total, // Sum total for the employee
-            ];
-
-            $fileName = $user->name . '_' . $user->lastname . '_attendance.xlsx';
-            $filePath = $tempDir . DIRECTORY_SEPARATOR . $fileName;
-
-            Excel::store(new AttendanceExport($data), 'public/temp_attendance_exports/' . $fileName);
-            $files[] = $filePath;
+        // Apply employee filter if an employee is selected
+        if ($employeeIds) {
+            $attendancedata->where('user_id', $employeeIds);
+        }
+        // Apply date range filter if both start and end dates are provided
+        if ($timeframeStart && $timeframeEnd) {
+            $attendancedata->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
         }
 
-        $zipFileName = 'attendance_records_' . $month . '_' . $year . '.zip';
-        $zipFilePath = $tempDir . DIRECTORY_SEPARATOR . $zipFileName;
+        // Get the filtered data
+        $attendancedata = $attendancedata->get();
 
-        $zip = new ZipArchive;
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
-            foreach ($files as $file) {
-                $zip->addFile($file, basename($file));
-            }
-            $zip->close();
-        } else {
-            Log::error('Unable to create ZIP file: ' . $zipFilePath);
-            return response()->json(['error' => 'Unable to create ZIP file.'], 500);
+        // Count the records
+        $recordCount = $attendancedata->count();
+
+        // Generate the PDF with the filtered data, count, and date range
+        if (Auth::user()->user_type == 0) {
+            $pdf = PDF::loadView('superadmin.attendance.generatereports', [
+                'attendancedata' => $attendancedata,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds
+            ]);
+        }
+        if (Auth::user()->user_type == 1) {
+            $pdf = PDF::loadView('admin.attendance.generatereports', [
+                'attendancedata' => $attendancedata,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds
+            ]);
         }
 
-        foreach ($files as $file) {
-            unlink($file);
-        }
 
-        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        // Return the PDF to be viewed in the browser
+        return $pdf->inline('Attendace_report.pdf');
     }
-
-
-
 }

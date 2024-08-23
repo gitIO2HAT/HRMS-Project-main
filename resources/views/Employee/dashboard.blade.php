@@ -11,60 +11,7 @@
     <div class="row g-4">
         <div class="col-sm-12 col-xl-12">
             <div class="row g-4">
-                <div class="col-sm-4 col-xl-4">
-                    <div class="bg-white text-center rounded-3  p-4">
-                        <div class="row g-4">
-                            <div
-                                class="d-flex justify-content-center align-items-center rounded-3 col-sm-4 col-xl-4 bg-info">
-                                <i class="bx fas fa-users fa-2x" style="color: #080808;"></i>
-                            </div>
-                            <div class=" col-sm-4 col-xl-4">
-                                <span class="">
-                                    <h3 class="fs-5 text-start text-dark">{{$employeeCount}}</h3>
-                                    <p class="text-dark">Employees</p>
-                                </span>
-                            </div>
-                        </div>
-                        <span class="fs-5 text-dark"></span>
-                    </div>
-                </div>
-                <div class="rounded col-sm-4 col-xl-4">
-                    <div class="bg-white text-center rounded-3  p-4">
-                        <div class="row g-4">
-                            <div
-                                class="d-flex justify-content-center align-items-center rounded-3 col-sm-4 col-xl-4 bg-danger">
-                                <i class="far fa-building fa-2x" style="color: #000000;"></i>
-                            </div>
-                            <div class=" col-sm-4 col-xl-4">
-                                <span class="">
-                                    <h3 class="fs-5 text-start text-dark">{{$departmentCount}}</h3>
-                                    <p class="text-dark">Departments</p>
-                                </span>
-                            </div>
-                        </div>
-                        <span class="fs-5 text-dark"></span>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-xl-4">
-                    <div class="bg-white text-center rounded-3  p-4">
 
-                        <div class="row g-4">
-                            <div
-                                class="d-flex justify-content-center align-items-center rounded-3 col-sm-4 col-xl-4 bg-light">
-                                <i class="fas fa-bullhorn fa-2x" style="color: #000000;"></i>
-                            </div>
-                            <div class=" col-sm-4 col-xl-4">
-                                <span class="">
-                                    @foreach($notification['notify'] as $key)
-                                    <h3 class="fs-5 text-start text-dark">{{$key->unread}}</h3>
-                                    @endforeach
-                                    <p class="text-dark">Announcement</p>
-                                </span>
-                            </div>
-                        </div>
-                        <span class="fs-5 text-dark"></span>
-                    </div>
-                </div>
                 <div class=" pt-4 px-4 ">
                     <div class="row g-4">
                         <div class="col-sm-12 col-xl-12">

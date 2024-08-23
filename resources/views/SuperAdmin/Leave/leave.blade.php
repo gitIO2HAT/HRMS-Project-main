@@ -5,10 +5,10 @@
         @include('layouts._message')
         <div class="card p-3 rounded shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <form action="{{ url('/SuperAdmin/Leave') }}" class="w-100" method="GET">
+                <form action="{{ url('/SuperAdmin/Leave') }}" class="w-100" method="GET" id="searchForm">
                     @csrf
                     <div class="input-group mb-3">
-                        <a type="button" class="btn btn-success mx-4 d-flex align-items-center" data-bs-toggle="modal"
+                        <a type="button" class="btn btn-success mx-1 d-flex align-items-center" data-bs-toggle="modal"
                             data-bs-target="#addCreditModal">
                             Credit
                         </a>
@@ -16,57 +16,60 @@
                             <i class="bi bi-search"></i>
                         </span>
                         <input type="search" id="search" class="form-control border-start-0 rounded-1" name="search"
-                            placeholder="Search Here" value="{{ request('search') }}">
+                            placeholder="Search Here" value="{{ request('search') }}" oninput="submitForm()">
                         <span class="mx-1 d-flex align-items-center bg-white">
                             From
                         </span>
                         <input type="date" id="from" class="form-control rounded-1 mx-1" name="from"
-                            placeholder="From" value="{{ request('from') }}">
+                            placeholder="From" value="{{ request('from') }}" onchange="submitForm()">
                         <span class="mx-1 d-flex align-items-center bg-white">
                             To
                         </span>
                         <input type="date" id="to" class="form-control rounded-1 mx-1" name="to"
-                            placeholder="To" value="{{ request('to') }}">
-                        <select class="form-control rounded-1 mx-1" name="leave_type" id="leave_type">
+                            placeholder="To" value="{{ request('to') }}" onchange="submitForm()">
+                        <select class="form-control rounded-1 mx-1" name="leave_type" id="leave_type"
+                            onchange="submitForm()">
                             <option value="">Leave Type</option>
                             <option value="Sick Leave" {{ request('leave_type') == 'Sick Leave' ? 'selected' : '' }}>Sick
                                 Leave</option>
                             <option value="Vacation Leave"
                                 {{ request('leave_type') == 'Vacation Leave' ? 'selected' : '' }}>Vacation Leave</option>
                         </select>
-                        <button class="btn btn-warning m-1" type="submit">Search</button>
-                        <button class="btn btn-light m-1" type="button" onclick="clearSearch()">Clear</button>
+
+                        <button class="btn btn-light " type="button" onclick="clearSearch()">Clear</button>
+                        <a type="button" class="btn btn-info mx-2 d-flex align-items-center" data-bs-toggle="modal"
+                            data-bs-target="#generateReportsModal">
+                            Generate Reports
+                        </a>
                     </div>
                 </form>
+
+
+
 
             </div>
 
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-
-                        <th>Select</th>
+                        <th>#</th>
                         <th>Admins & Employees Name</th>
                         <th>Leave Type</th>
                         <th>Role</th>
                         <th>From</th>
                         <th>To</th>
-                        <th>Reason</th>
+                        <th>Sick Credit</th>
+                        <th>Vacation Credit</th>
+                        <th>Request Send</th>
                         <th class="text-center">ABS. UND. W/P</th>
                         <th class="text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    @foreach ($leaves as $SuperAdmin)
+                    @foreach ($leaves as $index => $SuperAdmin)
                         <tr>
-                            <form action="{{ url('/SuperAdmin/Leave/ExportExcel') }}" method="POST" id="export-form">
-                                @csrf
-                                <td>
-                                    <input type="checkbox" name="employee_ids[]" value="{{ $SuperAdmin->employee_id }}" class="employee-checkbox">
-                                </td>
-                                <button type="submit" class="hidden" style="display: none;">Export</button>
-                            </form>
+                            <td>{{ $index + 1 }}</td>
 
                             @foreach ($users as $user)
                                 @if ($SuperAdmin->employee_id === $user->custom_id)
@@ -86,7 +89,9 @@
                             </td>
                             <td>{{ \Carbon\Carbon::parse($SuperAdmin->from)->format('Y, F j') }}</td>
                             <td>{{ \Carbon\Carbon::parse($SuperAdmin->to)->format('Y, F j') }}</td>
-                            <td>{{ $SuperAdmin->reason }}</td>
+                            <td>{{ $SuperAdmin->user->sick_balance }}</td>
+                            <td>{{ $SuperAdmin->user->vacation_balance }}</td>
+                            <td>{{ \Carbon\Carbon::parse($SuperAdmin->created_at)->format('Y, F j') }}</td>
                             <td class="text-center"><span
                                     class="rounded-pill shadow p-2">-{{ $SuperAdmin->leave_days }}</span></td>
                             <td class="text-center">
@@ -94,7 +99,6 @@
                                     action="{{ url('/SuperAdmin/Leave/UpdateRequestLeave/' . $SuperAdmin->id) }}"
                                     method="POST">
                                     @csrf
-
                                     <div class="dropdown">
                                         <button class="btn btn-white shadow rounded-pill dropdown-toggle" type="button"
                                             id="statusDropdown{{ $SuperAdmin->id }}" data-bs-toggle="dropdown">
@@ -136,11 +140,7 @@
                     {{ $leaves->links() }} <!-- This will generate the pagination links -->
                 </nav>
             </div>
-            <div class="d-flex align-items-center">
-                <a href="#" id="export-btn" style="display: none;">Export</a>
-                <a href="#" id="select-all" class="mx-3" style="display: none;">Select All</a>
-                <a href="#" id="deselect-all" class="mx-3" style="display: none;">Deselect All</a>
-            </div>
+
         </div>
     </div>
     <div class="modal fade" id="addCreditModal" tabindex="-1" aria-labelledby="addCreditModalLabel" aria-hidden="true">
@@ -194,5 +194,53 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="generateReportsModal" tabindex="-1" aria-labelledby="generateReportsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="generateReportsModalLabel">Generate Reports</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url('/SuperAdmin/Leave/GenerateReports') }}" method="POST">
+                        @csrf <!-- Add CSRF token for security -->
+                        <label class="text-dark" for="employeeIds">Select User</label>
+                        <select id="employeeIds" name="employeeIds" class="form-control underline-input">
+                            <option value="" selected>--Select All--</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label class="text-dark" for="employeetype">Select Type</label>
+                        <select id="employeetype" name="employeetype" class="form-control underline-input">
+                            <option value="" selected>--Select All--</option>
+                                <option value="Sick Leave">Sick Leave</option>
+                                <option value="Vacation Leave">Vacation Leave</option>
+                        </select>
+                        <label class="text-dark" for="employeestatus">Select Status</label>
+                        <select id="employeestatus" name="employeestatus" class="form-control underline-input">
+                            <option value="" selected>--Select All--</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Declined">Declined</option>
+                        </select>
+                        <label for="timeframeStart">From:</label>
+                        <input type="date" name="timeframeStart" id="timeframeStart"
+                            class="form-control underline-input">
+                        <label for="timeframeEnd">To:</label>
+                        <input type="date" name="timeframeEnd" id="timeframeEnd"
+                            class="form-control underline-input">
+                        <div class="text-center mt-1">
+                            <button type="submit" class="btn btn-info">Generate Reports</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection

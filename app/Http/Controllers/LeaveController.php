@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use ZipArchive;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+
 
 use App\Models\Message;
 use App\Models\Leave;
@@ -18,6 +20,7 @@ use App\Models\User;
 
 class LeaveController extends Controller
 {
+    private $timeZoneDbApiKey = 'INQ8VCI2UGFC';
     public function leave(Request $request)
     {
         // Retrieve notifications
@@ -51,16 +54,18 @@ class LeaveController extends Controller
                 ->latest('created_at');
         } elseif (Auth::user()->user_type == 1) {
             $leave = Leave::where('user_type', 2)
-            ->whereIn('id', function ($leave) {
-                $leave->selectRaw('MAX(id)')
-                    ->from('leaves')
-                    ->where('user_type', '!=', 0)
-                    ->groupBy('employee_id');
-            })
-            ->latest('created_at');
+                ->whereIn('id', function ($leave) {
+                    $leave->selectRaw('MAX(id)')
+                        ->from('leaves')
+                        ->where('user_type', '!=', 0)
+                        ->groupBy('employee_id');
+                })
+                ->latest('created_at');
         } elseif (Auth::user()->user_type == 2) {
             $leave = Leave::where('employee_id', Auth::user()->custom_id);
         }
+
+
 
         // Fetch departments that match the search query and are not marked as deleted
         if (Auth::user()->user_type === 0) {
@@ -76,8 +81,11 @@ class LeaveController extends Controller
 
         // Apply search filter
         if ($request->filled('search')) {
-            $leave->where('reason', 'like', '%' . $request->input('search') . '%');
+            $leave->whereHas('user', function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('search') . '%');
+            });
         }
+
 
         // Apply date filters
         if ($request->filled('from') && $request->filled('to')) {
@@ -92,6 +100,9 @@ class LeaveController extends Controller
         // Paginate the results
         $leaves = $leave->orderBy('id', 'desc')->paginate(10);
 
+
+        $history = Leave::where('employee_id', Auth::user()->custom_id)->paginate(10);
+
         // Retrieve notifications
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
@@ -103,7 +114,7 @@ class LeaveController extends Controller
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
-                $employeeCount = User::where('is_archive', 1)
+            $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
                 ->count();
@@ -160,9 +171,9 @@ class LeaveController extends Controller
             $counts = $departmentCounts->pluck('total');
 
             $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
 
             // Handle division by zero
             if ($totalEmployeesAtStart > 0) {
@@ -172,33 +183,33 @@ class LeaveController extends Controller
                 // Set retention rate to 0 or handle it differently
                 $retentionRate = 0;
             }
-        $totalEmployeesAtEnd = User::count();
-        // Calculate the number of employees who have left (assuming archived employees have left)
-        $employeesLeft = User::where('is_archive', 2)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        // Calculate the average number of employees
-        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-        } else {
-            $averageEmployees = 0;
-        }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-        // Handle division by zero
-        if ($averageEmployees > 0) {
-            // Calculate turnover rate
-            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-        } else {
-            $turnoverRate = 0;
-        }
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         } else {
             $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
                 ->whereNotIn('user_type', [0, 1])
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
-                $employeeCount = User::where('is_archive', 1)
+            $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
                 ->count();
@@ -255,9 +266,9 @@ class LeaveController extends Controller
             $counts = $departmentCounts->pluck('total');
 
             $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
 
             // Handle division by zero
             if ($totalEmployeesAtStart > 0) {
@@ -267,26 +278,26 @@ class LeaveController extends Controller
                 // Set retention rate to 0 or handle it differently
                 $retentionRate = 0;
             }
-        $totalEmployeesAtEnd = User::count();
-        // Calculate the number of employees who have left (assuming archived employees have left)
-        $employeesLeft = User::where('is_archive', 2)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        // Calculate the average number of employees
-        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-        } else {
-            $averageEmployees = 0;
-        }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-        // Handle division by zero
-        if ($averageEmployees > 0) {
-            // Calculate turnover rate
-            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-        } else {
-            $turnoverRate = 0;
-        }
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         }
         // Calculate growth rate for each year
         $growthRates = [];
@@ -331,6 +342,9 @@ class LeaveController extends Controller
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
             'turnoverRate' => $turnoverRate,
+            'history' => $history
+
+
         ]);
     }
 
@@ -511,83 +525,92 @@ class LeaveController extends Controller
         $user->save();
         return redirect()->back()->with('success', 'Leave request successfully updated');
     }
-    public function exportexcel(Request $request)
-{
-    // Ensure $employeeIds is an array, or set it to an empty array if null
-    $employeeIds = $request->input('employee_ids', []);
+    private function getInternetTime()
+    {
+        // Use the TimeZoneDB API to get the current time in Asia/Manila
+        $response = Http::get('https://api.timezonedb.com/v2.1/list-time-zone', [
+            'key' => $this->timeZoneDbApiKey,
+            'format' => 'json',
+            'zone' => 'Asia/Manila',
+            'fields' => 'zoneName,gmtOffset'
+        ]);
 
-    // Check if $employeeIds is empty
-    if (empty($employeeIds)) {
-        return response()->json(['error' => 'No employee IDs provided.'], 400);
-    }
-
-    $tempDir = storage_path('app/public/temp_leave_exports');
-
-    // Create the temp directory if it doesn't exist
-    if (!file_exists($tempDir)) {
-        if (!mkdir($tempDir, 0777, true)) {
-            Log::error('Unable to create directory: ' . $tempDir);
-            return response()->json(['error' => 'Unable to create directory.'], 500);
-        }
-    }
-
-    $files = [];
-
-    foreach ($employeeIds as $employeeId) {
-        $leaves = Leave::where('employee_id', $employeeId)
-            ->whereIn('status', ['Declined', 'Approved'])
-            ->with('user')
-            ->get();
-
-        if ($leaves->isEmpty()) {
-            continue;
+        if ($response->successful()) {
+            $data = $response->json();
+            $gmtOffset = $data['zones'][0]['gmtOffset'];
+            return Carbon::now()->utc()->addSeconds($gmtOffset);
         }
 
-        $user = $leaves->first()->user;
-
-        $data = $leaves->map(function ($leave) {
-            return [
-                'Employee' => $leave->user->name . ' ' . $leave->user->lastname,
-                'Leave Type' => $leave->leave_type,
-                'Reason' => $leave->reason,
-                'Start Date' => \Carbon\Carbon::parse($leave->from)->format('Y, F j'),
-                'End Date' => \Carbon\Carbon::parse($leave->to)->format('Y, F j'),
-                'Leave Days' => $leave->leave_days,
-                'Status' => $leave->status,
-            ];
-        })->toArray();
-
-        $fileName = $user->name . '_' . $user->lastname . '_leaves.xlsx';
-        $filePath = $tempDir . DIRECTORY_SEPARATOR . $fileName;
-
-        Excel::store(new LeavesExport($data), 'public/temp_leave_exports/' . $fileName);
-        $files[] = $filePath;
+        throw new \Exception('Unable to retrieve time information.');
     }
 
-    // Check if no files were created
-    if (empty($files)) {
-        return response()->json(['error' => 'No leave records to export.'], 404);
-    }
+    public function generateReports(Request $request)
+    {
+        // Retrieve input values for the date range and employee ID
+        $timeframeStart = $request->input('timeframeStart');
+        $timeframeEnd = $request->input('timeframeEnd');
+        $employeeIds = $request->input('employeeIds');
+        $employeetype = $request->input('employeetype');
+        $employeestatus = $request->input('employeestatus');
 
-    $zipFileName = 'leave_records.zip';
-    $zipFilePath = $tempDir . DIRECTORY_SEPARATOR . $zipFileName;
-
-    $zip = new ZipArchive;
-    if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
-        foreach ($files as $file) {
-            $zip->addFile($file, basename($file));
+        // Initialize the Leave query with the user relationship
+        if (Auth::user()->user_type == 0) {
+        $leaveData = Leave::query()->with('user');
         }
-        $zip->close();
-    } else {
-        Log::error('Unable to create ZIP file: ' . $zipFilePath);
-        return response()->json(['error' => 'Unable to create ZIP file.'], 500);
+        if (Auth::user()->user_type == 1) {
+            $leaveData = Leave::query()->where('employee_id','!=', 1)->with('user');
+            }
+        $dateNow = $this->getInternetTime();
+        // Apply employee filter if an employee is selected
+        if ($employeeIds) {
+            $leaveData->where('employee_id', $employeeIds);
+        }
+        if ($employeetype) {
+            $leaveData->where('leave_type', $employeetype);
+        }
+        if ($employeestatus) {
+            $leaveData->where('status', $employeestatus);
+        }
+
+        // Apply date range filter if both start and end dates are provided
+        if ($timeframeStart && $timeframeEnd) {
+            $leaveData->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
+        }
+
+        // Get the filtered data
+        $leaveData = $leaveData->get();
+
+        // Count the records
+        $recordCount = $leaveData->count();
+
+        // Generate the PDF with the filtered data, count, and date range
+
+        if (Auth::user()->user_type == 0) {
+            $pdf = PDF::loadView('superadmin.leave.generatereports', [
+                'leaveData' => $leaveData,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds,
+                'employeestatus' => $employeestatus,
+                'employeetype' => $employeetype
+            ]);
+        }
+        if (Auth::user()->user_type == 1) {
+            $pdf = PDF::loadView('admin.leave.generatereports', [
+                'leaveData' => $leaveData,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds,
+                'employeestatus' => $employeestatus,
+                'employeetype' => $employeetype
+            ]);
+        }
+
+        // Return the PDF to be viewed in the browser
+        return $pdf->inline('leave_report.pdf');
     }
-
-    foreach ($files as $file) {
-        unlink($file);
-    }
-
-    return response()->download($zipFilePath)->deleteFileAfterSend(true);
-}
-
 }

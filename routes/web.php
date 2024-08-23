@@ -57,8 +57,9 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/Leave', [LeaveController::class, 'leave']);
     Route::post('/SuperAdmin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
     Route::post('/SuperAdmin/Leave', [LeaveController::class, 'addcredit']);
-    Route::post('/SuperAdmin/Leave/ExportExcel', [LeaveController::class, 'exportexcel']);
-    Route::post('/SuperAdmin/Attendance/ExportExcelAttendance', [AttendanceController::class, 'exportexcelattendance']);
+    Route::post('/SuperAdmin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
+
+
 
 
 
@@ -88,6 +89,7 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::post('/SuperAdmin/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/SuperAdmin/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-superadmin', [AttendanceController::class, 'currentTime'])->name('current-time-superadmin');
+    Route::post('/SuperAdmin/Attendance/GenerateReports', [AttendanceController::class, 'generatereports']);
 
     Route::get('/SuperAdmin/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/SuperAdmin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
@@ -113,8 +115,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
     Route::post('/Admin/Leave', [LeaveController::class, 'addcredit']);
     Route::post('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
-    Route::post('/Admin/Leave/ExportExcel', [LeaveController::class, 'exportexcel']);
-    Route::post('/Admin/Attendance/ExportExcelAttendance', [AttendanceController::class, 'exportexcelattendance']);
+    Route::post('/Admin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
+
 
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('Admin/Announcement', [AnnouncementController::class, 'save_task']);
@@ -124,6 +126,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/Admin/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-admin', [AttendanceController::class, 'currentTime'])->name('current-time-admin');
+    Route::post('/Admin/Attendance/GenerateReports', [AttendanceController::class, 'generatereports']);
+
 
     Route::get('/Admin/Department', [DepartmentController::class, 'department']);
     Route::post('/Admin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);

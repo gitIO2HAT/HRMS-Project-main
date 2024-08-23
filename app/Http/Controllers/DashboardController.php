@@ -326,7 +326,7 @@ class DashboardController extends Controller
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate,
+            'turnoverRate' => $turnoverRate
 
 
 

@@ -339,8 +339,14 @@
             datasets: [{
                 label: 'Number of Employees per Department',
                 data: allCounts, // total employee counts
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
                 borderWidth: 1
             }]
         },
@@ -368,24 +374,12 @@
                     // Update the chart with filtered data
                     this.data.datasets[0].data = filteredData;
                     this.update();
-
-                    // Show the reset button
-                    document.getElementById('resetChartBtn').style.display = 'inline';
                 }
             }
         }
     });
-
-    // Reset button functionality
-    document.getElementById('resetChartBtn').addEventListener('click', function() {
-        // Reset the chart data to the original counts
-        departmentChart.data.datasets[0].data = allCounts;
-        departmentChart.update();
-
-        // Hide the reset button
-        this.style.display = 'none';
-    });
 </script>
+
 
 <script>
     var ctx = document.getElementById('retentionRateChart').getContext('2d');
@@ -474,44 +468,5 @@
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkboxes = document.querySelectorAll('.employee-checkbox');
-        const exportBtn = document.getElementById('export-btn');
-        const selectAllBtn = document.getElementById('select-all');
-        const deselectAllBtn = document.getElementById('deselect-all');
 
-        function toggleButtons() {
-            const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-            exportBtn.style.display = anyChecked ? 'inline-block' : 'none';
-            selectAllBtn.style.display = 'inline-block';
-            deselectAllBtn.style.display = 'inline-block';
-        }
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', toggleButtons);
-        });
-
-        selectAllBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-            toggleButtons();
-        });
-
-        deselectAllBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            toggleButtons();
-        });
-
-        exportBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            document.getElementById('export-form').submit();
-        });
-    });
-</script>
 </html>

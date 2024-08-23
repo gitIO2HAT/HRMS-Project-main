@@ -102,19 +102,19 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
+                    <div class="col-sm- col-xl-2 text-start text-dark ">
                         <p>Title:</p>
                         <p><?php echo e($getId->position); ?></p>
                     </div>
-                    <div class="col-sm-3 col-xl-2 text-dark">
+                    <div class="col-sm-2 col-xl-2 text-dark">
                         <p>Employee ID:</p>
                         <p><?php echo e($getId->custom_id); ?></p>
                     </div>
-                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
+                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
                         <p><?php echo e($getId->created_at); ?></p>
                     </div>
-                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
+                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Contract:</p>
                         <p>
                             <?php if($getId->contract == 1): ?>
@@ -130,7 +130,7 @@
                             <?php endif; ?>
                         </p>
                     </div>
-                    <div class="col-sm-3 col-xl-2 text-start text-dark ">
+                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>End of Contract:</p>
                         <p><?php echo e($getId->end_of_contract); ?></p>
                     </div>

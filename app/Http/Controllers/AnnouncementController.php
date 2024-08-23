@@ -292,7 +292,7 @@ $growthRates[$years[$i]] = $growthRate;
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate, // Access the 'users' array directly
+            'turnoverRate' => $turnoverRate // Access the 'users' array directly
         ]);
     }
 

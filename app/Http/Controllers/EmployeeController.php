@@ -287,7 +287,7 @@ class EmployeeController extends Controller
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate,
+            'turnoverRate' => $turnoverRate
         ]);
     }
 
@@ -561,7 +561,7 @@ class EmployeeController extends Controller
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate,
+            'turnoverRate' => $turnoverRate
         ]);
     }
 
@@ -926,7 +926,7 @@ $growthRates[$years[$i]] = $growthRate;
                 'retentionRate' => $retentionRate,
                 'averageEmployees' => $averageEmployees,
                 'employeesLeft' => $employeesLeft,
-                'turnoverRate' => $turnoverRate,
+                'turnoverRate' => $turnoverRate
             ]);
         } else {
             abort(404);
@@ -1233,7 +1233,7 @@ $growthRates[$years[$i]] = $growthRate;
                 'retentionRate' => $retentionRate,
                 'averageEmployees' => $averageEmployees,
                 'employeesLeft' => $employeesLeft,
-                'turnoverRate' => $turnoverRate,
+                'turnoverRate' => $turnoverRate
             ]);
         } else {
             abort(404);
@@ -1528,7 +1528,7 @@ $growthRates[$years[$i]] = $growthRate;
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate,
+            'turnoverRate' => $turnoverRate
         ]);
     }
 }
