@@ -162,36 +162,40 @@
     <div class="background"></div>
     <div class="container">
         <div class="logo">
-            <img src="{{asset('img/SULOP.png')}}" alt="logo" height="550px">
+            <img src="{{ asset('img/SULOP.png') }}" alt="logo" height="550px">
         </div>
 
         <div class="form">
             <div class="form-login">
-                <form method="post" action="{{ url('login') }}">
+                <form method="post" action="{{ url('login') }}" onsubmit="rememberMe();">
                     @csrf
                     <div class="text-center">
                         <img src="{{ asset('img/HUMAN.png') }}" alt="logo" height="200px" weight="200px">
                     </div>
-                    @if(Session::has('success'))
-                    <div class="alert alert-success">{{ Session::get('success') }}</div>
+                    @if (Session::has('success'))
+                        <div class="alert alert-success">{{ Session::get('success') }}</div>
                     @endif
                     @include('layouts._message')
 
                     <div class="input-box">
                         <span class="icon"><i class='bx bxs-user'></i></span>
-                        <input name="email" type="email" required>
+                        <input id="email" name="email" type="email" required>
                         <label>Email</label>
                     </div>
 
                     <div class="input-box">
                         <span class="icon"><i class='bx bxs-lock-alt'></i></span>
-                        <input name="password" type="password" required>
+                        <input id="password" name="password" type="password" required>
                         <label>Password</label>
                     </div>
 
                     <div class="remember-forgot">
-
-
+                        <div>
+                            <input type="checkbox" id="rememberMe"> Remember me
+                        </div>
+                        <div>
+                            <a href="{{ url('/ForgetPassword') }}">Forget Password? </a>
+                        </div>
                     </div>
 
                     <div class="login">
@@ -203,5 +207,32 @@
         </div>
 
 </body>
+<script>
+    // Load email and password from local storage if available
+    window.onload = function() {
+        var email = localStorage.getItem('email');
+        var password = localStorage.getItem('password');
+        var rememberMeChecked = localStorage.getItem('rememberMe') === 'true';
+
+        if (rememberMeChecked) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            document.getElementById('rememberMe').checked = true;
+        }
+    };
+
+    // Save email and password to local storage if "Remember me" is checked
+    function rememberMe() {
+        if (document.getElementById('rememberMe').checked) {
+            localStorage.setItem('email', document.getElementById('email').value);
+            localStorage.setItem('password', document.getElementById('password').value);
+            localStorage.setItem('rememberMe', true);
+        } else {
+            localStorage.removeItem('email');
+            localStorage.removeItem('password');
+            localStorage.setItem('rememberMe', false);
+        }
+    }
+</script>
 
 </html>

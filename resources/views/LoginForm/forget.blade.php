@@ -138,7 +138,7 @@
     <div class="background"></div>
     <div class="container">
         <div class="logo">
-            <img src="{{asset('img/SULOP.png')}}" alt="logo" height="450px">
+            <img src="{{ asset('img/SULOP.png') }}" alt="logo" height="450px">
         </div>
 
         <div class="form">
@@ -149,8 +149,22 @@
                         <img src="{{ asset('img/HUMAN.png') }}" alt="logo" height="200px" weight="200px">
                     </div>
                     <h4>Forgot Password</h4>
-                    @if(Session::has('success'))
-                    <div class="alert alert-success">{{ Session::get('success') }}</div>
+                    @if (Session::has('status'))
+                        <div class="alert alert-success">{{ Session::get('status') }}</div>
+                    @endif
+
+                    @if (Session::has('error'))
+                        <div class="alert alert-danger">{{ Session::get('error') }}</div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
                     @include('layouts._message')
 
@@ -159,14 +173,11 @@
                         <input name="email" type="email" required>
                         <label>Email</label>
                     </div>
-
                     <div class="login">
                         <button type="submit" class="btn">Send Password Reset Link</button>
-
-
                     </div>
                     <div class="login" style=" margin-top:10px;">
-                        <a class="btn" href="\" >Login</a>
+                        <a class="btn" href="\">Login</a>
                     </div>
 
                 </form>

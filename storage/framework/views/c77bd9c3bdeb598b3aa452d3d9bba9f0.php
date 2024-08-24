@@ -167,31 +167,35 @@
 
         <div class="form">
             <div class="form-login">
-                <form method="post" action="<?php echo e(url('login')); ?>">
+                <form method="post" action="<?php echo e(url('login')); ?>" onsubmit="rememberMe();">
                     <?php echo csrf_field(); ?>
                     <div class="text-center">
                         <img src="<?php echo e(asset('img/HUMAN.png')); ?>" alt="logo" height="200px" weight="200px">
                     </div>
                     <?php if(Session::has('success')): ?>
-                    <div class="alert alert-success"><?php echo e(Session::get('success')); ?></div>
+                        <div class="alert alert-success"><?php echo e(Session::get('success')); ?></div>
                     <?php endif; ?>
                     <?php echo $__env->make('layouts._message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
                     <div class="input-box">
                         <span class="icon"><i class='bx bxs-user'></i></span>
-                        <input name="email" type="email" required>
+                        <input id="email" name="email" type="email" required>
                         <label>Email</label>
                     </div>
 
                     <div class="input-box">
                         <span class="icon"><i class='bx bxs-lock-alt'></i></span>
-                        <input name="password" type="password" required>
+                        <input id="password" name="password" type="password" required>
                         <label>Password</label>
                     </div>
 
                     <div class="remember-forgot">
-
-
+                        <div>
+                            <input type="checkbox" id="rememberMe"> Remember me
+                        </div>
+                        <div>
+                            <a href="<?php echo e(url('/ForgetPassword')); ?>">Forget Password? </a>
+                        </div>
                     </div>
 
                     <div class="login">
@@ -203,6 +207,33 @@
         </div>
 
 </body>
+<script>
+    // Load email and password from local storage if available
+    window.onload = function() {
+        var email = localStorage.getItem('email');
+        var password = localStorage.getItem('password');
+        var rememberMeChecked = localStorage.getItem('rememberMe') === 'true';
+
+        if (rememberMeChecked) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            document.getElementById('rememberMe').checked = true;
+        }
+    };
+
+    // Save email and password to local storage if "Remember me" is checked
+    function rememberMe() {
+        if (document.getElementById('rememberMe').checked) {
+            localStorage.setItem('email', document.getElementById('email').value);
+            localStorage.setItem('password', document.getElementById('password').value);
+            localStorage.setItem('rememberMe', true);
+        } else {
+            localStorage.removeItem('email');
+            localStorage.removeItem('password');
+            localStorage.setItem('rememberMe', false);
+        }
+    }
+</script>
 
 </html>
 <?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>

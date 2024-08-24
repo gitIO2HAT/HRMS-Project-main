@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class LoginDashboardController extends Controller
 {
@@ -40,17 +42,51 @@ class LoginDashboardController extends Controller
     }
 
     public function sendResetLinkEmail(Request $request)
-    {
+{
+    try {
+        // Validate email input
         $request->validate(['email' => 'required|email']);
 
+        // Check if the user exists and is not archived
+        $user = User::where('email', $request->input('email'))
+        ->where('is_archive','=',1)->first();
+
+        if (!$user) {
+            // Log the missing email issue
+            Log::warning('Password reset attempted for non-existent email: ' . $request->input('email'));
+
+            // Return error message to user
+            return back()->withErrors(['email' => 'The provided email address does not exist in our records.']);
+        }
+
+        if ($user->is_archived == 1) {
+            // Log the archived account issue
+            Log::warning('Password reset attempted for archived account: ' . $request->input('email'));
+
+            // Return error message to user
+            return back()->withErrors(['email' => 'This account is archived and cannot be reset. Please contact support.']);
+        }
+
+        // Send password reset link
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
+        // Log success status
+        Log::info('Password reset link status: ' . $status);
+
         return $status === Password::RESET_LINK_SENT
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
+
+    } catch (\Exception $e) {
+        // Log the exception
+        Log::error('Error in sending password reset link: ' . $e->getMessage());
+
+        // Return with a general error message
+        return back()->withErrors(['email' => 'There was an error sending the password reset link. Try Again Later']);
     }
+}
 
     public function logoutButton()
     {

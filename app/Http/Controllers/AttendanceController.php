@@ -208,6 +208,10 @@ class AttendanceController extends Controller
             } else {
                 $turnoverRate = 0;
             }
+
+            $usersadmin = user::where('user_type', 2)
+            ->where('is_archive', 1)
+                ->get();
         } else {
             $usersadmin = user::where('user_type', 2)
             ->where('is_archive', 1)

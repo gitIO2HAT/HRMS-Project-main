@@ -11,7 +11,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyAccountController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Models\Attendance;
 
 /*
@@ -25,22 +25,16 @@ use App\Models\Attendance;
 |
 */
 
-Route::get('/', [LoginDashboardController::class, 'login']);
+Route::get('/', [LoginDashboardController::class, 'login'])->name('login');
 Route::post('login', [LoginDashboardController::class, 'AuthLogin']);
 Route::get('/ForgetPassword', [LoginDashboardController::class, 'forgetpassword']);
 Route::post('/ForgetPassword/Reset', [LoginDashboardController::class, 'sendResetLinkEmail']);
 Route::get('/logout', [LoginDashboardController::class, 'logoutButton'])->name('logoutButton');
-
-// Routes for password reset
-Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
-
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [ResetPasswordController::class, 'reset']);
 
 Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/Dashboard', [DashboardController::class, 'dashboard']);
-
-
 
     Route::get('/SuperAdmin/Employee', [EmployeeController::class, 'employee']);
     Route::get('/SuperAdmin/Employee/ArchiveEmployee', [EmployeeController::class, 'archiveemployee']);
@@ -52,26 +46,14 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/Employee/Archive/{id}', [EmployeeController::class, 'archive']);
     Route::get('/SuperAdmin/Employee/Restore/{id}', [EmployeeController::class, 'restore']);
 
-
-
     Route::get('/SuperAdmin/Leave', [LeaveController::class, 'leave']);
     Route::post('/SuperAdmin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
     Route::post('/SuperAdmin/Leave', [LeaveController::class, 'addcredit']);
     Route::post('/SuperAdmin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
 
-
-
-
-
-
-
-
     Route::get('/SuperAdmin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('/SuperAdmin/Announcement', [AnnouncementController::class, 'save_task']);
     Route::get('/SuperAdmin/Read/{id}', [AnnouncementController::class, 'read']);
-
-
-
 
     Route::get('/SuperAdmin/Department', [DepartmentController::class, 'department']);
     Route::post('/SuperAdmin/Department/UpdateDepartment/{id}', [DepartmentController::class, 'updatedepartment']);
@@ -98,8 +80,6 @@ Route::group(['middleware' => 'superadmin'], function () {
 Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Dashboard', [DashboardController::class, 'dashboard']);
 
-
-
     Route::get('/Admin/Employee', [EmployeeController::class, 'employee']);
     Route::get('/Admin/Employee/ArchiveEmployee', [EmployeeController::class, 'archiveemployee']);
     Route::get('/Admin/Employee/AddEmployee', [EmployeeController::class, 'addemployee']);
@@ -116,7 +96,6 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/Leave', [LeaveController::class, 'addcredit']);
     Route::post('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::post('/Admin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
-
 
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('Admin/Announcement', [AnnouncementController::class, 'save_task']);
@@ -145,17 +124,21 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
 });
 
+
+
 Route::group(['middleware' => 'employee'], function () {
+
     Route::get('/Employee/Dashboard', [DashboardController::class, 'dashboard']);
+
     Route::get('/Employee/Leave', [LeaveController::class, 'leave']);
+    Route::post('/Employee/Leave/AddLeave', [LeaveController::class, 'addleave']);
+
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/Employee/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
-    Route::post('/Employee/Leave/AddLeave', [LeaveController::class, 'addleave']);
+
     Route::get('/Employee/Read/{id}', [AnnouncementController::class, 'read']);
     Route::get('/Employee/Attendance', [AttendanceController::class, 'attendance']);
     Route::post('/Employee/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-employee', [AttendanceController::class, 'currentTime'])->name('current-time-employee');
 });
-
-

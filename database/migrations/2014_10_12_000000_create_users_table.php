@@ -47,6 +47,8 @@ return new class extends Migration
             $table->string('profile_pic', 255)->default('default.png');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('department')->references('id')->on('departments')->onDelete('cascade');
         });
         DB::table('users')->insert([
             [
