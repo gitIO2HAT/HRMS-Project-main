@@ -29,12 +29,12 @@ return new class extends Migration
             $table->integer('age')->default(18);
             $table->date('birth_date')->nullable();
             $table->string('phonenumber', 20);
-            $table->string('department')->nullable();
-            $table->string('position')->nullable();
+            $table->unsignedBigInteger('department')->nullable(); // Use unsignedBigInteger
+            $table->unsignedBigInteger('position')->nullable(); // Use unsignedBigInteger
             $table->decimal('daily_rate', 10, 2);
             $table->decimal('sick_balance', 10, 2)->default(0.0);
             $table->decimal('vacation_balance', 10, 2)->default(0.0);
-            $table->string('custom_id', 20)->unique()->nullable(); // Add custom_id column here
+            $table->string('custom_id', 20)->unique()->nullable();
             $table->date('end_of_contract')->nullable();
             $table->enum('is_archive', ['1', '2'])->default('1');
             $table->datetime('date_archive')->nullable();
@@ -48,7 +48,9 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
+            // Foreign key constraints
             $table->foreign('department')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('position')->references('id')->on('positions')->onDelete('cascade');
         });
         DB::table('users')->insert([
             [

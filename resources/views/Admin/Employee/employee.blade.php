@@ -69,8 +69,16 @@
                                                         <td>{{ $employee->name }} {{ $employee->lastname }}</td>
 
                                                         <td>{{ $employee->email }}</td>
-                                                        <td>{{ $employee->department }}</td>
-                                                        <td>{{ $employee->position }}</td>
+                                                        <td>@foreach ($depart as $data)
+                                                            @if ($employee->department == $data->id)
+                                                                {{ $data->name }}
+                                                            @endif
+                                                        @endforeach</td>
+                                                        <td>@foreach ($pos as $data)
+                                                            @if ($employee->position == $data->id)
+                                                                {{ $data->name }}
+                                                            @endif
+                                                        @endforeach</td>
 
                                                         <td>
                                                             @if ($employee->contract == 1)

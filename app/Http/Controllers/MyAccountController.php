@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Models\Department;
+use App\Models\Position;
 use App\Models\Message;
 class MyAccountController extends Controller
 {
@@ -30,6 +32,9 @@ class MyAccountController extends Controller
     GROUP BY
         users.id, users.name, users.lastname, users.email
 ");
+
+$depart = Department::all();
+$pos = Position::all();
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
 
@@ -265,6 +270,8 @@ $growthRates[$years[$i]] = $growthRate;
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
+            'depart' => $depart,
+            'pos' => $pos,
             'turnoverRate' => $turnoverRate
         ]);
     }

@@ -28,10 +28,10 @@
                                                 onclick="clearSearch()">Clear</button>
                                         </form>
                                         @if(Auth::user()->user_type == 0)
-                                        
+
                                             <a href="{{url('SuperAdmin/Employee')}}" class="m-1 btn btn-primary ">Back</a>
                                             @elseif(Auth::user()->user_type == 1)
-                                        
+
                                             <a href="{{url('Admin/Employee')}}" class="m-1 btn btn-primary ">Back</a>
                                         @endif
                                     </div>
@@ -48,7 +48,7 @@
                                                 <th scope="col">Position</th>
                                                 <th scope="col">Date Archive</th>
                                                 <th scope="col">Restore</th>
-                                               
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -57,22 +57,30 @@
                                                 <th scope="row">{{ $counter++ }}</th>
                                                 <td>{{ $employee->custom_id}}</td>
                                                 <td>{{ $employee->name}} {{ $employee->lastname}}</td>
-                                             
+
                                                 <td>{{ $employee->email}}</td>
-                                                <td>{{ $employee->department}}</td>
-                                                <td>{{ $employee->position}}</td>
+                                                <td>@foreach ($depart as $data)
+                                                    @if ($employee->department == $data->id)
+                                                        {{ $data->name }}
+                                                    @endif
+                                                @endforeach</td>
+                                                <td>@foreach ($pos as $data)
+                                                    @if ($employee->position == $data->id)
+                                                        {{ $data->name }}
+                                                    @endif
+                                                @endforeach</td>
                                                 <td>{{ $employee->date_archive}}</td>
                                                 @if(Auth::user()->user_type == 0)
                                                 <td>
                                                     <a class=" rounded-1"  href="{{ url('SuperAdmin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
                                                 </td>
-                                                
+
                                                 @elseif(Auth::user()->user_type == 1)
                                                 <td>
                                                     <a class=" rounded-1"  href="{{ url('Admin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
-                                                   
+
                                                 </td>
-                                               
+
                                                 @endif
                                             </tr>
                                             @endforeach

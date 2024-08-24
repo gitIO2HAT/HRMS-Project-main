@@ -33,8 +33,18 @@
                                                 <div class="border-bottom border-light ">
                                                     <h5 class="text-dark">{{ Auth::user()->name }}
                                                         {{ Auth::user()->middlename }} {{ Auth::user()->lastname }}</h5>
-                                                    <h6 class="text-light">{{ Auth::user()->position }}</h6>
-                                                    <h6 class="text-light">{{ Auth::user()->department }}</h6>
+                                                        <h6 class="text-light">
+                                                            @foreach ($depart as $data)
+                                                                    @if (Auth::user()->department == $data->id)
+                                                                        {{ $data->name }}
+                                                                    @endif
+                                                                @endforeach
+                                                        </h6>
+                                                        <h6 class="text-light">@foreach ($pos as $data)
+                                                            @if (Auth::user()->position == $data->id)
+                                                                {{ $data->name }}
+                                                            @endif
+                                                        @endforeach</h6>
                                                     <h6 class="text-light">
                                                         @if (Auth::user()->contract == 1)
                                                             Regular

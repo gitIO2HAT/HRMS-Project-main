@@ -44,6 +44,20 @@ class DashboardController extends Controller
             $birthdayUsers = collect(); // Empty collection
         }
         if (Auth::user()->user_type === 0) {
+
+
+            $departments = Department::where('deleted', 1)->get();
+            $userCounts = [];
+
+            foreach ($departments as $department) {
+                $userCounts[] = User::with('department')
+                                    ->where('department', $department->id)
+                                    ->where('is_archive', 1)
+                                    ->count();
+            }
+
+            $departmentNames = $departments->pluck('name'); // Assuming your department model has a 'name' field
+
             $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
@@ -326,6 +340,8 @@ class DashboardController extends Controller
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
+            'departmentNames' => $departmentNames,
+            'userCounts' => $userCounts,
             'turnoverRate' => $turnoverRate
 
 

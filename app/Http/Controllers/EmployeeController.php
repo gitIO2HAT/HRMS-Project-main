@@ -37,7 +37,8 @@ class EmployeeController extends Controller
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
 
         $query = User::getEmployee();
-
+$depart = Department::all();
+$pos = Position::all();
         $search = $request->input('search');
 
         if ($search) {
@@ -52,7 +53,9 @@ class EmployeeController extends Controller
             });
         }
 
-        $data['getEmployee'] = $query->orderBy('id', 'desc')->paginate(10);
+        $data['getEmployee'] = $query
+        ->orderBy('id', 'desc')
+        ->paginate(10);
 
 
         if(Auth::user()->user_type === 0){
@@ -287,6 +290,8 @@ class EmployeeController extends Controller
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
+            'depart' => $depart,
+            'pos' => $pos,
             'turnoverRate' => $turnoverRate
         ]);
     }
@@ -626,21 +631,13 @@ class EmployeeController extends Controller
         $user->birth_date = $request->input('birth_date') ? trim($request->input('birth_date')) : null;
         $user->phonenumber = trim($request->phonenumber);
 
-        // Find the department by ID and assign the name
-        $department = Department::find($request->department);
-        if ($department) {
-            $user->department = $department->name;
-        } else {
-            return redirect()->back()->withErrors(['department' => 'Department not found']);
-        }
+
+
+         $user->department = $request->department;
+         $user->position = $request->position;
 
         // Find the position by ID and assign the name
-        $position = Position::find($request->position);
-        if ($position) {
-            $user->position = $position->name;
-        } else {
-            return redirect()->back()->withErrors(['position' => 'Position not found']);
-        }
+
 
         $user->email = trim($request->email);
         $user->password = Hash::make($request->password);
@@ -683,6 +680,8 @@ class EmployeeController extends Controller
             users.id, users.name, users.lastname, users.email
     ");
 
+    $depart = Department::all();
+    $pos = Position::all();
 
     if(Auth::user()->user_type === 0){
         $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
@@ -926,6 +925,8 @@ $growthRates[$years[$i]] = $growthRate;
                 'retentionRate' => $retentionRate,
                 'averageEmployees' => $averageEmployees,
                 'employeesLeft' => $employeesLeft,
+                'depart' => $depart,
+                'pos' => $pos,
                 'turnoverRate' => $turnoverRate
             ]);
         } else {
@@ -950,24 +951,11 @@ $growthRates[$years[$i]] = $growthRate;
         ]);
 
         // Check if the department field is provided in the request
-        if ($request->filled('department')) {
-            $department = Department::find($request->department);
-            if ($department) {
-                $user->department = $department->name;
-            } else {
-                return redirect()->back()->withErrors(['department' => 'Department not found']);
-            }
-        }
+
+                $user->department = $request->department;
+                $user->position = $request->position;
 
         // Check if the position field is provided in the request
-        if ($request->filled('position')) {
-            $position = Position::find($request->position);
-            if ($position) {
-                $user->position = $position->name;
-            } else {
-                return redirect()->back()->withErrors(['position' => 'Position not found']);
-            }
-        }
         $user->contract = $request->contract;
         $user->end_of_contract = $request->input('end_of_contract') ? trim($request->input('end_of_contract')) : null;
         $user->daily_rate = $request->daily_rate;
@@ -999,6 +987,8 @@ $growthRates[$years[$i]] = $growthRate;
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $data['getId'] = User::getId($id);
+        $depart = Department::all();
+        $pos = Position::all();
 
         if(Auth::user()->user_type === 0){
             $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
@@ -1233,6 +1223,8 @@ $growthRates[$years[$i]] = $growthRate;
                 'retentionRate' => $retentionRate,
                 'averageEmployees' => $averageEmployees,
                 'employeesLeft' => $employeesLeft,
+                'pos' => $pos,
+                'depart' => $depart,
                 'turnoverRate' => $turnoverRate
             ]);
         } else {
@@ -1277,6 +1269,8 @@ $growthRates[$years[$i]] = $growthRate;
             users.id, users.name, users.lastname, users.email
     ");
 
+    $depart = Department::all();
+    $pos = Position::all();
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $query = User::getArchiveEmployee();
@@ -1528,7 +1522,9 @@ $growthRates[$years[$i]] = $growthRate;
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate
+            'turnoverRate' => $turnoverRate,
+            'depart' => $depart,
+            'pos' => $pos
         ]);
     }
 }

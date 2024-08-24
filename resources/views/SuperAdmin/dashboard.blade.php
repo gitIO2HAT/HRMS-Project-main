@@ -68,25 +68,10 @@
                             <span class="fs-5 text-dark"></span>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xl-12 rounded">
-                        <div class="bg-white rounded-3 h-100 p-4">
-                            <h6 class="mb-4 fs-2 text-primary">Today's Birthday</h6>
-                            @foreach ($birthdayUsers as $user)
-                                <div class="my-2 rounded-2 border-start border-primary">
-                                    <span class=" d-flex justify-content-between align-items-center">
-                                        <img class="my-1 mx-1"
-                                            src="{{ asset('public/accountprofile/' . $user->profile_pic) }}"
-                                            alt="Employee" width="30px">
-                                        <h3 class="fs-5 text-start text-dark">Today is {{ $user->name }}'s
-                                            birthday!</h3>
-                                        <i class="fas fa-birthday-cake" style="color: #000000;"></i>
-                                    </span>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+
                     <div class=" pt-4 px-4 ">
                         <div class="row g-4">
+
                             <div class="col-sm-12 col-xl-4 rounded">
                                 <div class="bg-white rounded-3  h-100 p-4">
                                     <h6 class="mb-4 text-center text-dark">Employee Growth Rate</h6>
@@ -99,6 +84,7 @@
                                     <canvas id="retentionRateChart" width="200" height="100"></canvas>
                                 </div>
                             </div>
+
                             <div class="col-sm-12 col-xl-4 rounded">
                                 <div class="bg-white rounded-3  h-100 p-4">
                                     <h6 class="mb-4 text-center text-dark">Turnover Rate Chart</h6>
@@ -118,12 +104,24 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 col-xl-4 rounded">
-                                <div class="bg-white rounded-3  h-100 p-4">
-                                    <h6 class="mb-4 text-center text-dark">Department Chart</h6>
-                                    <canvas id="departmentChart" width="200" height="100"></canvas>
-                                    <button id="resetChartBtn" style="display:none;">Reset Chart</button>
+                                <div class="bg-white rounded-3 h-100 p-4">
+                                    <h6 class="mb-4 fs-2 text-primary">Today's Birthday</h6>
+                                    @foreach ($birthdayUsers as $user)
+                                        <div class="my-2 rounded-2 border-start border-primary">
+                                            <span class=" d-flex justify-content-between align-items-center">
+                                                <img class="my-1 mx-1"
+                                                    src="{{ asset('public/accountprofile/' . $user->profile_pic) }}"
+                                                    alt="Employee" width="30px">
+                                                <h3 class="fs-5 text-start text-dark">Today is {{ $user->name }}'s
+                                                    birthday!</h3>
+                                                <i class="fas fa-birthday-cake" style="color: #000000;"></i>
+                                            </span>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
+
+
 
 
                         </div>

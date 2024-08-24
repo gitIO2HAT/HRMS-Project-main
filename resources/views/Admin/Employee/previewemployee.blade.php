@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview- {{$getId->name}} {{$getId->lastname}}</title>
+    <title>Preview- {{ $getId->name }} {{ $getId->lastname }}</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -27,10 +27,10 @@
     <link href="{{ asset('lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 <style>
     body {
@@ -42,7 +42,6 @@
 
     /* Additional styles for your content go here */
 </style>
-
 @php
     $redirectUrl = '';
     if (Auth::user()->user_type == '0') {
@@ -53,7 +52,6 @@
 @endphp
 
 <body class="bg-white" onclick="window.location='{{ $redirectUrl }}'" style="cursor: pointer;">
-
     <container class="col-12">
         <div class="row g-4">
             <div class="col-sm-4 col-xl-4 text-center d-flex justify-content-around align-items-center">
@@ -67,7 +65,8 @@
                         Sheet</h3>
                     </p>
                 </div>
-                <p class="mt-1 text-end text-dark">{{ now()->format('Y-m-d') }}</p>
+                <p class="mt-1 text-end text-dark">{{ \Carbon\Carbon::parse(now())->format('Y, F j') }}
+                </p>
             </div>
 
             <div class=" bg-success " style="height:50%; width:100%">
@@ -75,27 +74,29 @@
                 <h3 class=" text-start  text-white">Personal Information:</h3>
                 </p>
             </div>
-            <h3 class="text-dark">{{$getId->name}} {{$getId->middlename}} {{$getId->lastname}}</h3>
+            <h3 class="text-dark">{{ $getId->name }} {{ $getId->middlename }} {{ $getId->lastname }}</h3>
 
             <div class="col-sm-4 col-xl-4 text-start text-dark ">
                 <p>Email:</p>
-                <p>{{$getId->email}}</p>
+                <p>{{ $getId->email }}</p>
             </div>
             <div class="col-sm-8 col-xl-8 text-dark">
                 <p>Cell Phone:</p>
-                <p>{{$getId->phonenumber}}</p>
+                <p>{{ $getId->phonenumber }}</p>
             </div>
             <div class="col-sm-4 col-xl-4 text-start text-dark ">
                 <p>Address:</p>
-                <p>{{$getId->fulladdress}}</p>
+                <p>{{ $getId->fulladdress }}</p>
             </div>
             <div class="col-sm-8 col-xl-8 text-dark">
                 <p>Birth Date:</p>
-                <p>{{$getId->birth_date}}</p>
+                <p>
+                    {{ \Carbon\Carbon::parse($getId->birth_date )->format('Y, F j') }}
+                </p>
             </div>
             <div class="col-sm-12 col-xl-12 text-dark">
                 <p>Marital Status:</p>
-                <p>{{$getId->civil_status}}</p>
+                <p>{{ $getId->civil_status }}</p>
             </div>
             <div class=" bg-success " style="height:50%; width:100%">
                 <p class=" d-flex justify-content-center align-items-center">
@@ -104,37 +105,36 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm-2 col-xl-2 text-start text-dark ">
-                        <p>Title:</p>
-                        <p>{{$getId->position}}</p>
-                    </div>
+
                     <div class="col-sm-2 col-xl-2 text-dark">
                         <p>Employee ID:</p>
-                        <p>{{$getId->custom_id}}</p>
+                        <p>{{ $getId->custom_id }}</p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
-                        <p>{{$getId->created_at}}</p>
+                        <p>
+                            {{ \Carbon\Carbon::parse($getId->created_at )->format('Y, F j') }}
+                        </p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Contract:</p>
                         <p>
-                            @if($getId->contract == 1)
-                            Regular
+                            @if ($getId->contract == 1)
+                                Regular
                             @elseif($getId->contract == 2)
-                            Casual
+                                Casual
                             @elseif($getId->contract == 3)
-                            Contractual
+                                Contractual
                             @elseif($getId->contract == 4)
-                            Job Order
+                                Job Order
                             @elseif($getId->contract == 5)
-                            Seasonal
+                                Seasonal
                             @endif
                         </p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>End of Contract:</p>
-                        <p>{{$getId->end_of_contract}}</p>
+                        <p>{{ \Carbon\Carbon::parse($getId->end_of_contract)->format('Y, F j') }}</p>
                     </div>
                 </div>
             </div>
@@ -142,15 +142,30 @@
                 <div class="row g-4">
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Department:</p>
-                        <p>{{$getId->department}}</p>
+                        <p>
+                            @foreach ($depart as $data)
+                                @if ($getId->department == $data->id)
+                                    {{ $data->name }}
+                                @endif
+                            @endforeach
+                        </p>
                     </div>
+
+
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Position:</p>
-                        <p>{{$getId->position}}</p>
+                        <p>
+                            @foreach ($pos as $data)
+                            @if ($getId->position == $data->id)
+                                {{ $data->name }}
+                            @endif
+                        @endforeach
+                        </p>
                     </div>
+
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Daily Rate:</p>
-                        <p>{{$getId->daily_rate}}</p>
+                        <p>{{ $getId->daily_rate }}</p>
                     </div>
                 </div>
             </div>
@@ -159,20 +174,20 @@
                 <h3 class=" text-start  text-white">Emergency Contact Information:</h3>
                 </p>
             </div>
-            <h3 class="text-dark">{{$getId->emergency_fullname}}</h3>
+            <h3 class="text-dark">{{ $getId->emergency_fullname }}</h3>
             <div class="col-sm-12 col-xl-12">
                 <div class="row g-4">
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Address:</p>
-                        <p>{{$getId->emergency_fulladdress}}</p>
+                        <p>{{ $getId->emergency_fulladdress }}</p>
                     </div>
                     <div class="col-sm-4 col-xl-4 text-dark">
                         <p>Phone Number:</p>
-                        <p>{{$getId->emergency_phonenumber}}</p>
+                        <p>{{ $getId->emergency_phonenumber }}</p>
                     </div>
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Relationship:</p>
-                        <p>{{$getId->emergency_relationship}}</p>
+                        <p>{{ $getId->emergency_relationship }}</p>
                     </div>
                 </div>
             </div>
@@ -181,15 +196,15 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{asset('lib/chart/chart.min.js')}}"></script>
-<script src="{{asset('lib/easing/easing.min.js')}}"></script>
-<script src="{{asset('lib/waypoints/waypoints.min.js')}}"></script>
-<script src="{{asset('lib/owlcarousel/owl.carousel.min.js')}}"></script>
-<script src="{{asset('lib/tempusdominus/js/moment.min.js')}}"></script>
-<script src="{{asset('lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
-<script src="{{asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<script src="{{ asset('lib/chart/chart.min.js') }}"></script>
+<script src="{{ asset('lib/easing/easing.min.js') }}"></script>
+<script src="{{ asset('lib/waypoints/waypoints.min.js') }}"></script>
+<script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('lib/tempusdominus/js/moment.min.js') }}"></script>
+<script src="{{ asset('lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+<script src="{{ asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
 <!-- Template Javascript -->
-<script src="{{asset('js/main.js')}}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
 
 </html>

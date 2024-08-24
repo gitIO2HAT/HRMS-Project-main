@@ -24,9 +24,9 @@
                                         <div class="input-field">
                                                 <label for="department">Department</label>
                                                 <select id="department" name="department" class="form-control">
-                                                    <option value="" disabled selected>{{$getId->department}}</option>
+                                                    <option value="" disabled selected>--Select Department--</option>
                                                     @foreach($departments as $department)
-                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                    <option value="{{ $department->id }}" @if($getId->department == $department->id) selected @endif>{{ $department->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @if($errors->has('department'))
@@ -37,7 +37,11 @@
                                             <div class="input-field">
                                                 <label for="position">Position</label>
                                                 <select id="position" name="position" class="form-control">
-                                                    <option value="">{{$getId->position}}</option>
+                                                    <option value="">@foreach ($pos as $data)
+                                                        @if ($getId->position == $data->id)
+                                                            {{ $data->name }}
+                                                        @endif
+                                                    @endforeach</option>
                                                 </select>
                                                 @if($errors->has('position'))
                                                 <span class="text-danger">{{ $errors->first('position') }}</span>

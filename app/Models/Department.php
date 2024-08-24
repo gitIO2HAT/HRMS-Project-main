@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'deleted',
+    ];
 
     public function positions()
     {
@@ -18,7 +22,9 @@ class Department extends Model
         return self::find($id);
     }
     public function users()
-    {
-        return $this->hasMany(User::class, 'department', 'name');
-    }
+{
+    return $this->hasMany(User::class, 'department', 'id');
+}
+
+
 }

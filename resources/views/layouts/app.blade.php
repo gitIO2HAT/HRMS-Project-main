@@ -327,6 +327,7 @@
         }
     });
 </script>
+<!--
 <script>
     var allDepartments = {!! json_encode($departments) !!};
     var allCounts = {!! json_encode($counts) !!};
@@ -379,6 +380,7 @@
         }
     });
 </script>
+-->
 
 
 <script>
@@ -467,6 +469,8 @@
         options: options
     });
 </script>
+
+
 
 
 </html>

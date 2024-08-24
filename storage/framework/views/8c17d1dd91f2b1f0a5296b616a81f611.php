@@ -65,7 +65,9 @@
                         Sheet</h3>
                     </p>
                 </div>
-                <p class="mt-1 text-end text-dark"><?php echo e(now()->format('Y-m-d')); ?></p>
+                <p class="mt-1 text-end text-dark"><?php echo e(\Carbon\Carbon::parse(now())->format('Y, F j')); ?>
+
+                </p>
             </div>
 
             <div class=" bg-success " style="height:50%; width:100%">
@@ -89,7 +91,10 @@
             </div>
             <div class="col-sm-8 col-xl-8 text-dark">
                 <p>Birth Date:</p>
-                <p><?php echo e($getId->birth_date); ?></p>
+                <p>
+                    <?php echo e(\Carbon\Carbon::parse($getId->birth_date )->format('Y, F j')); ?>
+
+                </p>
             </div>
             <div class="col-sm-12 col-xl-12 text-dark">
                 <p>Marital Status:</p>
@@ -102,37 +107,37 @@
             </div>
             <div class="col-sm-12 col-xl-12 border-bottom border-info">
                 <div class="row g-4">
-                    <div class="col-sm- col-xl-2 text-start text-dark ">
-                        <p>Title:</p>
-                        <p><?php echo e($getId->position); ?></p>
-                    </div>
+
                     <div class="col-sm-2 col-xl-2 text-dark">
                         <p>Employee ID:</p>
                         <p><?php echo e($getId->custom_id); ?></p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
-                        <p><?php echo e($getId->created_at); ?></p>
+                        <p>
+                            <?php echo e(\Carbon\Carbon::parse($getId->created_at )->format('Y, F j')); ?>
+
+                        </p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Contract:</p>
                         <p>
                             <?php if($getId->contract == 1): ?>
-                            Regular
+                                Regular
                             <?php elseif($getId->contract == 2): ?>
-                            Casual
+                                Casual
                             <?php elseif($getId->contract == 3): ?>
-                            Contractual
+                                Contractual
                             <?php elseif($getId->contract == 4): ?>
-                            Job Order
+                                Job Order
                             <?php elseif($getId->contract == 5): ?>
-                            Seasonal
+                                Seasonal
                             <?php endif; ?>
                         </p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>End of Contract:</p>
-                        <p><?php echo e($getId->end_of_contract); ?></p>
+                        <p><?php echo e(\Carbon\Carbon::parse($getId->end_of_contract)->format('Y, F j')); ?></p>
                     </div>
                 </div>
             </div>
@@ -140,13 +145,27 @@
                 <div class="row g-4">
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Department:</p>
-                        <p><?php echo e($getId->department); ?></p>
+                        <p>
+                            <?php $__currentLoopData = $depart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if($getId->department == $data->id): ?>
+                                    <?php echo e($data->name); ?>
+
+                                <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </p>
                     </div>
 
 
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
                         <p>Position:</p>
-                        <p><?php echo e($getId->position); ?></p>
+                        <p>
+                            <?php $__currentLoopData = $pos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($getId->position == $data->id): ?>
+                                <?php echo e($data->name); ?>
+
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </p>
                     </div>
 
                     <div class="col-sm-4 col-xl-4 text-start text-dark ">
