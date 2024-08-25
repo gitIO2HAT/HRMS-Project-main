@@ -172,8 +172,10 @@
                     <div class="text-center">
                         <img src="{{ asset('img/HUMAN.png') }}" alt="logo" height="200px" weight="200px">
                     </div>
-                    @if (Session::has('success'))
-                        <div class="alert alert-success">{{ Session::get('success') }}</div>
+                    @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
                     @endif
                     @include('layouts._message')
 
