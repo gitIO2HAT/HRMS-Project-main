@@ -41,8 +41,8 @@ class UpdateUserCredit extends Command
         $updated = User::whereRaw('DATE_ADD(created_at, INTERVAL 1 MONTH) <= ?', [$now])
             ->whereRaw('MOD(TIMESTAMPDIFF(DAY, created_at, NOW()), 30) = 0')
             ->update([
-                'sick_balance' => DB::raw('sick_balance + 1.5'),
-                'vacation_balance' => DB::raw('vacation_balance + 1.5')
+                'sick_balance' => DB::raw('sick_balance + 1.25'),
+                'vacation_balance' => DB::raw('vacation_balance + 1.25')
             ]);
 
         if ($updated) {
@@ -72,7 +72,7 @@ class UpdateUserCredit extends Command
      *       :Then click " ok "
      * Step 4: Actions click " New "
      *       :Action should be " Start a Program "
-     *       :Program/script Browse the "UpdateUserCredit.bat" in your laravel fie along with this commands folder file "C:\xampp\htdocs\HRMS-Project-main\app\Console\Commands\UpdateUserCredit.bat"
+     *       :Program/script Browse the "UpdateUserCredit.bat" in your laravel file along with this commands folder file "C:\xampp\htdocs\HRMS-Project-main\app\Console\Commands\UpdateUserCredit.bat"
      *       :Then click " ok "
      * Step 5: Settings
      *       :Double check the setting
@@ -92,10 +92,10 @@ class UpdateUserCredit extends Command
             $now = Carbon::now();
 
             // Find and update all users created at a time where the minutes since creation are a multiple of 5
-            $updated = User::whereRaw('TIMESTAMPDIFF(MINUTE, created_at, NOW()) % 5 = 0')
+            $updated = User::whereRaw('TIMESTAMPDIFF(MINUTE, created_at, NOW()) % 1 = 0')
                 ->update([
-                    'sick_balance' => DB::raw('sick_balance + 1.5'),
-                    'vacation_balance' => DB::raw('vacation_balance + 1.5')
+                    'sick_balance' => DB::raw('sick_balance + 1.25'),
+                    'vacation_balance' => DB::raw('vacation_balance + 1.25')
                 ]);
 
             if ($updated) {
