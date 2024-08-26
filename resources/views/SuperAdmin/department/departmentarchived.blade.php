@@ -45,7 +45,7 @@
                                     <tbody>
                                         @foreach($departments as $index => $list)
                                         <tr>
-                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td class="text-center">{{ ($departments->currentPage() - 1) * $departments->perPage() + $index + 1 }}</td>
                                             <td class="text-center">
                                                 {{ $list->name }}
                                             </td>

@@ -59,7 +59,7 @@
                                             <tbody class="text-center">
                                                 @foreach ($employeeRecords as $index => $record)
                                                     <tr>
-                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>{{ ($employeeRecords->currentPage() - 1) * $employeeRecords->perPage() + $index + 1 }}</td>
                                                         <td class="text-dark  d-flex align-items-center">
                                                             <img class="rounded-circle me-lg-2"
                                                                 src="{{ asset('public/accountprofile/' . $record->profile_pic) }}"
@@ -472,7 +472,7 @@
                                                     const hours = parseInt(formattedTime.find(part => part.type === 'hour').value);
                                                     const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
-                                                    const isClockInTime = (
+                                                  /*  const isClockInTime = (
                                                         (hours === 7 && minutes >= 0 && minutes <= 59) ||
                                                         (hours === 8 && minutes >= 0 && minutes <= 15) ||
                                                         (hours === 12 && minutes >= 31 && minutes <= 59) ||
@@ -484,6 +484,11 @@
                                                         (hours === 17 && minutes >= 0 && minutes <= 59) ||
                                                         (hours === 18 && minutes === 0)
                                                     );
+                                                    */
+                                                    const isClockInTime = true;
+
+// Always allow clock-out at any time
+const isClockOutTime = true;
 
                                                     document.getElementById('clockInButton').style.display = isClockInTime ? 'block' : 'none';
                                                     document.getElementById('clockOutButton').style.display = isClockOutTime ? 'block' : 'none';

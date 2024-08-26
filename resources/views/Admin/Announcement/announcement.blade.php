@@ -7,10 +7,7 @@
             <div class="row g-4">
                 <div class="col-sm-12 col-xl-12">
                     <div class="bg-white text-center rounded-3  p-4">
-                        @php
-                        $counter = 1;
-                        $counters = 1;
-                        @endphp
+                       
                         @include('layouts._message')
                         <div class="col-12">
                             <div class="bg-white rounded h-100 p-4">
@@ -39,9 +36,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($getAnn as $announce)
+                                            @foreach($getAnn as $index => $announce)
                                             <tr>
-                                                <th class="border-bottom border-white" scope="row">{{ $counter++ }}</th>
+                                                <th class="border-bottom border-white" scope="row">{{ ($getAnn->currentPage() - 1) * $getAnn->perPage() + $index + 1 }}</th>
                                                 <td class="border-bottom border-white">{{$announce->title}}</td>
                                                 <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
                                                     strtotime($announce->scheduled_date)) }}</td>
@@ -91,9 +88,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($getCompleted as $announce)
+                                            @foreach($getCompleted as $index => $announce)
                                             <tr>
-                                                <th class="border-bottom border-white" scope="row">{{ $counters++ }}
+                                                <th class="border-bottom border-white" scope="row">{{ ($getCompleted->currentPage() - 1) * $getCompleted->perPage() + $index + 1 }}
                                                 </th>
                                                 <td class="border-bottom border-white">{{$announce->title}}</td>
                                                 <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
