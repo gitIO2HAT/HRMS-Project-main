@@ -58,8 +58,8 @@
                         <th>Role</th>
                         <th>From</th>
                         <th>To</th>
-                        <th>Sick Credit</th>
-                        <th>Vacation Credit</th>
+                        <th>Sick Leave Balance</th>
+                        <th>Vacation Leave Balance</th>
                         <th>Request Send</th>
                         <th class="text-center">ABS. UND. W/P</th>
                         <th class="text-center">Status</th>
@@ -69,7 +69,7 @@
 
                     @foreach ($leaves as $index => $SuperAdmin)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td>{{ ($leaves->currentPage() - 1) * $leaves->perPage() + $index + 1 }}</td>
 
                             @foreach ($users as $user)
                                 @if ($SuperAdmin->employee_id === $user->custom_id)

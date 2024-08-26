@@ -21,10 +21,7 @@
                     <div class="row g-4">
                         <div class="col-sm-12 col-xl-12">
                             <div class="bg-white text-center rounded-3  p-4">
-                                @php
-                                $counter = 1;
-                                $counters = 1;
-                                @endphp
+                              
 
                                 <div class="col-12">
                                     <div class="bg-white rounded h-100 p-4">
@@ -42,9 +39,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($getAnn as $announce)
+                                                    @foreach($getAnn as $index => $announce)
                                                     <tr>
-                                                        <th class="border-bottom border-white" scope="row">{{ $counter++ }}</th>
+                                                        <th class="border-bottom border-white" scope="row">{{ ($getAnn->currentPage() - 1) * $getAnn->perPage() + $index + 1 }}</th>
                                                         <td class="border-bottom border-white">{{$announce->title}}</td>
                                                         <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
                                                             strtotime($announce->scheduled_date)) }}</td>

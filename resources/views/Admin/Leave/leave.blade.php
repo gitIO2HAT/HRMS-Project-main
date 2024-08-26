@@ -61,8 +61,8 @@
                         <th>Role</th>
                         <th>From</th>
                         <th>To</th>
-                        <th>Sick Credit</th>
-                        <th>Vacation Credit</th>
+                        <th>Sick Leave Balance</th>
+                        <th>Vacation Leave Balance</th>
                         <th>Request Send</th>
                         <th class="text-center">ABS. UND. W/P</th>
                         <th class="text-center">Status</th>
@@ -72,7 +72,7 @@
 
                     @foreach ($leaves as $index => $SuperAdmin)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td>{{ ($leaves->currentPage() - 1) * $leaves->perPage() + $index + 1 }}</td>
 
                             @foreach ($users as $user)
                                 @if ($SuperAdmin->employee_id === $user->custom_id)
@@ -151,7 +151,8 @@
                         <th>Leave Type</th>
                         <th>From</th>
                         <th>To</th>
-                        <th>Reason</th>
+                        <th>Sick Leave Balance</th>
+                        <th>Vacation Leave Balance</th>
                         <th class="text-center">ABS. UND. W/P</th>
                         <th class="text-center">Status</th>
                     </tr>
@@ -161,11 +162,12 @@
                     @foreach($history as $index => $leave)
 
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ ($history->currentPage() - 1) * $history->perPage() + $index + 1 }}</td>
                         <td>{{$leave->leave_type}}</td>
                         <td>{{ \Carbon\Carbon::parse($leave->from)->format('Y, F j') }}</td>
                         <td>{{ \Carbon\Carbon::parse($leave->to)->format('Y, F j') }}</td>
-                        <td>{{$leave->reason}}</td>
+                        <td>{{$leave->user->sick_balance}}</td>
+                        <td>{{$leave->user->vacation_balance}}</td>
                         <td class="text-center"><span class="rounded-pill shadow p-2">-{{$leave->leave_days}}</span></td>
                         <td class="text-center"> <span class="rounded-pill shadow p-2">@if($leave->status === 'Pending')
                                 <i class="far fa-dot-circle text-warning"></i> {{$leave->status}}

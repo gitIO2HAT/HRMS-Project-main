@@ -56,7 +56,7 @@
                                             <form action="{{ url('/Admin/Department/UpdateDepartment/'.$list->id) }}" method="POST">
                                                 @csrf
                                                 <tr>
-                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td class="text-center">{{ ($departments->currentPage() - 1) * $departments->perPage() + $index + 1 }}</td>
                                                     <td class="text-center">
                                                         <span id="editable-span-dept-{{ $list->id }}" onclick="toggleEdit('dept-{{$list->id}}')">
                                                             {{ $list->name }}

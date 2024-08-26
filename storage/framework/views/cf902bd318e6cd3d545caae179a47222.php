@@ -5,9 +5,7 @@
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-12">
                         <div class="bg-white text-center rounded-3  p-4">
-                            <?php
-                                $counter = 1;
-                            ?>
+                           
                             <div class="col-12">
                                 <div class="bg-white rounded h-100 p-4">
                                     <?php echo $__env->make('layouts._message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -61,9 +59,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php $__currentLoopData = $getEmployee; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php $__currentLoopData = $getEmployee; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <tr>
-                                                        <th scope="row"><?php echo e($counter++); ?></th>
+                                                        <th scope="row"><?php echo e(($getEmployee->currentPage() - 1) * $getEmployee->perPage() + $index + 1); ?></th>
                                                         <td><?php echo e($employee->custom_id); ?></td>
                                                         <td><?php echo e($employee->name); ?> <?php echo e($employee->lastname); ?></td>
 

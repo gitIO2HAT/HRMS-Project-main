@@ -30,8 +30,8 @@ class UpdateUserCredit extends Command
      * Execute the console command.
      */
 
-    /* This is 1 Month
-    public function handle()
+    // This is 1 Month
+ public function handle()
 {
     try {
         // Get the current time
@@ -52,9 +52,9 @@ class UpdateUserCredit extends Command
         }
     } catch (\Exception $e) {
         $this->error('Error occurred: ' . $e->getMessage());
-    }
+    } 
 }
-*/
+
 
     /** For testing
      *
@@ -85,14 +85,14 @@ class UpdateUserCredit extends Command
      */
 
 
-    public function handle()
+  /*  public function handle()
     {
         try {
             // Get the current time
             $now = Carbon::now();
 
             // Find and update all users created at a time where the minutes since creation are a multiple of 5
-            $updated = User::whereRaw('TIMESTAMPDIFF(MINUTE, created_at, NOW()) % 1 = 0')
+            $updated = User::whereRaw('TIMESTAMPDIFF(MINUTE, created_at, NOW()) % 5 = 0')
                 ->update([
                     'sick_balance' => DB::raw('sick_balance + 1.25'),
                     'vacation_balance' => DB::raw('vacation_balance + 1.25')
@@ -106,5 +106,5 @@ class UpdateUserCredit extends Command
         } catch (\Exception $e) {
             $this->error('Error occurred: ' . $e->getMessage());
         }
-    }
+    }*/
 }

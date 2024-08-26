@@ -115,7 +115,7 @@
                                     <tbody class="text-center">
                                         @foreach($getPunch as $index => $punch)
                                         <tr>
-                                            <th scope="row">{{ $index + 1 }}</th>
+                                            <th scope="row">{{ ($getPunch->currentPage() - 1) * $getPunch->perPage() + $index + 1 }}</th>
                                             <td class="text-dark">{{ $punch->user_id }}</td>
                                             <td class="text-dark">{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
                                             <td class="text-dark">
@@ -328,7 +328,7 @@
                         const hours = parseInt(formattedTime.find(part => part.type === 'hour').value);
                         const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
-                        const isClockInTime = (
+                /*       const isClockInTime = (
                             (hours === 7 && minutes >= 0 && minutes <= 59) ||
                             (hours === 8 && minutes >= 0 && minutes <= 15) ||
                             (hours === 12 && minutes >= 31 && minutes <= 59) ||
@@ -340,6 +340,13 @@
                             (hours === 17 && minutes >= 0 && minutes <= 59) ||
                             (hours === 18 && minutes === 0)
                         );
+                */
+
+                // Always allow clock-in at any time
+const isClockInTime = true;
+
+// Always allow clock-out at any time
+const isClockOutTime = true;
 
                         document.getElementById('clockInButton').style.display = isClockInTime ? 'block' : 'none';
                         document.getElementById('clockOutButton').style.display = isClockOutTime ? 'block' : 'none';

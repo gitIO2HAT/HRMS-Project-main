@@ -7,9 +7,7 @@
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-12">
                         <div class="bg-white text-center rounded-3  p-4">
-                            @php
-                                $counter = 1;
-                            @endphp
+                          
                             <div class="col-12">
                                 <div class="bg-white rounded h-100 p-4">
                                     @include('layouts._message')
@@ -62,9 +60,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($getEmployee as $employee)
+                                                @foreach ($getEmployee as $index => $employee)
                                                     <tr>
-                                                        <th scope="row">{{ $counter++ }}</th>
+                                                        <th scope="row">{{ ($getEmployee->currentPage() - 1) * $getEmployee->perPage() + $index + 1 }}</th>
                                                         <td>{{ $employee->custom_id }}</td>
                                                         <td>{{ $employee->name }} {{ $employee->lastname }}</td>
 

@@ -172,8 +172,11 @@
                     <div class="text-center">
                         <img src="<?php echo e(asset('img/HUMAN.png')); ?>" alt="logo" height="200px" weight="200px">
                     </div>
-                    <?php if(Session::has('success')): ?>
-                        <div class="alert alert-success"><?php echo e(Session::get('success')); ?></div>
+                    <?php if(session('status')): ?>
+                    <div class="alert alert-success">
+                        <?php echo e(session('status')); ?>
+
+                    </div>
                     <?php endif; ?>
                     <?php echo $__env->make('layouts._message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
@@ -235,5 +238,4 @@
     }
 </script>
 
-</html>
-<?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>
