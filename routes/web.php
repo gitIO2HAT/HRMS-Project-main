@@ -34,7 +34,7 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('/password/reset', [ResetPasswordController::class, 'reset']);
 
 Route::group(['middleware' => 'superadmin'], function () {
-    
+
     Route::get('/SuperAdmin/Dashboard', [DashboardController::class, 'dashboard']);
 
     Route::get('/SuperAdmin/Employee', [EmployeeController::class, 'employee']);
@@ -102,7 +102,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('Admin/Announcement', [AnnouncementController::class, 'save_task']);
     Route::get('/Admin/Read/{id}', [AnnouncementController::class, 'read']);
-
+ 
     Route::get('/Admin/Attendance', [AttendanceController::class, 'attendance']);
     Route::post('/Admin/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/Admin/ClockOut', [AttendanceController::class, 'clockOut']);
