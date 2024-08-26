@@ -211,31 +211,27 @@
 
 </body>
 <script>
-    // Load email and password from local storage if available
-    window.onload = function() {
+    document.addEventListener('DOMContentLoaded', function() {
         var email = localStorage.getItem('email');
-        var password = localStorage.getItem('password');
         var rememberMeChecked = localStorage.getItem('rememberMe') === 'true';
 
-        if (rememberMeChecked) {
+        if (rememberMeChecked && email) {
             document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
             document.getElementById('rememberMe').checked = true;
         }
-    };
+    });
 
-    // Save email and password to local storage if "Remember me" is checked
-    function rememberMe() {
+    document.querySelector('form').addEventListener('submit', function() {
         if (document.getElementById('rememberMe').checked) {
             localStorage.setItem('email', document.getElementById('email').value);
-            localStorage.setItem('password', document.getElementById('password').value);
             localStorage.setItem('rememberMe', true);
         } else {
             localStorage.removeItem('email');
-            localStorage.removeItem('password');
             localStorage.setItem('rememberMe', false);
         }
-    }
+    });
 </script>
 
-</html><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>
+
+</html>
+<?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/loginform/login.blade.php ENDPATH**/ ?>
