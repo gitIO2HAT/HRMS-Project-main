@@ -59,7 +59,7 @@ $pos = Position::all();
 
 
         if(Auth::user()->user_type === 0){
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
             ->where('user_type', '!=', 0)
             ->groupBy('year')
             ->pluck('total', 'year')
@@ -120,7 +120,7 @@ $pos = Position::all();
         $departments = $departmentCounts->pluck('department');
         $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
         ->where('user_type', '!=', 0)->count();
         $employeesStayed = User::where('is_archive', 1)
         ->where('user_type', '!=', 0)->count();
@@ -154,7 +154,7 @@ $pos = Position::all();
         $turnoverRate = 0;
     }
         }else{
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
             ->whereNotIn('user_type', [0, 1])
             ->groupBy('year')
             ->pluck('total', 'year')
@@ -216,7 +216,7 @@ $pos = Position::all();
         $departments = $departmentCounts->pluck('department');
         $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
         ->where('user_type', '!=', 0)->count();
         $employeesStayed = User::where('is_archive', 1)
         ->where('user_type', '!=', 0)->count();
@@ -331,7 +331,7 @@ $pos = Position::all();
 
 
             if(Auth::user()->user_type === 0){
-                $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+                $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
                 ->where('user_type', '!=', 0)
                 ->groupBy('year')
                 ->pluck('total', 'year')
@@ -392,7 +392,7 @@ $pos = Position::all();
             $departmentsedits = $departmentCounts->pluck('department');
             $counts = $departmentCounts->pluck('total');
 
-            $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
             ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
             ->where('user_type', '!=', 0)->count();
@@ -426,7 +426,7 @@ $pos = Position::all();
             $turnoverRate = 0;
         }
             }else{
-                $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+                $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
                 ->whereNotIn('user_type', [0, 1])
                 ->groupBy('year')
                 ->pluck('total', 'year')
@@ -487,7 +487,7 @@ $pos = Position::all();
             $departmentsedits = $departmentCounts->pluck('department');
             $counts = $departmentCounts->pluck('total');
 
-            $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
             ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
             ->where('user_type', '!=', 0)->count();
@@ -628,6 +628,7 @@ $pos = Position::all();
         $user->contract = $request->contract;
         $user->sex = $request->sex;
         $user->age = $request->age;
+        $user->date_of_assumption =  Carbon::now();
         $user->birth_date = $request->input('birth_date') ? trim($request->input('birth_date')) : null;
         $user->phonenumber = trim($request->phonenumber);
 
@@ -684,7 +685,7 @@ $pos = Position::all();
     $pos = Position::all();
 
     if(Auth::user()->user_type === 0){
-        $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+        $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
         ->where('user_type', '!=', 0)
         ->groupBy('year')
         ->pluck('total', 'year')
@@ -745,7 +746,7 @@ $pos = Position::all();
     $departmentsedits = $departmentCounts->pluck('department');
     $counts = $departmentCounts->pluck('total');
 
-    $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+    $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
     ->where('user_type', '!=', 0)->count();
     $employeesStayed = User::where('is_archive', 1)
     ->where('user_type', '!=', 0)->count();
@@ -779,7 +780,7 @@ if ($averageEmployees > 0) {
     $turnoverRate = 0;
 }
     }else{
-        $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+        $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
         ->whereNotIn('user_type', [0, 1])
         ->groupBy('year')
         ->pluck('total', 'year')
@@ -841,7 +842,7 @@ if ($averageEmployees > 0) {
     $departmentsedits = $departmentCounts->pluck('department');
     $counts = $departmentCounts->pluck('total');
 
-    $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+    $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
     ->where('user_type', '!=', 0)->count();
     $employeesStayed = User::where('is_archive', 1)
     ->where('user_type', '!=', 0)->count();
@@ -942,6 +943,7 @@ $growthRates[$years[$i]] = $growthRate;
         $request->validate([
             'department' => 'nullable|integer', // Validate as integer if using IDs
             'position' => 'nullable|integer',
+            'date_of_assumption' => 'nullable|date',
             'contract' => 'nullable|in:1,2,3,4,5',  // Validate as integer if using IDs
             'end_of_contract' => 'nullable|date',
         ], [
@@ -954,6 +956,7 @@ $growthRates[$years[$i]] = $growthRate;
 
                 $user->department = $request->department;
                 $user->position = $request->position;
+                $user->date_of_assumption = $request->input('date_of_assumption') ? trim($request->input('date_of_assumption')) : null;
 
         // Check if the position field is provided in the request
         $user->contract = $request->contract;
@@ -991,7 +994,7 @@ $growthRates[$years[$i]] = $growthRate;
         $pos = Position::all();
 
         if(Auth::user()->user_type === 0){
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
             ->where('user_type', '!=', 0)
             ->groupBy('year')
             ->pluck('total', 'year')
@@ -1052,7 +1055,7 @@ $growthRates[$years[$i]] = $growthRate;
         $departments = $departmentCounts->pluck('department');
         $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
         ->where('user_type', '!=', 0)->count();
         $employeesStayed = User::where('is_archive', 1)
         ->where('user_type', '!=', 0)->count();
@@ -1086,7 +1089,7 @@ $growthRates[$years[$i]] = $growthRate;
         $turnoverRate = 0;
     }
         }else{
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
             ->whereNotIn('user_type', [0, 1])
             ->groupBy('year')
             ->pluck('total', 'year')
@@ -1147,7 +1150,7 @@ $growthRates[$years[$i]] = $growthRate;
         $departments = $departmentCounts->pluck('department');
         $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
         ->where('user_type', '!=', 0)->count();
         $employeesStayed = User::where('is_archive', 1)
         ->where('user_type', '!=', 0)->count();
@@ -1292,7 +1295,7 @@ $growthRates[$years[$i]] = $growthRate;
         $data['getEmployee'] = $query->orderBy('id', 'desc')->paginate(10);
 
         if(Auth::user()->user_type === 0){
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
             ->where('user_type', '!=', 0)
             ->groupBy('year')
             ->pluck('total', 'year')
@@ -1353,7 +1356,7 @@ $growthRates[$years[$i]] = $growthRate;
         $departments = $departmentCounts->pluck('department');
         $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
         ->where('user_type', '!=', 0)->count();
         $employeesStayed = User::where('is_archive', 1)
         ->where('user_type', '!=', 0)->count();
@@ -1387,7 +1390,7 @@ $growthRates[$years[$i]] = $growthRate;
         $turnoverRate = 0;
     }
         }else{
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
             ->whereNotIn('user_type', [0, 1])
             ->groupBy('year')
             ->pluck('total', 'year')
@@ -1448,7 +1451,7 @@ $growthRates[$years[$i]] = $growthRate;
         $departments = $departmentCounts->pluck('department');
         $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
         ->where('user_type', '!=', 0)->count();
         $employeesStayed = User::where('is_archive', 1)
         ->where('user_type', '!=', 0)->count();

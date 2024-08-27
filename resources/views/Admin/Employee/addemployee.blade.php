@@ -155,6 +155,7 @@
                                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                                                 @endif
                                             </div>
+                                            
                                             <div class="input-field">
                                                 <label>End of Contract</label>
                                                 <input type="date" class="form-control" name="end_of_contract" required>

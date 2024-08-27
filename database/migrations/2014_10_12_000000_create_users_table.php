@@ -35,6 +35,7 @@ return new class extends Migration
             $table->decimal('sick_balance', 10, 2)->default(0.0);
             $table->decimal('vacation_balance', 10, 2)->default(0.0);
             $table->string('custom_id', 20)->unique()->nullable();
+            $table->date('date_of_assumption')->nullable();
             $table->date('end_of_contract')->nullable();
             $table->enum('is_archive', ['1', '2'])->default('1');
             $table->datetime('date_archive')->nullable();

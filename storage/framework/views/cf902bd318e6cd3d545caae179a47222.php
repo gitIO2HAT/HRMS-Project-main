@@ -50,6 +50,7 @@
                                                     <th scope="col">Email</th>
                                                     <th scope="col">Department</th>
                                                     <th scope="col">Position</th>
+                                                    <th scope="col">Date of Assumption</th>
                                                     <th scope="col">Contract</th>
                                                     <th scope="col">Role</th>
                                                     <th scope="col">End of Contract</th>
@@ -82,6 +83,7 @@
                                                                 <?php endif; ?>
                                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </td>
+                                                        <td><?php echo e($employee->date_of_assumption); ?></td>
                                                         <td>
                                                             <?php if($employee->contract == 1): ?>
                                                                 Regular

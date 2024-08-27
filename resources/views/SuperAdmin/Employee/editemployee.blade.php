@@ -63,6 +63,13 @@
                                                     @endif
                                                 </select>
                                             </div>
+                                            <div class="input-field">
+                                                <label>Date of Assumption</label>
+                                                <input type="date" class="form-control" name="date_of_assumption" value="{{$getId->date_of_assumption}}" required>
+                                                @if($errors->has('date_of_assumption'))
+                                                <span class="text-danger">{{ $errors->first('date_of_assumption') }}</span>
+                                                @endif
+                                            </div>
 
                                             <div class="input-field">
                                                 <label>End of Contract</label>

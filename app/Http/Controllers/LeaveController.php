@@ -109,7 +109,7 @@ class LeaveController extends Controller
 
 
         if (Auth::user()->user_type === 0) {
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
                 ->where('user_type', '!=', 0)
                 ->groupBy('year')
                 ->pluck('total', 'year')
@@ -170,7 +170,7 @@ class LeaveController extends Controller
             $departments = $departmentCounts->pluck('department');
             $counts = $departmentCounts->pluck('total');
 
-            $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
                 ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)->count();
@@ -204,7 +204,7 @@ class LeaveController extends Controller
                 $turnoverRate = 0;
             }
         } else {
-            $employeeData = User::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
                 ->whereNotIn('user_type', [0, 1])
                 ->groupBy('year')
                 ->pluck('total', 'year')
@@ -265,7 +265,7 @@ class LeaveController extends Controller
             $departments = $departmentCounts->pluck('department');
             $counts = $departmentCounts->pluck('total');
 
-            $totalEmployeesAtStart = User::where('created_at', '<=', now()->startOfYear())
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
                 ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)->count();

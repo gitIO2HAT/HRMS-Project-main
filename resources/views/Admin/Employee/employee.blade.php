@@ -52,6 +52,7 @@
                                                     <th scope="col">Email</th>
                                                     <th scope="col">Department</th>
                                                     <th scope="col">Position</th>
+                                                    <th scope="col">Date of Assumption</th>
                                                     <th scope="col">Contract</th>
                                                     <th scope="col">End of Contract</th>
                                                     <th scope="col">Edit</th>
@@ -77,6 +78,7 @@
                                                                 {{ $data->name }}
                                                             @endif
                                                         @endforeach</td>
+                                                        <td>{{$employee->date_of_assumption}}</td>
 
                                                         <td>
                                                             @if ($employee->contract == 1)

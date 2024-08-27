@@ -44,6 +44,7 @@
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Department</th>
                                                 <th scope="col">Position</th>
+                                                <th scope="col">Date of Assumption</th>
                                                 <th scope="col">Date Archive</th>
                                                 <th scope="col">Restore</th>
 
@@ -67,6 +68,7 @@
                                                         {{ $data->name }}
                                                     @endif
                                                 @endforeach</td>
+                                                <td>{{$employee->date_of_assumption}}</td>
                                                 <td>{{ \Carbon\Carbon::parse( $employee->date_archive)->format('Y, M d - g:i A') }}</td>
                                                 @if(Auth::user()->user_type == 0)
                                                 <td>

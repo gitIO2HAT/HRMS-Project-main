@@ -113,7 +113,7 @@
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
                         <p>
-                            {{ \Carbon\Carbon::parse($getId->created_at )->format('Y, F j') }}
+                            {{ \Carbon\Carbon::parse($getId->date_of_assumption )->format('Y, F j') }}
                         </p>
                     </div>
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">

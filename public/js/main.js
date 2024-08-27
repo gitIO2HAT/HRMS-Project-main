@@ -94,7 +94,7 @@
 
 
     // Salse & Revenue Chart
-    var ctx2 = $("#salse-revenue").get(0).getContext("2d");
+  /*  var ctx2 = $("#salse-revenue").get(0).getContext("2d");
     var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
@@ -116,7 +116,7 @@
         options: {
             responsive: true
         }
-    });
+    }); */
     
 
 
