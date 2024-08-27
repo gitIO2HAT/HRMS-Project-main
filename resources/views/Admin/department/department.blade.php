@@ -84,7 +84,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    {{$departments->onEachSide(1)->links()}}
+                                    {{ $departments->appends(['page_position' => request('page_position')])->links() }}
                                 </div>
 
                             </div>
@@ -117,7 +117,7 @@
                                             <form action="{{ url('/Admin/Department/UpdatePosition/'.$list->id) }}" method="POST">
                                                 @csrf
                                                 <tr>
-                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td class="text-center">{{ ($position->currentPage() - 1) * $position->perPage() + $index + 1 }}</td>
                                                     <td class="text-center">
                                                     @foreach($departments as $depart)
 
@@ -162,7 +162,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                {{$position->onEachSide(1)->links()}}
+                                {{ $position->appends(['page_department' => request('page_department')])->links() }}
                             </div>
                         </div>
                     </div>

@@ -84,7 +84,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    {{$departments->onEachSide(1)->links()}}
+                                    {{ $departments->appends(['page_position' => request('page_position')])->links() }}
                                 </div>
 
                             </div>
@@ -159,7 +159,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                {{$position->onEachSide(1)->links()}}
+                                {{ $position->appends(['page_department' => request('page_department')])->links() }}
                             </div>
                         </div>
                     </div>

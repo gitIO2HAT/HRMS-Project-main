@@ -35,16 +35,16 @@ class DepartmentController extends Controller
 
     $search = $request->input('search');
 
-    // Fetch departments that match the search query and are not marked as deleted
+    // Fetch departments that match the search query
     $departments = Department::where('name', 'LIKE', "%{$search}%")
         ->where('deleted', 1)
-        ->paginate(10);
+        ->paginate(10, ['*'], 'page_department');
 
-    // Fetch positions that belong to the found departments
-    $departmentIds = $departments->pluck('id');
-    $position = Position::whereIn('department_id', $departmentIds)
+    // Fetch positions that match the search query
+    $position = Position::where('name', 'LIKE', "%{$search}%")
         ->where('deleted', 1)
-        ->paginate(10);
+        ->paginate(10, ['*'], 'page_position');
+
         $query = Message::getNotify();
 
 
@@ -315,17 +315,20 @@ $growthRates[$years[$i]] = $growthRate;
 
     $search = $request->input('search');
 
-    // Fetch departments that match the search query and are not marked as deleted
-    $departments = Department::where('name', 'LIKE', "%{$search}%")
-        ->where('deleted', 2)
-        ->paginate(10);
+// Fetch department IDs matching the search query
+$departmentIds = Department::where('name', 'LIKE', "%{$search}%")
+    ->where('deleted', 2)
+    ->pluck('id');
 
-    // Fetch positions that belong to the found departments and are not marked as deleted
-    $departmentIds = $departments->pluck('id');
-    $position = Position::whereIn('department_id', $departmentIds)
-        ->where('deleted', 2)
-        ->where('name', 'LIKE', "%{$search}%")
-        ->paginate(10);
+// Fetch positions that match the search query and belong to the found departments
+$position = Position::whereIn('department_id', $departmentIds)
+    ->where('deleted', 2)
+    ->where('name', 'LIKE', "%{$search}%")
+    ->paginate(10);
+
+// Pass the filtered departments separately if needed
+$departments = Department::whereIn('id', $departmentIds)->get();
+
 
         if(Auth::user()->user_type === 0){
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')

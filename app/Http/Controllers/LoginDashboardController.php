@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class LoginDashboardController extends Controller
@@ -23,6 +24,15 @@ class LoginDashboardController extends Controller
 
     public function AuthLogin(Request $request)
     {
+        // Retrieve user by email first
+        $user = User::where('email', $request->email)->first();
+
+        // Check if user exists and if the end_of_contract date has passed
+        if ($user && Carbon::parse($user->end_of_contract)->isPast()) {
+            return redirect()->back()->with('error', 'Your contract has ended. Please contact the administrator.');
+        }
+
+        // Attempt to log in with the provided credentials
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
@@ -37,7 +47,7 @@ class LoginDashboardController extends Controller
 
             return redirect($viewPath);
         } else {
-            return redirect()->back()->with('error', 'Please input the correct email and password');
+            return redirect()->back()->with('error', 'Please input the correct email and password.');
         }
     }
 
