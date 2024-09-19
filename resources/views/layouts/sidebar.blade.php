@@ -246,6 +246,21 @@
             </a>
         </li>
         @endif
+        @if(Request::segment(2) == 'MyAttendance')
+        <li class="active">
+            <a href="{{url('SuperAdmin/MyAttendance')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('SuperAdmin/MyAttendance')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
+            </a>
+        </li>
+        @endif
         @elseif(Auth::user()->user_type == 1)
 
         @if(Request::segment(2) == 'Attendance')
@@ -260,6 +275,21 @@
             <a href="{{url('Admin/Attendance')}}">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
+            </a>
+        </li>
+        @endif
+        @if(Request::segment(2) == 'MyAttendance')
+        <li class="active">
+            <a href="{{url('Admin/MyAttendance')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('Admin/MyAttendance')}}">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
             </a>
         </li>
         @endif

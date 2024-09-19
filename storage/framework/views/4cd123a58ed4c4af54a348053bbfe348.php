@@ -246,6 +246,21 @@
             </a>
         </li>
         <?php endif; ?>
+        <?php if(Request::segment(2) == 'MyAttendance'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('SuperAdmin/MyAttendance')); ?>">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li>
+            <a href="<?php echo e(url('SuperAdmin/MyAttendance')); ?>">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
+            </a>
+        </li>
+        <?php endif; ?>
         <?php elseif(Auth::user()->user_type == 1): ?>
 
         <?php if(Request::segment(2) == 'Attendance'): ?>
@@ -260,6 +275,21 @@
             <a href="<?php echo e(url('Admin/Attendance')); ?>">
                 <i class="bx fas fa-cog" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if(Request::segment(2) == 'MyAttendance'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('Admin/MyAttendance')); ?>">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li>
+            <a href="<?php echo e(url('Admin/MyAttendance')); ?>">
+                <i class="bx fas fa-cog" style="color: #000000;"></i>
+                <span class="text">My Attendance</span>
             </a>
         </li>
         <?php endif; ?>

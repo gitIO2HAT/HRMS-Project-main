@@ -269,22 +269,17 @@ class DashboardController extends Controller
         // Get the current date and time in Asia/Manila timezone
         $currentDateTime['currentDateTime'] = Carbon::now()->setTimezone('Asia/Manila');
         // Notification query
-        $notification['notify'] = DB::select("
-            SELECT
-                users.id,
-                users.name,
-                users.lastname,
-                users.email,
-                COUNT(messages.is_read) AS unread
-            FROM
-                users
-            LEFT JOIN
-                messages ON users.id = messages.send_to AND messages.is_read = 0
-            WHERE
-                users.id = " . Auth::id() . "
-            GROUP BY
-                users.id, users.name, users.lastname, users.email
-        ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->selectRaw('COUNT(messages.is_read) AS unread')
+        ->selectRaw('COUNT(messages.inbox) AS inbox')
+        ->leftJoin('messages', function($join) {
+            $join->on('users.id', '=', 'messages.send_to')
+                 ->where('messages.inbox', '=', 0);
+        })
+        ->where('users.id', Auth::id())
+        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->get();
+    
         $gettask = Task::getTask();
         $getAnn['getAnn'] = $gettask->orderby('scheduled_date', 'asc')->paginate(10);
 

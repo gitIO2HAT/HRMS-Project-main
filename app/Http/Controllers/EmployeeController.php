@@ -16,29 +16,24 @@ class EmployeeController extends Controller
 {
     public function employee(Request $request)
     {
-        $notification['notify'] = DB::select("
-    SELECT
-        users.id,
-        users.name,
-        users.lastname,
-        users.email,
-        COUNT(messages.is_read) AS unread
-    FROM
-        users
-    LEFT JOIN
-        messages ON users.id = messages.send_to AND messages.is_read = 0
-    WHERE
-        users.id = " . Auth::id() . "
-    GROUP BY
-        users.id, users.name, users.lastname, users.email
-");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
 
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
 
         $query = User::getEmployee();
-$depart = Department::all();
-$pos = Position::all();
+        $depart = Department::all();
+        $pos = Position::all();
         $search = $request->input('search');
 
         if ($search) {
@@ -54,212 +49,212 @@ $pos = Position::all();
         }
 
         $data['getEmployee'] = $query
-        ->orderBy('id', 'desc')
-        ->paginate(10);
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
 
-        if(Auth::user()->user_type === 0){
+        if (Auth::user()->user_type === 0) {
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-            ->where('user_type', '!=', 0)
-            ->groupBy('year')
-            ->pluck('total', 'year')
-            ->toArray();
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
             $employeeCount = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->where('user_type', '!=', 0)
-            ->count();
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $employeefemale = User::where('sex', '=', 'Female')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employeemale = User::where('sex', '=', 'Male')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee1822 = User::whereBetween('age', [18, 22])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2327 = User::whereBetween('age', [23, 27])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2833 = User::whereBetween('age', [28, 33])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3438 = User::whereBetween('age', [34, 38])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3943 = User::whereBetween('age', [39, 43])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4448 = User::whereBetween('age', [44, 48])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4953 = User::whereBetween('age', [49, 53])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee5460 = User::whereBetween('age', [54, 60])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->groupBy('department')
-            ->get();
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-        // Prepare data for Chart.js
-        $departments = $departmentCounts->pluck('department');
-        $counts = $departmentCounts->pluck('total');
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-        ->where('user_type', '!=', 0)->count();
-        $employeesStayed = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-        // Handle division by zero
-        if ($totalEmployeesAtStart > 0) {
-            // Calculate retention rate
-            $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         } else {
-            // Set retention rate to 0 or handle it differently
-            $retentionRate = 0;
-        }
-    $totalEmployeesAtEnd = User::count();
-    // Calculate the number of employees who have left (assuming archived employees have left)
-    $employeesLeft = User::where('is_archive', 2)
-    ->where('user_type', '!=', 0)
-    ->count();
-
-    // Calculate the average number of employees
-    if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-        $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-    } else {
-        $averageEmployees = 0;
-    }
-
-    // Handle division by zero
-    if ($averageEmployees > 0) {
-        // Calculate turnover rate
-        $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-    } else {
-        $turnoverRate = 0;
-    }
-        }else{
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-            ->whereNotIn('user_type', [0, 1])
-            ->groupBy('year')
-            ->pluck('total', 'year')
-            ->toArray();
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
 
             $employeeCount = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->where('user_type', '!=', 0)
-            ->count();
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $employeefemale = User::where('sex', '=', 'Female')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employeemale = User::where('sex', '=', 'Male')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee1822 = User::whereBetween('age', [18, 22])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2327 = User::whereBetween('age', [23, 27])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2833 = User::whereBetween('age', [28, 33])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3438 = User::whereBetween('age', [34, 38])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3943 = User::whereBetween('age', [39, 43])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4448 = User::whereBetween('age', [44, 48])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4953 = User::whereBetween('age', [49, 53])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee5460 = User::whereBetween('age', [54, 60])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->groupBy('department')
-            ->get();
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-        // Prepare data for Chart.js
-        $departments = $departmentCounts->pluck('department');
-        $counts = $departmentCounts->pluck('total');
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-        ->where('user_type', '!=', 0)->count();
-        $employeesStayed = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-        // Handle division by zero
-        if ($totalEmployeesAtStart > 0) {
-            // Calculate retention rate
-            $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
-        } else {
-            // Set retention rate to 0 or handle it differently
-            $retentionRate = 0;
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         }
-    $totalEmployeesAtEnd = User::count();
-    // Calculate the number of employees who have left (assuming archived employees have left)
-    $employeesLeft = User::where('is_archive', 2)
-    ->where('user_type', '!=', 0)
-    ->count();
 
-    // Calculate the average number of employees
-    if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-        $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-    } else {
-        $averageEmployees = 0;
-    }
-
-    // Handle division by zero
-    if ($averageEmployees > 0) {
-        // Calculate turnover rate
-        $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-    } else {
-        $turnoverRate = 0;
-    }
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
         }
-
-    // Calculate growth rate for each year
-    $growthRates = [];
-    $years = array_keys($employeeData);
-    for ($i = 1; $i < count($years); $i++) {
-    $previousYearEmployees = $employeeData[$years[$i - 1]];
-    $currentYearEmployees = $employeeData[$years[$i]];
-    $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
-    $growthRates[$years[$i]] = $growthRate;
-    }
 
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.employee.employee'
@@ -298,22 +293,17 @@ $pos = Position::all();
 
     public function addemployee(Request $request)
     {
-        $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
 
         $search = $request->input('search');
 
@@ -330,13 +320,13 @@ $pos = Position::all();
             ->paginate(10);
 
 
-            if(Auth::user()->user_type === 0){
-                $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+        if (Auth::user()->user_type === 0) {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
                 ->where('user_type', '!=', 0)
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
-                $employeeCount = User::where('is_archive', 1)
+            $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
                 ->count();
@@ -393,9 +383,9 @@ $pos = Position::all();
             $counts = $departmentCounts->pluck('total');
 
             $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
 
             // Handle division by zero
             if ($totalEmployeesAtStart > 0) {
@@ -405,33 +395,33 @@ $pos = Position::all();
                 // Set retention rate to 0 or handle it differently
                 $retentionRate = 0;
             }
-        $totalEmployeesAtEnd = User::count();
-        // Calculate the number of employees who have left (assuming archived employees have left)
-        $employeesLeft = User::where('is_archive', 2)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        // Calculate the average number of employees
-        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-        } else {
-            $averageEmployees = 0;
-        }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-        // Handle division by zero
-        if ($averageEmployees > 0) {
-            // Calculate turnover rate
-            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         } else {
-            $turnoverRate = 0;
-        }
-            }else{
-                $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
                 ->whereNotIn('user_type', [0, 1])
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
-                $employeeCount = User::where('is_archive', 1)
+            $employeeCount = User::where('is_archive', 1)
                 ->where('user_type', '!=', 0)
                 ->where('user_type', '!=', 0)
                 ->count();
@@ -488,9 +478,9 @@ $pos = Position::all();
             $counts = $departmentCounts->pluck('total');
 
             $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
             $employeesStayed = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)->count();
+                ->where('user_type', '!=', 0)->count();
 
             // Handle division by zero
             if ($totalEmployeesAtStart > 0) {
@@ -500,36 +490,36 @@ $pos = Position::all();
                 // Set retention rate to 0 or handle it differently
                 $retentionRate = 0;
             }
-        $totalEmployeesAtEnd = User::count();
-        // Calculate the number of employees who have left (assuming archived employees have left)
-        $employeesLeft = User::where('is_archive', 2)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        // Calculate the average number of employees
-        if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-            $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-        } else {
-            $averageEmployees = 0;
-        }
-
-        // Handle division by zero
-        if ($averageEmployees > 0) {
-            // Calculate turnover rate
-            $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-        } else {
-            $turnoverRate = 0;
-        }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
             }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        }
 
         // Calculate growth rate for each year
         $growthRates = [];
         $years = array_keys($employeeData);
         for ($i = 1; $i < count($years); $i++) {
-        $previousYearEmployees = $employeeData[$years[$i - 1]];
-        $currentYearEmployees = $employeeData[$years[$i]];
-        $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
-        $growthRates[$years[$i]] = $growthRate;
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
         }
 
 
@@ -634,8 +624,8 @@ $pos = Position::all();
 
 
 
-         $user->department = $request->department;
-         $user->position = $request->position;
+        $user->department = $request->department;
+        $user->position = $request->position;
 
         // Find the position by ID and assign the name
 
@@ -658,234 +648,236 @@ $pos = Position::all();
         // Save the user to the database
         $user->save();
 
-        return redirect()->back()->with('success', 'Employee successfully added');
+        $user = Auth::user();
+        $viewPath = $user->user_type == 0
+            ? '/SuperAdmin/Employee'
+            : ($user->user_type == 1
+                ? '/Admin/Employee'
+                : '/Employee/Employee');
+
+        return redirect($viewPath)->with('success', 'User successfully added');
     }
 
 
     public function editemployee($id)
     {
-        $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
 
-    $depart = Department::all();
-    $pos = Position::all();
 
-    if(Auth::user()->user_type === 0){
-        $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-        ->where('user_type', '!=', 0)
-        ->groupBy('year')
-        ->pluck('total', 'year')
-        ->toArray();
-        $employeeCount = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->where('user_type', '!=', 0)
-        ->count();
+        $depart = Department::all();
+        $pos = Position::all();
 
-    $employeefemale = User::where('sex', '=', 'Female')
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employeemale = User::where('sex', '=', 'Male')
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee1822 = User::whereBetween('age', [18, 22])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee2327 = User::whereBetween('age', [23, 27])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee2833 = User::whereBetween('age', [28, 33])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee3438 = User::whereBetween('age', [34, 38])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee3943 = User::whereBetween('age', [39, 43])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee4448 = User::whereBetween('age', [44, 48])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee4953 = User::whereBetween('age', [49, 53])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee5460 = User::whereBetween('age', [54, 60])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
+        if (Auth::user()->user_type === 0) {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            $employeeCount = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-    $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->groupBy('department')
-        ->get();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-    // Prepare data for Chart.js
-    $departmentsedits = $departmentCounts->pluck('department');
-    $counts = $departmentCounts->pluck('total');
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-    $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-    ->where('user_type', '!=', 0)->count();
-    $employeesStayed = User::where('is_archive', 1)
-    ->where('user_type', '!=', 0)->count();
+            // Prepare data for Chart.js
+            $departmentsedits = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-    // Handle division by zero
-    if ($totalEmployeesAtStart > 0) {
-        // Calculate retention rate
-        $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
-    } else {
-        // Set retention rate to 0 or handle it differently
-        $retentionRate = 0;
-    }
-$totalEmployeesAtEnd = User::count();
-// Calculate the number of employees who have left (assuming archived employees have left)
-$employeesLeft = User::where('is_archive', 2)
-->where('user_type', '!=', 0)
-->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-// Calculate the average number of employees
-if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-    $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-} else {
-    $averageEmployees = 0;
-}
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-// Handle division by zero
-if ($averageEmployees > 0) {
-    // Calculate turnover rate
-    $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-} else {
-    $turnoverRate = 0;
-}
-    }else{
-        $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-        ->whereNotIn('user_type', [0, 1])
-        ->groupBy('year')
-        ->pluck('total', 'year')
-        ->toArray();
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-        $employeeCount = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->where('user_type', '!=', 0)
-        ->count();
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        } else {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
 
-    $employeefemale = User::where('sex', '=', 'Female')
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employeemale = User::where('sex', '=', 'Male')
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee1822 = User::whereBetween('age', [18, 22])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee2327 = User::whereBetween('age', [23, 27])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee2833 = User::whereBetween('age', [28, 33])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee3438 = User::whereBetween('age', [34, 38])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee3943 = User::whereBetween('age', [39, 43])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee4448 = User::whereBetween('age', [44, 48])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee4953 = User::whereBetween('age', [49, 53])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
-    $employee5460 = User::whereBetween('age', [54, 60])
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->count();
+            $employeeCount = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-    $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-        ->where('is_archive', 1)
-        ->where('user_type', '!=', 0)
-        ->groupBy('department')
-        ->get();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-    // Prepare data for Chart.js
-    $departmentsedits = $departmentCounts->pluck('department');
-    $counts = $departmentCounts->pluck('total');
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-    $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-    ->where('user_type', '!=', 0)->count();
-    $employeesStayed = User::where('is_archive', 1)
-    ->where('user_type', '!=', 0)->count();
+            // Prepare data for Chart.js
+            $departmentsedits = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-    // Handle division by zero
-    if ($totalEmployeesAtStart > 0) {
-        // Calculate retention rate
-        $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
-    } else {
-        // Set retention rate to 0 or handle it differently
-        $retentionRate = 0;
-    }
-$totalEmployeesAtEnd = User::count();
-// Calculate the number of employees who have left (assuming archived employees have left)
-$employeesLeft = User::where('is_archive', 2)
-->where('user_type', '!=', 0)
-->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-// Calculate the average number of employees
-if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-    $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-} else {
-    $averageEmployees = 0;
-}
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-// Handle division by zero
-if ($averageEmployees > 0) {
-    // Calculate turnover rate
-    $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-} else {
-    $turnoverRate = 0;
-}
-    }
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
 
-// Calculate growth rate for each year
-$growthRates = [];
-$years = array_keys($employeeData);
-for ($i = 1; $i < count($years); $i++) {
-$previousYearEmployees = $employeeData[$years[$i - 1]];
-$currentYearEmployees = $employeeData[$years[$i]];
-$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
-$growthRates[$years[$i]] = $growthRate;
-}
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        }
+
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
+        }
 
 
         $departments = Department::all();
@@ -954,9 +946,9 @@ $growthRates[$years[$i]] = $growthRate;
 
         // Check if the department field is provided in the request
 
-                $user->department = $request->department;
-                $user->position = $request->position;
-                $user->date_of_assumption = $request->input('date_of_assumption') ? trim($request->input('date_of_assumption')) : null;
+        $user->department = $request->department;
+        $user->position = $request->position;
+        $user->date_of_assumption = $request->input('date_of_assumption') ? trim($request->input('date_of_assumption')) : null;
 
         // Check if the position field is provided in the request
         $user->contract = $request->contract;
@@ -965,235 +957,237 @@ $growthRates[$years[$i]] = $growthRate;
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Employee successfully updated');
+        $user = Auth::user();
+        $viewPath = $user->user_type == 0
+        ? '/SuperAdmin/Employee'
+        : ($user->user_type == 1
+            ? '/Admin/Employee'
+            : '/Employee/Employee');
+        return redirect($viewPath)->with('success', 'User successfully Edit');
+        
     }
 
 
     public function previewemployee($id)
     {
-        $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $data['getId'] = User::getId($id);
         $depart = Department::all();
         $pos = Position::all();
 
-        if(Auth::user()->user_type === 0){
+        if (Auth::user()->user_type === 0) {
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-            ->where('user_type', '!=', 0)
-            ->groupBy('year')
-            ->pluck('total', 'year')
-            ->toArray();
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
             $employeeCount = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->where('user_type', '!=', 0)
-            ->count();
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $employeefemale = User::where('sex', '=', 'Female')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employeemale = User::where('sex', '=', 'Male')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee1822 = User::whereBetween('age', [18, 22])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2327 = User::whereBetween('age', [23, 27])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2833 = User::whereBetween('age', [28, 33])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3438 = User::whereBetween('age', [34, 38])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3943 = User::whereBetween('age', [39, 43])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4448 = User::whereBetween('age', [44, 48])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4953 = User::whereBetween('age', [49, 53])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee5460 = User::whereBetween('age', [54, 60])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->groupBy('department')
-            ->get();
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-        // Prepare data for Chart.js
-        $departments = $departmentCounts->pluck('department');
-        $counts = $departmentCounts->pluck('total');
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-        ->where('user_type', '!=', 0)->count();
-        $employeesStayed = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-        // Handle division by zero
-        if ($totalEmployeesAtStart > 0) {
-            // Calculate retention rate
-            $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         } else {
-            // Set retention rate to 0 or handle it differently
-            $retentionRate = 0;
-        }
-    $totalEmployeesAtEnd = User::count();
-    // Calculate the number of employees who have left (assuming archived employees have left)
-    $employeesLeft = User::where('is_archive', 2)
-    ->where('user_type', '!=', 0)
-    ->count();
-
-    // Calculate the average number of employees
-    if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-        $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-    } else {
-        $averageEmployees = 0;
-    }
-
-    // Handle division by zero
-    if ($averageEmployees > 0) {
-        // Calculate turnover rate
-        $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-    } else {
-        $turnoverRate = 0;
-    }
-        }else{
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-            ->whereNotIn('user_type', [0, 1])
-            ->groupBy('year')
-            ->pluck('total', 'year')
-            ->toArray();
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
             $employeeCount = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->where('user_type', '!=', 0)
-            ->count();
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $employeefemale = User::where('sex', '=', 'Female')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employeemale = User::where('sex', '=', 'Male')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee1822 = User::whereBetween('age', [18, 22])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2327 = User::whereBetween('age', [23, 27])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2833 = User::whereBetween('age', [28, 33])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3438 = User::whereBetween('age', [34, 38])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3943 = User::whereBetween('age', [39, 43])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4448 = User::whereBetween('age', [44, 48])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4953 = User::whereBetween('age', [49, 53])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee5460 = User::whereBetween('age', [54, 60])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->groupBy('department')
-            ->get();
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-        // Prepare data for Chart.js
-        $departments = $departmentCounts->pluck('department');
-        $counts = $departmentCounts->pluck('total');
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-        ->where('user_type', '!=', 0)->count();
-        $employeesStayed = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-        // Handle division by zero
-        if ($totalEmployeesAtStart > 0) {
-            // Calculate retention rate
-            $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
-        } else {
-            // Set retention rate to 0 or handle it differently
-            $retentionRate = 0;
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         }
-    $totalEmployeesAtEnd = User::count();
-    // Calculate the number of employees who have left (assuming archived employees have left)
-    $employeesLeft = User::where('is_archive', 2)
-    ->where('user_type', '!=', 0)
-    ->count();
 
-    // Calculate the average number of employees
-    if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-        $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-    } else {
-        $averageEmployees = 0;
-    }
-
-    // Handle division by zero
-    if ($averageEmployees > 0) {
-        // Calculate turnover rate
-        $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-    } else {
-        $turnoverRate = 0;
-    }
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
         }
-
-// Calculate growth rate for each year
-$growthRates = [];
-$years = array_keys($employeeData);
-for ($i = 1; $i < count($years); $i++) {
-$previousYearEmployees = $employeeData[$years[$i - 1]];
-$currentYearEmployees = $employeeData[$years[$i]];
-$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
-$growthRates[$years[$i]] = $growthRate;
-}
 
         if (!empty($data['getId'])) {
             $viewPath = Auth::user()->user_type == 0
@@ -1226,7 +1220,7 @@ $growthRates[$years[$i]] = $growthRate;
                 'retentionRate' => $retentionRate,
                 'averageEmployees' => $averageEmployees,
                 'employeesLeft' => $employeesLeft,
-                'pos' => $pos,
+                'pos'=> $pos,
                 'depart' => $depart,
                 'turnoverRate' => $turnoverRate
             ]);
@@ -1255,25 +1249,20 @@ $growthRates[$years[$i]] = $growthRate;
 
     public function archiveemployee(Request $request)
     {
-        $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
 
-    $depart = Department::all();
-    $pos = Position::all();
+
+        $depart = Department::all();
+        $pos = Position::all();
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
         $query = User::getArchiveEmployee();
@@ -1294,207 +1283,207 @@ $growthRates[$years[$i]] = $growthRate;
 
         $data['getEmployee'] = $query->orderBy('id', 'desc')->paginate(10);
 
-        if(Auth::user()->user_type === 0){
+        if (Auth::user()->user_type === 0) {
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-            ->where('user_type', '!=', 0)
-            ->groupBy('year')
-            ->pluck('total', 'year')
-            ->toArray();
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
             $employeeCount = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->where('user_type', '!=', 0)
-            ->count();
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $employeefemale = User::where('sex', '=', 'Female')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employeemale = User::where('sex', '=', 'Male')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee1822 = User::whereBetween('age', [18, 22])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2327 = User::whereBetween('age', [23, 27])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2833 = User::whereBetween('age', [28, 33])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3438 = User::whereBetween('age', [34, 38])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3943 = User::whereBetween('age', [39, 43])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4448 = User::whereBetween('age', [44, 48])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4953 = User::whereBetween('age', [49, 53])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee5460 = User::whereBetween('age', [54, 60])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->groupBy('department')
-            ->get();
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-        // Prepare data for Chart.js
-        $departments = $departmentCounts->pluck('department');
-        $counts = $departmentCounts->pluck('total');
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-        ->where('user_type', '!=', 0)->count();
-        $employeesStayed = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-        // Handle division by zero
-        if ($totalEmployeesAtStart > 0) {
-            // Calculate retention rate
-            $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         } else {
-            // Set retention rate to 0 or handle it differently
-            $retentionRate = 0;
-        }
-    $totalEmployeesAtEnd = User::count();
-    // Calculate the number of employees who have left (assuming archived employees have left)
-    $employeesLeft = User::where('is_archive', 2)
-    ->where('user_type', '!=', 0)
-    ->count();
-
-    // Calculate the average number of employees
-    if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-        $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-    } else {
-        $averageEmployees = 0;
-    }
-
-    // Handle division by zero
-    if ($averageEmployees > 0) {
-        // Calculate turnover rate
-        $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-    } else {
-        $turnoverRate = 0;
-    }
-        }else{
             $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
-            ->whereNotIn('user_type', [0, 1])
-            ->groupBy('year')
-            ->pluck('total', 'year')
-            ->toArray();
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
             $employeeCount = User::where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->where('user_type', '!=', 0)
-            ->count();
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $employeefemale = User::where('sex', '=', 'Female')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employeemale = User::where('sex', '=', 'Male')
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee1822 = User::whereBetween('age', [18, 22])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2327 = User::whereBetween('age', [23, 27])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee2833 = User::whereBetween('age', [28, 33])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3438 = User::whereBetween('age', [34, 38])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee3943 = User::whereBetween('age', [39, 43])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4448 = User::whereBetween('age', [44, 48])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee4953 = User::whereBetween('age', [49, 53])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
-        $employee5460 = User::whereBetween('age', [54, 60])
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->count();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
 
-        $departmentCounts = User::select('department', DB::raw('count(*) as total'))
-            ->where('is_archive', 1)
-            ->where('user_type', '!=', 0)
-            ->groupBy('department')
-            ->get();
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
 
-        // Prepare data for Chart.js
-        $departments = $departmentCounts->pluck('department');
-        $counts = $departmentCounts->pluck('total');
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
 
-        $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
-        ->where('user_type', '!=', 0)->count();
-        $employeesStayed = User::where('is_archive', 1)
-        ->where('user_type', '!=', 0)->count();
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
 
-        // Handle division by zero
-        if ($totalEmployeesAtStart > 0) {
-            // Calculate retention rate
-            $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
-        } else {
-            // Set retention rate to 0 or handle it differently
-            $retentionRate = 0;
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
         }
-    $totalEmployeesAtEnd = User::count();
-    // Calculate the number of employees who have left (assuming archived employees have left)
-    $employeesLeft = User::where('is_archive', 2)
-    ->where('user_type', '!=', 0)
-    ->count();
 
-    // Calculate the average number of employees
-    if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
-        $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
-    } else {
-        $averageEmployees = 0;
-    }
-
-    // Handle division by zero
-    if ($averageEmployees > 0) {
-        // Calculate turnover rate
-        $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
-    } else {
-        $turnoverRate = 0;
-    }
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
         }
-
-// Calculate growth rate for each year
-$growthRates = [];
-$years = array_keys($employeeData);
-for ($i = 1; $i < count($years); $i++) {
-$previousYearEmployees = $employeeData[$years[$i - 1]];
-$currentYearEmployees = $employeeData[$years[$i]];
-$growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
-$growthRates[$years[$i]] = $growthRate;
-}
 
         $viewPath = Auth::user()->user_type == 0
             ? 'superadmin.employee.archiveemployee'

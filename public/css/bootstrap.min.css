@@ -8357,6 +8357,13 @@ fieldset:disabled .btn {
 .text-info {
     color: #0dcaf0 !important
 }
+.text-details {
+    color: #000 !important
+   
+}
+.text-details:hover {
+    color: #0dcaf0 !important
+}
 
 .text-warning {
     color: #ffc107 !important
@@ -8400,6 +8407,14 @@ fieldset:disabled .btn {
 
 .bg-primary {
     background-color: #EB1616 !important
+}
+
+.bg-inbox {
+    background-color: #ffe4e1 !important; /* Light pink background */
+}
+
+.bg-inbox:hover {
+    background-color: #ffff !important; /* Slightly different color on hover */
 }
 
 

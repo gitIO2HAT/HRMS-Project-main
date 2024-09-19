@@ -116,7 +116,13 @@
                                         @foreach($getPunch as $index => $punch)
                                         <tr>
                                             <th scope="row">{{ ($getPunch->currentPage() - 1) * $getPunch->perPage() + $index + 1 }}</th>
-                                            <td class="text-dark">{{ $punch->user_id }}</td>
+                                            <td class="text-dark"><img class="rounded-circle me-lg-2"
+                                                    src="{{ asset('public/accountprofile/' . $punch->user->profile_pic) }}"
+                                                    alt=""
+                                                    style="width: 40px; height: 40px;">
+                                                {{ $punch->user->name }}
+                                                {{ $punch->user->lastname }}
+                                            </td>
                                             <td class="text-dark">{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
                                             <td class="text-dark">
                                                 @if(is_null($punch->punch_in_am_first))
@@ -157,6 +163,31 @@
                         </div>
                     </div>
                 </div>
+                @foreach($getNot['getNotify'] as $unread)
+                        <!-- Modal -->
+                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ $unread->description_message }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        @if(Auth::user()->user_type == 0)
+                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 1)
+                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 2)
+                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
 
                 <script>
                     function updateDateTime() {
@@ -328,25 +359,25 @@
                         const hours = parseInt(formattedTime.find(part => part.type === 'hour').value);
                         const minutes = parseInt(formattedTime.find(part => part.type === 'minute').value);
 
-                /*       const isClockInTime = (
-                            (hours === 7 && minutes >= 0 && minutes <= 59) ||
-                            (hours === 8 && minutes >= 0 && minutes <= 15) ||
-                            (hours === 12 && minutes >= 31 && minutes <= 59) ||
-                            (hours === 13 && minutes >= 0 && minutes <= 15)
-                        );
+                        /*       const isClockInTime = (
+                                    (hours === 7 && minutes >= 0 && minutes <= 59) ||
+                                    (hours === 8 && minutes >= 0 && minutes <= 15) ||
+                                    (hours === 12 && minutes >= 31 && minutes <= 59) ||
+                                    (hours === 13 && minutes >= 0 && minutes <= 15)
+                                );
 
-                        const isClockOutTime = (
-                            (hours === 12 && minutes >= 0 && minutes <= 30) ||
-                            (hours === 17 && minutes >= 0 && minutes <= 59) ||
-                            (hours === 18 && minutes === 0)
-                        );
-                */
+                                const isClockOutTime = (
+                                    (hours === 12 && minutes >= 0 && minutes <= 30) ||
+                                    (hours === 17 && minutes >= 0 && minutes <= 59) ||
+                                    (hours === 18 && minutes === 0)
+                                );
+                        */
 
-                // Always allow clock-in at any time
-const isClockInTime = true;
+                        // Always allow clock-in at any time
+                        const isClockInTime = true;
 
-// Always allow clock-out at any time
-const isClockOutTime = true;
+                        // Always allow clock-out at any time
+                        const isClockOutTime = true;
 
                         document.getElementById('clockInButton').style.display = isClockInTime ? 'block' : 'none';
                         document.getElementById('clockOutButton').style.display = isClockOutTime ? 'block' : 'none';

@@ -13,8 +13,8 @@
         <div class="nav-item dropdown" id="<?php echo e($key->id); ?>">
             <a href="#" class="nav-link  me-2" data-bs-toggle="dropdown">
                 <i class="fa fa-bell me-lg-2" style="color:black;">
-                    <?php if($key->unread): ?>
-                    <span class="badge badge-danger bg-primary pending"><?php echo e($key->unread); ?></span>
+                    <?php if($key->inbox): ?>
+                    <span class="badge badge-danger bg-primary pending"><?php echo e($key->inbox); ?></span>
                     <?php endif; ?>
                 </i>
             </a>
@@ -30,33 +30,37 @@
                     </thead>
                     <?php $__currentLoopData = $getNot['getNotify']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unread): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
-                        <td class="border-bottom-0">
-                            <?php if(Auth::user()->user_type == 0): ?>
-                            <a href="<?php echo e(url('SuperAdmin/Read/'.$unread->id)); ?>">
-                            <?php elseif(Auth::user()->user_type == 1): ?>
-                            <a href="<?php echo e(url('Admin/Read/'.$unread->id)); ?>">
-                            <?php elseif(Auth::user()->user_type == 2): ?>
-                            <a href="<?php echo e(url('Employee/Read/'.$unread->id)); ?>">
+                        <?php if($unread->inbox == 0): ?>
+                        <td class="border-bottom-0 shadow bg-inbox">
+                            <?php else: ?>
+                        <td class="border-bottom-0 shadow">
                             <?php endif; ?>
-                           
-                                <div class="row g-4">
-                                    <div class="col-1 mx-1 justify-content-start align-items-center">
-                                        <img class="rounded-circle me-lg-2"
-                                            src="<?php echo e(asset('public/accountprofile/' . $unread->profile_pic)); ?>" alt=""
-                                            style="width: 40px; height: 40px;">
-                                    </div>
-                                    <div class="col-sm-10 col-xl-10">
-                                        <p class="text-dark text-capitalize mt-1" style="font-size:12px;">
-                                            <?php echo e($unread->title_message); ?> :
-                                            <span
-                                                class="text-light text-capitalize"><?php echo e($unread->description_message); ?></span>
-                                        </p>
-                                    </div>
-                                    <div class="col-sm-12 col-xl-12">
-                                        <span class="text-end text-light"><?php echo e(\Carbon\Carbon::parse($unread->created_at)->format('g:i A')); ?></span>
-                                    </div>
-                                </div>
-                            </a>
+                                    <a>
+
+                                        <div class="row g-4">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                            <div class="col-1 mx-1 justify-content-start align-items-center">
+                                                <img class="rounded-circle me-lg-2"
+                                                    src="<?php echo e(asset('public/accountprofile/' . $unread->profile_pic)); ?>" alt=""
+                                                    style="width: 40px; height: 40px;">
+                                            </div>
+                                            <span><?php echo e($unread->from); ?></span>
+                                            </div>
+                                            <div class="col-sm-10 col-xl-10">
+                                                <p class="text-dark text-capitalize mt-1" style="font-size:12px;">
+                                                    <?php echo e($unread->title_message); ?> :
+                                                    <span class="text-light text-capitalize">
+                                                        <?php echo e(\Illuminate\Support\Str::limit($unread->description_message, 40)); ?>
+
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-12 col-xl-12 d-flex justify-content-between">
+                                            <a class="col-6 col-sm-6 col-xl-6 text-start text-details" data-bs-toggle="modal" data-bs-target="#descriptionModal<?php echo e($unread->id); ?>">More details</a>
+                                            <span class=" col-6 col-sm-6 col-xl-6 text-end text-light"><?php echo e(\Carbon\Carbon::parse($unread->created_at)->format('g:i A')); ?></span>
+                                            </div>
+                                        </div>
+                                    </a>
                         </td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -88,5 +92,5 @@
                 <span class=" text-white d-none d-lg-inline-flex"><?php echo e(Auth::user()->name); ?></span>
             </a>
         </div>
-    </div>
+
 </nav><?php /**PATH C:\xampp\htdocs\HRMS-Project-main\resources\views/layouts/header.blade.php ENDPATH**/ ?>

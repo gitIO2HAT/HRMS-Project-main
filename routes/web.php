@@ -70,6 +70,7 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/positionsSuper/{department_id}', [DepartmentController::class, 'getPositions']);
 
     Route::get('/SuperAdmin/Attendance', [AttendanceController::class, 'attendance']);
+    Route::get('/SuperAdmin/MyAttendance', [AttendanceController::class, 'myattendance']);
     Route::post('/SuperAdmin/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/SuperAdmin/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-superadmin', [AttendanceController::class, 'currentTime'])->name('current-time-superadmin');
@@ -104,6 +105,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/Read/{id}', [AnnouncementController::class, 'read']);
  
     Route::get('/Admin/Attendance', [AttendanceController::class, 'attendance']);
+    Route::get('/Admin/MyAttendance', [AttendanceController::class, 'myattendance']);
     Route::post('/Admin/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/Admin/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-admin', [AttendanceController::class, 'currentTime'])->name('current-time-admin');

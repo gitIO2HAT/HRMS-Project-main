@@ -19,7 +19,7 @@ class Message extends Model
         'title_message',
         'description_message',
         'is_read',
-        
+        'inbox',
     ];
 
     public static function getNotify()

@@ -16,22 +16,17 @@ class DepartmentController extends Controller
 
     public function department(Request $request)
     {
-        $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->selectRaw('COUNT(messages.is_read) AS unread')
+        ->selectRaw('COUNT(messages.inbox) AS inbox')
+        ->leftJoin('messages', function($join) {
+            $join->on('users.id', '=', 'messages.send_to')
+                 ->where('messages.inbox', '=', 0);
+        })
+        ->where('users.id', Auth::id())
+        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->get();
+    
 
     $search = $request->input('search');
 
@@ -296,38 +291,30 @@ $growthRates[$years[$i]] = $growthRate;
 
     public function departmentarchived(Request $request)
     {
-        $notification['notify'] = DB::select("
-        SELECT
-            users.id,
-            users.name,
-            users.lastname,
-            users.email,
-            COUNT(messages.is_read) AS unread
-        FROM
-            users
-        LEFT JOIN
-            messages ON users.id = messages.send_to AND messages.is_read = 0
-        WHERE
-            users.id = " . Auth::id() . "
-        GROUP BY
-            users.id, users.name, users.lastname, users.email
-    ");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->selectRaw('COUNT(messages.is_read) AS unread')
+        ->selectRaw('COUNT(messages.inbox) AS inbox')
+        ->leftJoin('messages', function($join) {
+            $join->on('users.id', '=', 'messages.send_to')
+                 ->where('messages.inbox', '=', 0);
+        })
+        ->where('users.id', Auth::id())
+        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->get();
+    
 
     $search = $request->input('search');
 
 // Fetch department IDs matching the search query
-$departmentIds = Department::where('name', 'LIKE', "%{$search}%")
-    ->where('deleted', 2)
-    ->pluck('id');
+$departments = Department::where('name', 'LIKE', "%{$search}%")
+        ->where('deleted', 2)
+        ->paginate(10, ['*'], 'page_department');
 
 // Fetch positions that match the search query and belong to the found departments
-$position = Position::whereIn('department_id', $departmentIds)
-    ->where('deleted', 2)
-    ->where('name', 'LIKE', "%{$search}%")
-    ->paginate(10);
+
 
 // Pass the filtered departments separately if needed
-$departments = Department::whereIn('id', $departmentIds)->get();
+
 
 
         if(Auth::user()->user_type === 0){
@@ -548,7 +535,6 @@ $growthRates[$years[$i]] = $growthRate;
             'notification' => $notification,
             'getNot' => $getNot,
             'departments' => $departments,
-            'position' => $position,
             'growthRates' => $growthRates,
             'employeeData' => $employeeData,
 

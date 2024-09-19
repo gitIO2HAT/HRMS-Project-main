@@ -10,6 +10,7 @@
     <span class="ml-2 font-weight-bold">Reminder: Your contract is ending soon! Don't hesitate to contact the administrator.</span>
 </div>
 @endif
+@include('layouts._message')
 
 
 <div class="container-fluid pt-4 px-4">
@@ -103,4 +104,29 @@
             </div>
         </div>
     </div>
+    @foreach($getNot['getNotify'] as $unread)
+                        <!-- Modal -->
+                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ $unread->description_message }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        @if(Auth::user()->user_type == 0)
+                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 1)
+                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 2)
+                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
     @endsection

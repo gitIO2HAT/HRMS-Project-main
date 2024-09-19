@@ -18,22 +18,18 @@ class AnnouncementController extends Controller
 {
     public function announcement(Request $request)
     {
-        $notification['notify'] = DB::select("
-    SELECT
-        users.id,
-        users.name,
-        users.lastname,
-        users.email,
-        COUNT(messages.is_read) AS unread
-    FROM
-        users
-    LEFT JOIN
-        messages ON users.id = messages.send_to AND messages.is_read = 0
-    WHERE
-        users.id = " . Auth::id() . "
-    GROUP BY
-        users.id, users.name, users.lastname, users.email
-");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->selectRaw('COUNT(messages.is_read) AS unread')
+        ->selectRaw('COUNT(messages.inbox) AS inbox')
+        ->leftJoin('messages', function($join) {
+            $join->on('users.id', '=', 'messages.send_to')
+                 ->where('messages.inbox', '=', 0);
+        })
+        ->where('users.id', Auth::id())
+        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->get();
+    
+
 
 date_default_timezone_set('Asia/Manila');
 
@@ -300,7 +296,7 @@ $growthRates[$years[$i]] = $growthRate;
     {
 
         $read = Message::getID($id);
-        $read->is_read = 1;
+        $read->inbox = 1;
         $read->save();
         return redirect()->back();
     }

@@ -115,7 +115,7 @@
                     <div class="col-sm-2 col-xl-2 text-start text-dark ">
                         <p>Start Date:</p>
                         <p>
-                            <?php echo e(\Carbon\Carbon::parse($getId->created_at )->format('Y, F j')); ?>
+                            <?php echo e(\Carbon\Carbon::parse($getId->date_of_assumption )->format('Y, F j')); ?>
 
                         </p>
                     </div>

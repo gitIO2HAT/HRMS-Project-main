@@ -16,22 +16,17 @@ class MyAccountController extends Controller
 {
     public function myaccount()
     {
-        $notification['notify'] = DB::select("
-    SELECT
-        users.id,
-        users.name,
-        users.lastname,
-        users.email,
-        COUNT(messages.is_read) AS unread
-    FROM
-        users
-    LEFT JOIN
-        messages ON users.id = messages.send_to AND messages.is_read = 0
-    WHERE
-        users.id = " . Auth::id() . "
-    GROUP BY
-        users.id, users.name, users.lastname, users.email
-");
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->selectRaw('COUNT(messages.is_read) AS unread')
+        ->selectRaw('COUNT(messages.inbox) AS inbox')
+        ->leftJoin('messages', function($join) {
+            $join->on('users.id', '=', 'messages.send_to')
+                 ->where('messages.inbox', '=', 0);
+        })
+        ->where('users.id', Auth::id())
+        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+        ->get();
+    
 
 $depart = Department::all();
 $pos = Position::all();
@@ -281,6 +276,8 @@ $growthRates[$years[$i]] = $growthRate;
             $id = Auth::user()->id;
 
             $messages = [
+                'pds_file.mimes' => 'The file must be a file of type: pdf, xlsx, xls.',
+                'pds_file.max' => 'The file size must not exceed 20MB.',
                 'name.required' => 'The name field is required.',
                 'middlename.required' => 'The middlename field is required.',
                 'lastname.required' => 'The lastname field is required.',
@@ -308,6 +305,7 @@ $growthRates[$years[$i]] = $growthRate;
             ];
 
             $request->validate([
+                'pds_file' => 'required|mimes:pdf,xlsx,xls|max:20480', // 20MB file size limit
                 'name' => 'required|string|max:30',
                 'middlename' => 'required|string|max:30',
                 'lastname' => 'required|string|max:30',
@@ -359,13 +357,27 @@ $growthRates[$years[$i]] = $growthRate;
                 $file->move('public/accountprofile/', $filename);
                 $user->profile_pic = $filename;
             }
+            if (!empty($request->file('pds_file'))) {
+                $ext = $request->file('pds_file')->getClientOriginalExtension();
+                $file = $request->file('pds_file');
+                $randomStr = date('Ymdhis') . Str::random(20);
+                $filename = strtolower($randomStr) . '.' . $ext;
+                $file->move('public/employeepdsfile/', $filename);
+                $user->pds_file = $filename;
+            }
 
             $user->save();
 
             // Log successful save
             Log::info('User profile updated successfully for user ID: ' . $id);
 
-            return redirect()->back()->with('success', 'Your Profile successfully updated');
+            $user = Auth::user();
+            $viewPath = $user->user_type == 0
+            ? '/SuperAdmin/Dashboard'
+            : ($user->user_type == 1
+                ? '/Admin/Dashboard'
+                : '/Employee/Dashboard');
+            return redirect($viewPath)->with('success', ' successfully update profile');
 
         } catch (\Exception $e) {
             // Log the error message

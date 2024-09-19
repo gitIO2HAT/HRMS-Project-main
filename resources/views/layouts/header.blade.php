@@ -13,8 +13,8 @@
         <div class="nav-item dropdown" id="{{$key->id}}">
             <a href="#" class="nav-link  me-2" data-bs-toggle="dropdown">
                 <i class="fa fa-bell me-lg-2" style="color:black;">
-                    @if($key->unread)
-                    <span class="badge badge-danger bg-primary pending">{{$key->unread}}</span>
+                    @if($key->inbox)
+                    <span class="badge badge-danger bg-primary pending">{{$key->inbox}}</span>
                     @endif
                 </i>
             </a>
@@ -30,33 +30,36 @@
                     </thead>
                     @foreach($getNot['getNotify'] as $unread)
                     <tr>
-                        <td class="border-bottom-0">
-                            @if(Auth::user()->user_type == 0)
-                            <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}">
-                            @elseif(Auth::user()->user_type == 1)
-                            <a href="{{ url('Admin/Read/'.$unread->id)}}">
-                            @elseif(Auth::user()->user_type == 2)
-                            <a href="{{ url('Employee/Read/'.$unread->id)}}">
+                        @if($unread->inbox == 0)
+                        <td class="border-bottom-0 shadow bg-inbox">
+                            @else
+                        <td class="border-bottom-0 shadow">
                             @endif
-                           
-                                <div class="row g-4">
-                                    <div class="col-1 mx-1 justify-content-start align-items-center">
-                                        <img class="rounded-circle me-lg-2"
-                                            src="{{ asset('public/accountprofile/' . $unread->profile_pic) }}" alt=""
-                                            style="width: 40px; height: 40px;">
-                                    </div>
-                                    <div class="col-sm-10 col-xl-10">
-                                        <p class="text-dark text-capitalize mt-1" style="font-size:12px;">
-                                            {{$unread->title_message}} :
-                                            <span
-                                                class="text-light text-capitalize">{{$unread->description_message}}</span>
-                                        </p>
-                                    </div>
-                                    <div class="col-sm-12 col-xl-12">
-                                        <span class="text-end text-light">{{ \Carbon\Carbon::parse($unread->created_at)->format('g:i A') }}</span>
-                                    </div>
-                                </div>
-                            </a>
+                                    <a>
+
+                                        <div class="row g-4">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                            <div class="col-1 mx-1 justify-content-start align-items-center">
+                                                <img class="rounded-circle me-lg-2"
+                                                    src="{{ asset('public/accountprofile/' . $unread->profile_pic) }}" alt=""
+                                                    style="width: 40px; height: 40px;">
+                                            </div>
+                                            <span>{{$unread->from}}</span>
+                                            </div>
+                                            <div class="col-sm-10 col-xl-10">
+                                                <p class="text-dark text-capitalize mt-1" style="font-size:12px;">
+                                                    {{$unread->title_message}} :
+                                                    <span class="text-light text-capitalize">
+                                                        {{ \Illuminate\Support\Str::limit($unread->description_message, 40) }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-12 col-xl-12 d-flex justify-content-between">
+                                            <a class="col-6 col-sm-6 col-xl-6 text-start text-details" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $unread->id }}">More details</a>
+                                            <span class=" col-6 col-sm-6 col-xl-6 text-end text-light">{{ \Carbon\Carbon::parse($unread->created_at)->format('g:i A') }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                         </td>
                     </tr>
                     @endforeach
@@ -88,5 +91,5 @@
                 <span class=" text-white d-none d-lg-inline-flex">{{Auth::user()->name}}</span>
             </a>
         </div>
-    </div>
+
 </nav>

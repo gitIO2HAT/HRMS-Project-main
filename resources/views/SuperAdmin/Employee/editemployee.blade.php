@@ -37,7 +37,8 @@
                                             <div class="input-field">
                                                 <label for="position">Position</label>
                                                 <select id="position" name="position" class="form-control">
-                                                    <option value="">@foreach ($pos as $data)
+                                                    <option value="">
+                                                        @foreach ($pos as $data)
                                                         @if ($getId->position == $data->id)
                                                             {{ $data->name }}
                                                         @endif
@@ -91,11 +92,6 @@
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-success">Submit</button>
-                                @if(Auth::user()->user_type == 0)
-                                <a href="{{url('SuperAdmin/Employee')}}" class="btn btn-primary">Done<a>
-                                        @elseif(Auth::user()->user_type == 1)
-                                        <a href="{{url('Admin/Employee')}}" class="btn btn-primary">Done<a>
-                                                @endif
                             </form>
                         </div>
                     </div>
@@ -103,6 +99,31 @@
             </div>
         </div>
     </div>
+    @foreach($getNot['getNotify'] as $unread)
+                        <!-- Modal -->
+                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ $unread->description_message }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        @if(Auth::user()->user_type == 0)
+                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 1)
+                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 2)
+                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {

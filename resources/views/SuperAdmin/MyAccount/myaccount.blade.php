@@ -77,6 +77,37 @@
                                         </div>
                                         <div class="col-sm-3 col-xl-3 border-bottom">
                                             <div class="fields">
+                                            <div class="input-field">
+                                                    <label class="text-start">Upload Personal Data Sheet</label>
+                                                    <div>
+                                                    @if(Auth::user()->pds_file)
+                                                    @php
+                                                    // Get the file extension
+                                                    $fileExtension = pathinfo(Auth::user()->pds_file, PATHINFO_EXTENSION);
+                                                    @endphp
+
+                                                    @if($fileExtension === 'pdf')
+                                                    <!-- Display the PDF file and provide download -->
+                                                    <a href="{{ asset('public/employeepdsfile/' . Auth::user()->pds_file) }}" target="_blank">View PDF</a> |
+                                                    <a href="{{ asset('public/employeepdsfile/' . Auth::user()->pds_file) }}" download>Download PDF</a>
+                                                    @elseif($fileExtension === 'xlsx' || $fileExtension === 'xls')
+                                                    <!-- Provide download for Excel files -->
+                                                    <a href="{{ asset('public/employeepdsfile/' . Auth::user()->pds_file) }}" download>Download Excel ({{ strtoupper($fileExtension) }})</a>
+                                                    @else
+                                                    <!-- In case other file types are present -->
+                                                    Invalid file format.
+                                                    @endif
+                                                    @else
+                                                    No file available
+                                                    @endif
+                                                    </div>
+                                                    <input type="file"
+                                                        class="form-control" name="pds_file" value="{{ asset('public/employeepdsfile/' . Auth::user()->pds_file) }}"
+                                                        required>
+                                                    @if ($errors->has('pds_file'))
+                                                        <span class="text-danger">{{ $errors->first('pds_file') }}</span>
+                                                    @endif
+                                                </div>
                                                 <div class="input-field">
                                                     <label class="text-start">First Name</label>
                                                     <input type="text" placeholder="Enter First Name"
@@ -103,7 +134,13 @@
                                                         <span class="text-danger">{{ $errors->first('lastname') }}</span>
                                                     @endif
                                                 </div>
-                                                <div class="input-field">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 col-xl-3 border-bottom">
+                                            <div class="fields">
+                                            <div class="input-field d-flex justify-content-between">
+                                                    <div>
                                                     <label for="suffix">Suffix</label>
                                                     <select id="suffix" class="form-control" name="suffix">
                                                         <option selected disabled>--Select Suffix--</option>
@@ -123,11 +160,7 @@
                                                         <span class="text-danger">{{ $errors->first('suffix') }}</span>
                                                     @endif
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 col-xl-3 border-bottom">
-                                            <div class="fields">
-                                                <div class="input-field">
+                                                    <div>
                                                     <label for="sex">Sex</label>
                                                     <select id="sex" class="form-control" name="sex" required>
                                                         <option selected disabled>--Select Sex--</option>
@@ -140,6 +173,7 @@
                                                             <span class="text-danger">{{ $errors->first('sex') }}</span>
                                                         @endif
                                                     </select>
+                                                    </div>
                                                 </div>
                                                 <div class="input-field">
                                                     <label>Age</label>
@@ -275,7 +309,6 @@
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-success">Submit</button>
-                                    <a href="{{ url('/SuperAdmin/Dashboard') }}" class="btn btn-primary">Done<a>
                                 </form>
                             </div>
                         </div>
@@ -283,4 +316,29 @@
                 </div>
             </div>
         </div>
+        @foreach($getNot['getNotify'] as $unread)
+                        <!-- Modal -->
+                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ $unread->description_message }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        @if(Auth::user()->user_type == 0)
+                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 1)
+                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @elseif(Auth::user()->user_type == 2)
+                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
     @endsection
