@@ -8,15 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use ZipArchive;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Illuminate\Support\Str;
 
 
 use App\Models\Message;
 use App\Models\Leave;
 use App\Models\User;
+use App\Models\Leavetype;
 
 class LeaveController extends Controller
 {
@@ -25,19 +28,41 @@ class LeaveController extends Controller
     {
         // Retrieve notifications
         $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
-        ->selectRaw('COUNT(messages.is_read) AS unread')
-        ->selectRaw('COUNT(messages.inbox) AS inbox')
-        ->leftJoin('messages', function($join) {
-            $join->on('users.id', '=', 'messages.send_to')
-                 ->where('messages.inbox', '=', 0);
-        })
-        ->where('users.id', Auth::id())
-        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
-        ->get();
-        
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
         // Retrieve notifications
         $query = Message::getNotify();
         $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
+
+        $users = User::where('is_archive', 1);
+
+        if (auth()->user()->user_type == 0) {
+            // If the logged-in user's type is 0, fetch users whose type is not 0
+            $users->where('user_type', '!=', 0);
+        } elseif (auth()->user()->user_type == 1) {
+            // If the logged-in user's type is 1, fetch users whose type is neither 0 nor 1
+            $users->whereNotIn('user_type', [0, 1]);
+        } elseif (auth()->user()->user_type == 2) {
+            // If the logged-in user's type is 2, fetch users whose type is 2
+            $users->where('user_type', 2);
+        }
+
+        // Get all the filtered users
+        $users = $users->get();
+
+        $leaveData = Leave::where('deleted', 1)->get();
+
+
+
+        $leavetype = Leavetype::All();
 
 
         if (Auth::user()->user_type === 0) {
@@ -267,9 +292,563 @@ class LeaveController extends Controller
             'retentionRate' => $retentionRate,
             'averageEmployees' => $averageEmployees,
             'employeesLeft' => $employeesLeft,
-            'turnoverRate' => $turnoverRate
+            'turnoverRate' => $turnoverRate,
+            'users' => $users,
+            'leavetype' => $leavetype,
+            'leaveData' => $leaveData
         ]);
     }
+
+    public function myleave(Request $request)
+    {
+        // Retrieve notifications
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
+        // Retrieve notifications
+        $query = Message::getNotify();
+        $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
+
+        $users = User::where('is_archive', 1);
+
+        if (auth()->user()->user_type == 0) {
+            // If the logged-in user's type is 0, fetch users whose type is not 0
+            $users->where('user_type', '!=', 0);
+        } elseif (auth()->user()->user_type == 1) {
+            // If the logged-in user's type is 1, fetch users whose type is neither 0 nor 1
+            $users->whereNotIn('user_type', [0, 1]);
+        } elseif (auth()->user()->user_type == 2) {
+            // If the logged-in user's type is 2, fetch users whose type is 2
+            $users->where('user_type', 2);
+        }
+
+        // Get all the filtered users
+        $users = $users->get();
+
+        $leaveData = Leave::where('deleted', 1)->get();
+
+
+
+        $leavetype = Leavetype::All();
+
+
+        if (Auth::user()->user_type === 0) {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
+
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
+
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
+
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        } else {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            $employeeCount = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
+
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
+
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
+
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        }
+
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
+        }
+
+        // Determine view path based on user type
+        $viewPath = Auth::user()->user_type == 0
+            ? 'superadmin.leave.myleave'
+            : (Auth::user()->user_type == 1
+                ? 'admin.leave.myleave'
+                : 'employee.leave.myleave');
+
+        // Return the appropriate view
+        return view($viewPath, [
+            'notification' => $notification,
+            'getNot' => $getNot,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
+            'employeefemale' => $employeefemale,
+            'employeemale' => $employeemale,
+            'employee1822' => $employee1822,
+            'employee2327' => $employee2327,
+            'employee2833' => $employee2833,
+            'employee3438' => $employee3438,
+            'employee3943' => $employee3943,
+            'employee4448' => $employee4448,
+            'employee4953' => $employee4953,
+            'employee5460' => $employee5460,
+            'departments' => $departments,
+            'counts' => $counts,
+            'employeesStayed' => $employeesStayed,
+            'totalEmployeesAtStart' => $totalEmployeesAtStart,
+            'retentionRate' => $retentionRate,
+            'averageEmployees' => $averageEmployees,
+            'employeesLeft' => $employeesLeft,
+            'turnoverRate' => $turnoverRate,
+            'users' => $users,
+            'leavetype' => $leavetype,
+            'leaveData' => $leaveData
+        ]);
+    }
+
+    public function credits(Request $request)
+    {
+        // Retrieve notifications
+        $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
+        // Retrieve notifications
+        $query = Message::getNotify();
+        $getNot['getNotify'] = $query->orderBy('id', 'desc')->take(10)->get();
+
+        $users = User::where('is_archive', 1);
+
+        if (auth()->user()->user_type == 0) {
+            // If the logged-in user's type is 0, fetch users whose type is not 0
+            $users->where('user_type', '!=', 0);
+        } elseif (auth()->user()->user_type == 1) {
+            // If the logged-in user's type is 1, fetch users whose type is neither 0 nor 1
+            $users->whereNotIn('user_type', [0, 1]);
+        } elseif (auth()->user()->user_type == 2) {
+            // If the logged-in user's type is 2, fetch users whose type is 2
+            $users->where('user_type', 2);
+        }
+
+        // Get all the filtered users
+        $users = $users->get();
+
+        $leaveData = Leave::where('deleted', 1)->get();
+
+
+
+        $leavetype = Leavetype::All();
+
+
+        if (Auth::user()->user_type === 0) {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+                ->where('user_type', '!=', 0)
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
+
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
+
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
+
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        } else {
+            $employeeData = User::selectRaw('YEAR(date_of_assumption) as year, COUNT(*) as total')
+                ->whereNotIn('user_type', [0, 1])
+                ->groupBy('year')
+                ->pluck('total', 'year')
+                ->toArray();
+            $employeeCount = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $employeefemale = User::where('sex', '=', 'Female')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employeemale = User::where('sex', '=', 'Male')
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee1822 = User::whereBetween('age', [18, 22])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2327 = User::whereBetween('age', [23, 27])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee2833 = User::whereBetween('age', [28, 33])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3438 = User::whereBetween('age', [34, 38])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee3943 = User::whereBetween('age', [39, 43])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4448 = User::whereBetween('age', [44, 48])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee4953 = User::whereBetween('age', [49, 53])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+            $employee5460 = User::whereBetween('age', [54, 60])
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            $departmentCounts = User::select('department', DB::raw('count(*) as total'))
+                ->where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->groupBy('department')
+                ->get();
+
+            // Prepare data for Chart.js
+            $departments = $departmentCounts->pluck('department');
+            $counts = $departmentCounts->pluck('total');
+
+            $totalEmployeesAtStart = User::where('date_of_assumption', '<=', now()->startOfYear())
+                ->where('user_type', '!=', 0)->count();
+            $employeesStayed = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)->count();
+
+            // Handle division by zero
+            if ($totalEmployeesAtStart > 0) {
+                // Calculate retention rate
+                $retentionRate = ($employeesStayed / $totalEmployeesAtStart) * 100;
+            } else {
+                // Set retention rate to 0 or handle it differently
+                $retentionRate = 0;
+            }
+            $totalEmployeesAtEnd = User::count();
+            // Calculate the number of employees who have left (assuming archived employees have left)
+            $employeesLeft = User::where('is_archive', 2)
+                ->where('user_type', '!=', 0)
+                ->count();
+
+            // Calculate the average number of employees
+            if ($totalEmployeesAtStart + $totalEmployeesAtEnd > 0) {
+                $averageEmployees = ($totalEmployeesAtStart + $totalEmployeesAtEnd) / 2;
+            } else {
+                $averageEmployees = 0;
+            }
+
+            // Handle division by zero
+            if ($averageEmployees > 0) {
+                // Calculate turnover rate
+                $turnoverRate = ($employeesLeft / $averageEmployees) * 100;
+            } else {
+                $turnoverRate = 0;
+            }
+        }
+
+        // Calculate growth rate for each year
+        $growthRates = [];
+        $years = array_keys($employeeData);
+        for ($i = 1; $i < count($years); $i++) {
+            $previousYearEmployees = $employeeData[$years[$i - 1]];
+            $currentYearEmployees = $employeeData[$years[$i]];
+            $growthRate = (($currentYearEmployees - $previousYearEmployees) / $previousYearEmployees) * 100;
+            $growthRates[$years[$i]] = $growthRate;
+        }
+
+        // Determine view path based on user type
+        $viewPath = Auth::user()->user_type == 0
+            ? 'superadmin.leave.credit'
+            : (Auth::user()->user_type == 1
+                ? 'admin.leave.credit'
+                : 'employee.leave.myleave');
+
+        // Return the appropriate view
+        return view($viewPath, [
+            'notification' => $notification,
+            'getNot' => $getNot,
+            'growthRates' => $growthRates,
+            'employeeData' => $employeeData,
+            'employeefemale' => $employeefemale,
+            'employeemale' => $employeemale,
+            'employee1822' => $employee1822,
+            'employee2327' => $employee2327,
+            'employee2833' => $employee2833,
+            'employee3438' => $employee3438,
+            'employee3943' => $employee3943,
+            'employee4448' => $employee4448,
+            'employee4953' => $employee4953,
+            'employee5460' => $employee5460,
+            'departments' => $departments,
+            'counts' => $counts,
+            'employeesStayed' => $employeesStayed,
+            'totalEmployeesAtStart' => $totalEmployeesAtStart,
+            'retentionRate' => $retentionRate,
+            'averageEmployees' => $averageEmployees,
+            'employeesLeft' => $employeesLeft,
+            'turnoverRate' => $turnoverRate,
+            'users' => $users,
+            'leavetype' => $leavetype,
+            'leaveData' => $leaveData
+        ]);
+    }
+
 
     private function getInternetTime()
     {
@@ -290,4 +869,187 @@ class LeaveController extends Controller
         throw new \Exception('Unable to retrieve time information.');
     }
 
+
+    public function addleave(Request $request)
+    {
+
+        $leave = new Leave;
+
+        $request->validate([
+            'employee_id' => 'required|string|exists:users,custom_id',
+            'leave_type' => 'required|exists:leavetype,id',
+            'from' => 'required|date|before_or_equal:to',
+            'to' => 'required|date|after_or_equal:from',
+            'leave_days' => 'required|numeric|min:1',
+            'details_leave' => 'nullable|in:1,2',
+            'abroad' => 'nullable|string',
+            'monetization' => 'nullable|file|mimes:jpg,jpeg,png|max:20480',
+            'terminal' => 'nullable|file|mimes:jpg,jpeg,png|max:20480',
+            'adoption' => 'nullable|file|mimes:jpg,jpeg,png|max:20480',
+
+        ], [
+            'employee_id.required' => 'Employee is required.',
+            'leave_type.required' => 'Leave type is required.',
+            'from.required' => 'Inclusive from date is required.',
+            'to.required' => 'Inclusive to date is required.',
+            'leave_days.required' => 'Number of leave days must be calculated.',
+            'monetization.mimes' => 'The file must be a file of type: jpg, jpeg, png.',
+            'monetization.max' => 'The file size must not exceed 20MB.',
+            'terminal.mimes' => 'The file must be a file of type: jpg, jpeg, png.',
+            'terminal.max' => 'The file size must not exceed 20MB.',
+            'adoption.mimes' => 'The file must be a file of type: jpg, jpeg, png.',
+            'adoption.max' => 'The file size must not exceed 20MB.',
+            'from.before_or_equal' => 'The from date must be before or on the to date.',
+            'to.after_or_equal' => 'The to date must be after or on the from date.'
+        ]);
+
+        $leave->employee_id = $request->employee_id;
+        $leave->leave_type = $request->leave_type;
+        $leave->from = $request->from;
+        $leave->to = $request->to;
+        $leave->leave_days = $request->leave_days;
+        $leave->details_leave = $request->details_leave;
+        $leave->abroad = $request->abroad;
+
+        // Monetization document upload
+        if (!empty($request->file('monetization'))) {
+            $ext = $request->file('monetization')->getClientOriginalExtension();
+            $file = $request->file('monetization');
+            $randomStr = date('Ymdhis') . Str::random(20);
+            $filename = strtolower($randomStr) . '.' . $ext;
+            $file->move('public/leavedocuments/', $filename);
+            $leave->monetization = $filename;
+        }
+
+        // Terminal document upload
+        if (!empty($request->file('terminal'))) {
+            $ext = $request->file('terminal')->getClientOriginalExtension();
+            $file = $request->file('terminal');
+            $randomStr = date('Ymdhis') . Str::random(20);
+            $filename = strtolower($randomStr) . '.' . $ext;
+            $file->move('public/leavedocuments/', $filename);
+            $leave->terminal = $filename;
+        }
+
+        // Adoption document upload
+        if (!empty($request->file('adoption'))) {
+            $ext = $request->file('adoption')->getClientOriginalExtension();
+            $file = $request->file('adoption');
+            $randomStr = date('Ymdhis') . Str::random(20);
+            $filename = strtolower($randomStr) . '.' . $ext;
+            $file->move('public/leavedocuments/', $filename);
+            $leave->adoption = $filename;
+        }
+        $leave->save();
+
+        return redirect()->back()->with('success', 'Leave successfully added.');
+    }
+
+
+
+    public function editstatus($id, Request $request)
+    {
+        // Fetch the specific leave by ID
+        $leave = Leave::findOrFail($id);
+
+        // Validate the request
+        $request->validate([
+            'status' => 'required|in:Pending,Approved,Declined',
+        ]);
+
+        // Fetch the related user based on the employee_id in the leave
+        $user = User::where('custom_id', $leave->employee_id)->where('is_archive', 1)->first();
+
+        // Check if the user exists and is archived
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found or is not archived.');
+        }
+
+        // Define leave types
+        $leaveTypes = [
+            1  => 'vacation_leave',
+            2  => 'vacation_leave',
+            3  => 'sick_leave',
+            4  => 'maternity_leave',
+            5  => 'paternity_leave',
+            6  => 'special_previlege_leave',
+            7  => 'solo_parent_leave',
+            8  => 'study_leave',
+            9  => 'vawc_leave',
+            10 => 'rehabilitation_leave',
+            11 => 'special_leave_benefits_women', // Requires gender check
+            12 => 'special_emergency_leave',
+            13 => '', // No balance check needed
+            14 => '', // No balance check needed
+            15 => '', // No balance check needed
+        ];
+
+        // Check if the leave type is valid
+        if (array_key_exists($leave->leave_type, $leaveTypes)) {
+            $leaveField = $leaveTypes[$leave->leave_type];
+
+            // For leave types 13, 14, and 15, skip balance check and update directly
+            if (in_array($leave->leave_type, [13, 14, 15])) {
+                // No balance check needed, continue with status update
+            } else {
+                // Additional gender check for special leave
+                if ($leave->leave_type == 11 && $user->sex != 'Female') {
+                    return redirect()->back()->with('error', 'For Females Only!');
+                }
+
+                // Check if the user has sufficient leave balance
+                if ($user->{$leaveField} >= $leave->leave_days) {
+                    $user->{$leaveField} -= $leave->leave_days;
+                    $user->save();
+                } else {
+                    return redirect()->back()->with('error', 'Insufficient balance!');
+                }
+            }
+        } else {
+            return redirect()->back()->with('error', 'Invalid leave type!');
+        }
+
+        // Update leave status
+        $leave->status = $request->status;
+        $leave->save();
+
+        // Redirect based on user type
+        $monitor = Auth::user();
+        $viewPath = match ($monitor->user_type) {
+            0 => '/SuperAdmin/Leave',
+            1 => '/Admin/Leave',
+            default => '/Employee/Leave',
+        };
+
+        return redirect($viewPath)->with('success', 'Leave successfully updated.');
+    }
+
+    public function editcredits($id, Request $request)
+    {
+        // Retrieve the user by their ID
+        $user = User::findOrFail($id);
+
+        // Validate the request inputs
+        $validated = $request->validate([
+            'sick_leave' => 'required|numeric|min:0',
+            'vacation_leave' => 'required|numeric|min:0',
+            'special_previlege_leave' => 'required|numeric|min:0',
+        ]);
+
+        // Update the user's leave credits
+        $user->sick_leave = $validated['sick_leave'];
+        $user->vacation_leave = $validated['vacation_leave'];
+        $user->special_previlege_leave = $validated['special_previlege_leave'];
+
+        // Save the updated data in the database
+        $user->save();
+        $monitor = Auth::user();
+        $viewPath = match ($monitor->user_type) {
+            0 => '/SuperAdmin/Credits',
+            1 => '/Admin/Credits',
+            default => '/Employee/Dashboard',
+        };
+
+        return redirect($viewPath)->with('success', 'Edit credits successfully updated.');
+    }
 }

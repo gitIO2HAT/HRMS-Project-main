@@ -117,4 +117,6 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department', 'id');
     }
 
+   
+
 }

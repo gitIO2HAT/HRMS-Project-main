@@ -32,7 +32,6 @@ return new class extends Migration
             $table->unsignedBigInteger('department')->nullable(); // Use unsignedBigInteger
             $table->unsignedBigInteger('position')->nullable(); // Use unsignedBigInteger
             $table->decimal('daily_rate', 10, 2);
-            $table->unsignedBigInteger('credits_balance')->nullable();
             $table->string('custom_id', 20)->unique()->nullable();
             $table->date('date_of_assumption')->nullable();
             $table->date('end_of_contract')->nullable();
@@ -45,14 +44,25 @@ return new class extends Migration
             $table->string('emergency_phonenumber', 20)->nullable();
             $table->string('emergency_relationship', 50)->nullable();
             $table->string('profile_pic', 255)->default('default.png');
-            $table->string('pds_file', 255);
+            $table->string('pds_file', 255)->nullable();
+            $table->decimal('vacation_leave', 10, 3)->default(0);
+            $table->decimal('sick_leave',10, 3)->default(0);
+            $table->decimal('special_previlege_leave',10, 3)->default(3);
+            $table->decimal('maternity_leave',10, 3)->default(105);
+            $table->decimal('paternity_leave',10, 3)->default(7);
+            $table->decimal('solo_parent_leave',10, 3)->default(7);
+            $table->decimal('study_leave',10, 3)->default(240);
+            $table->decimal('vawc_leave',10, 3)->default(10);
+            $table->decimal('rehabilitation_leave',10, 3)->default(240);
+            $table->decimal('special_leave_benefits_for_women',10, 3)->default(60);
+            $table->decimal('special_emergency_leave',10, 3)->default(5);
             $table->rememberToken();
             $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('department')->references('id')->on('departments')->onDelete('cascade');
             $table->foreign('position')->references('id')->on('positions')->onDelete('cascade');
-            $table->foreign('credits_balance')->references('id')->on('credits_balance')->onDelete('cascade');
+
         });
         DB::table('users')->insert([
             [

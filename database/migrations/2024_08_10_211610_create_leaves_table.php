@@ -16,16 +16,20 @@ return new class extends Migration
             $table->string('employee_id', 20)->collation('utf8mb4_unicode_ci');
             $table->date('from');
             $table->date('to');
-            $table->string('reason');
-            $table->tinyInteger('user_type');
             $table->enum('status', ['Pending', 'Approved', 'Declined'])->default('Pending');
-            $table->enum('leave_type', ['Sick Leave', 'Vacation Leave']);
+            $table->unsignedBigInteger('leave_type')->nullable(); 
             $table->integer('leave_days')->nullable();
+            $table->enum('details_leave', ['1', '2'])->nullable();
             $table->enum('deleted', ['1', '2'])->default('1');
+            $table->string('abroad')->nullable();
+            $table->string('monetization', 255)->nullable();
+            $table->string('terminal', 255)->nullable();
+            $table->string('adoption', 255)->nullable();
             $table->timestamps();
-
+            
             // Ensure the foreign key matches the `custom_id` type in the `users` table
             $table->foreign('employee_id')->references('custom_id')->on('users')->onDelete('cascade');
+            $table->foreign('leave_type')->references('id')->on('leavetype')->onDelete('cascade');
         });
     }
 

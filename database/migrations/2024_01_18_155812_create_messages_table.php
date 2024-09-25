@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('title_message');
             $table->text('description_message');
             $table->tinyInteger('is_read')->default(0);
+            $table->tinyInteger('inbox')->default(0);
             $table->timestamps();
         });
     }

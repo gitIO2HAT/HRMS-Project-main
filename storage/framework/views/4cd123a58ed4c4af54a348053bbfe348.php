@@ -93,6 +93,36 @@
             </a>
         </li>
         <?php endif; ?>
+        <?php if(Request::segment(2)== 'MyLeave'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('SuperAdmin/MyLeave')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li>
+            <a href="<?php echo e(url('SuperAdmin/MyLeave')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if(Request::segment(2)== 'Credits'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('SuperAdmin/Credits')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li>
+            <a href="<?php echo e(url('SuperAdmin/Credits')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
+            </a>
+        </li>
+        <?php endif; ?>
         <?php if(Request::segment(2) == 'Announcement'): ?>
         <li class="active">
             <a href="<?php echo e(url('SuperAdmin/Announcement')); ?>">
@@ -169,6 +199,36 @@
             <a href="<?php echo e(url('Admin/Leave')); ?>">
                 <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
                 <span class="text">Leave</span>
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if(Request::segment(2)== 'MyLeave'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('Admin/MyLeave')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li>
+            <a href="<?php echo e(url('Admin/MyLeave')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if(Request::segment(2)== 'Credits'): ?>
+        <li class="active">
+            <a href="<?php echo e(url('Admin/Credits')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
+            </a>
+        </li>
+        <?php else: ?>
+        <li>
+            <a href="<?php echo e(url('Admin/Credits')); ?>">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
             </a>
         </li>
         <?php endif; ?>

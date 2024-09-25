@@ -93,6 +93,36 @@
             </a>
         </li>
         @endif
+        @if(Request::segment(2)== 'MyLeave')
+        <li class="active">
+            <a href="{{url('SuperAdmin/MyLeave')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('SuperAdmin/MyLeave')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        @endif
+        @if(Request::segment(2)== 'Credits')
+        <li class="active">
+            <a href="{{url('SuperAdmin/Credits')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('SuperAdmin/Credits')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
+            </a>
+        </li>
+        @endif
         @if(Request::segment(2) == 'Announcement')
         <li class="active">
             <a href="{{url('SuperAdmin/Announcement')}}">
@@ -169,6 +199,36 @@
             <a href="{{url('Admin/Leave')}}">
                 <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
                 <span class="text">Leave</span>
+            </a>
+        </li>
+        @endif
+        @if(Request::segment(2)== 'MyLeave')
+        <li class="active">
+            <a href="{{url('Admin/MyLeave')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('Admin/MyLeave')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">My Leave</span>
+            </a>
+        </li>
+        @endif
+        @if(Request::segment(2)== 'Credits')
+        <li class="active">
+            <a href="{{url('Admin/Credits')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
+            </a>
+        </li>
+        @else
+        <li>
+            <a href="{{url('Admin/Credits')}}">
+                <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
+                <span class="text">Credits</span>
             </a>
         </li>
         @endif

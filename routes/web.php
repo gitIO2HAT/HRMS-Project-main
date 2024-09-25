@@ -48,9 +48,11 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/Employee/Restore/{id}', [EmployeeController::class, 'restore']);
 
     Route::get('/SuperAdmin/Leave', [LeaveController::class, 'leave']);
-    Route::post('/SuperAdmin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
-
-    Route::post('/SuperAdmin/Leave', [LeaveController::class, 'addcredit']);
+    Route::get('/SuperAdmin/MyLeave', [LeaveController::class, 'myleave']);
+    Route::get('/SuperAdmin/Credits', [LeaveController::class, 'credits']);
+    Route::patch('/SuperAdmin/Credits/EditCredits/{id}', [LeaveController::class, 'editcredits']);
+    Route::patch('/SuperAdmin/Leave/AddLeave', [LeaveController::class, 'addleave']);
+    Route::patch('/SuperAdmin/Leave/AddLeave/EditStatus/{id}', [LeaveController::class, 'editstatus']);
     Route::post('/SuperAdmin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
 
     Route::get('/SuperAdmin/Announcement', [AnnouncementController::class, 'announcement']);
@@ -95,9 +97,11 @@ Route::group(['middleware' => 'admin'], function () {
 
 
     Route::get('/Admin/Leave', [LeaveController::class, 'leave']);
-    Route::post('/Admin/Leave/UpdateRequestLeave/{id}', [LeaveController::class, 'updaterequest']);
-    Route::post('/Admin/Leave', [LeaveController::class, 'addcredit']);
-    Route::post('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
+    Route::get('/Admin/MyLeave', [LeaveController::class, 'myleave']);
+    Route::get('/Admin/Credits', [LeaveController::class, 'credits']);
+    Route::patch('/Admin/Credits/EditCredits/{id}', [LeaveController::class, 'editcredits']);
+    Route::patch('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
+    Route::patch('/Admin/Leave/AddLeave/EditStatus/{id}', [LeaveController::class, 'editstatus']);
     Route::post('/Admin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
 
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
@@ -134,8 +138,8 @@ Route::group(['middleware' => 'employee'], function () {
 
     Route::get('/Employee/Dashboard', [DashboardController::class, 'dashboard']);
 
-    Route::get('/Employee/Leave', [LeaveController::class, 'leave']);
-    Route::post('/Employee/Leave/AddLeave', [LeaveController::class, 'addleave']);
+    Route::get('/Employee/MyLeave', [LeaveController::class, 'myleave']);
+
 
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/Employee/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);

@@ -16,12 +16,15 @@ class Leave extends Model
         'employee_id',
         'from',
         'to',
-        'reason',
         'deleted',
         'status',     // Ensure this column exists in your database
         'leave_type',
-        'user_type',
+        'abroad',
+        'monetization',
+        'terminal',
+        'adoption',
         'leave_days',
+        'details_leave'
     ];
 
     /**
@@ -31,11 +34,15 @@ class Leave extends Model
     {
         return $this->belongsTo(User::class, 'employee_id', 'custom_id');
     }
-
+    public function leavetype()
+    {
+        return $this->belongsTo(Leavetype::class,'leave_type', 'id');
+    }
 
     static public function getID($id)
     {
         return self::find($id);
     }
 
+   
 }
