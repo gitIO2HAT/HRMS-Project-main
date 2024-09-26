@@ -58,7 +58,22 @@ class LeaveController extends Controller
         // Get all the filtered users
         $users = $users->get();
 
-        $leaveData = Leave::where('deleted', 1)->get();
+        $search = request('search'); // Get the search term from the request
+
+        $leaveData = Leave::where('deleted', 1)
+            ->with('user', 'leavetype')
+            ->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")
+                        ->orWhere('middlename', 'like', "%{$search}%");
+                })
+                    ->orWhereHas('leavetype', function ($query) use ($search) {
+                        $query->where('status', 'like', "%{$search}%");
+                    });
+            })
+            ->orderBy('created_at', 'desc') // Sort in descending order by created date
+            ->paginate(10, ['*'], 'page_leave');
 
 
 
@@ -332,8 +347,23 @@ class LeaveController extends Controller
 
         // Get all the filtered users
         $users = $users->get();
+        $search = request('search');
 
-        $leaveData = Leave::where('deleted', 1)->get();
+        $leaveData = Leave::where('deleted', 1)
+            ->where('employee_id', Auth::user()->custom_id)
+            ->with('user', 'leavetype')
+            ->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")
+                        ->orWhere('middlename', 'like', "%{$search}%");
+                })
+                    ->orWhereHas('leavetype', function ($query) use ($search) {
+                        $query->where('status', 'like', "%{$search}%");
+                    });
+            })
+            ->orderBy('created_at', 'desc') // Sort in descending order by created date
+            ->paginate(10, ['*'], 'page_leave');
 
 
 
@@ -595,18 +625,47 @@ class LeaveController extends Controller
         $users = User::where('is_archive', 1);
 
         if (auth()->user()->user_type == 0) {
-            // If the logged-in user's type is 0, fetch users whose type is not 0
-            $users->where('user_type', '!=', 0);
+
+            $search = request('search');
+            $users = User::where('is_archive', 1)
+                ->where('user_type', '!=', 0)
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")
+                        ->orWhere('middlename', 'like', "%{$search}%"); // Moved inside closure
+                })
+                ->orderBy('created_at', 'desc') // Sort in descending order by created date
+                ->paginate(10, ['*'], 'page_user');
         } elseif (auth()->user()->user_type == 1) {
             // If the logged-in user's type is 1, fetch users whose type is neither 0 nor 1
-            $users->whereNotIn('user_type', [0, 1]);
+
+            $search = request('search');
+            $users = User::where('is_archive', 1)
+                ->whereNotIn('user_type', [0, 1])
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")
+                        ->orWhere('middlename', 'like', "%{$search}%"); // Moved inside closure
+                })
+                ->orderBy('created_at', 'desc') // Sort in descending order by created date
+                ->paginate(10, ['*'], 'page_user');
         } elseif (auth()->user()->user_type == 2) {
             // If the logged-in user's type is 2, fetch users whose type is 2
-            $users->where('user_type', 2);
+
+            $search = request('search');
+            $users = User::where('is_archive', 1)
+                ->where('user_type', 2)
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")
+                        ->orWhere('middlename', 'like', "%{$search}%"); // Moved inside closure
+                })
+                ->orderBy('created_at', 'desc') // Sort in descending order by created date
+                ->paginate(10, ['*'], 'page_user');
         }
 
         // Get all the filtered users
-        $users = $users->get();
+
 
         $leaveData = Leave::where('deleted', 1)->get();
 
@@ -1024,25 +1083,38 @@ class LeaveController extends Controller
         return redirect($viewPath)->with('success', 'Leave successfully updated.');
     }
 
-    public function editcredits($id, Request $request)
-    {
-        // Retrieve the user by their ID
-        $user = User::findOrFail($id);
 
-        // Validate the request inputs
-        $validated = $request->validate([
-            'sick_leave' => 'required|numeric|min:0',
-            'vacation_leave' => 'required|numeric|min:0',
-            'special_previlege_leave' => 'required|numeric|min:0',
+
+    public function editCredits(Request $request, $id)
+    {
+        // Validate the form input
+        $request->validate([
+            'type' => 'required|string',
+            'numberInput' => 'required|numeric|min:-100|max:100',
         ]);
 
-        // Update the user's leave credits
-        $user->sick_leave = $validated['sick_leave'];
-        $user->vacation_leave = $validated['vacation_leave'];
-        $user->special_previlege_leave = $validated['special_previlege_leave'];
+        // Retrieve the user by ID
+        $user = User::findOrFail($id);
 
-        // Save the updated data in the database
+        // Determine which leave balance to update based on the 'type' input
+        switch ($request->input('type')) {
+            case 'sick_leave':
+                $user->sick_leave += $request->input('numberInput');
+                break;
+            case 'vacation_leave':
+                $user->vacation_leave += $request->input('numberInput');
+                break;
+            case 'special_previlege_leave':
+                $user->special_previlege_leave += $request->input('numberInput');
+                break;
+            default:
+                return redirect()->back()->withErrors(['type' => 'Invalid leave type selected']);
+        }
+
+        // Save the updated user record
         $user->save();
+
+        // Redirect back with a success message
         $monitor = Auth::user();
         $viewPath = match ($monitor->user_type) {
             0 => '/SuperAdmin/Credits',

@@ -7,10 +7,10 @@
             <div class="row g-4">
                 <div class="col-sm-12 col-xl-12">
                     <div class="bg-white text-center rounded-3  p-4">
-                        
+
                         <div class="col-12">
                             <div class="bg-white rounded h-100 p-4">
-                            @include('layouts._message')
+                                @include('layouts._message')
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class=" text-dark ">List of Archived Employees</h6>
 
@@ -27,10 +27,10 @@
                                         </form>
                                         @if(Auth::user()->user_type == 0)
 
-                                            <a href="{{url('SuperAdmin/Employee')}}" class="m-1 btn btn-primary ">Back</a>
-                                            @elseif(Auth::user()->user_type == 1)
+                                        <a href="{{url('SuperAdmin/Employee')}}" class="m-1 btn btn-primary ">Back</a>
+                                        @elseif(Auth::user()->user_type == 1)
 
-                                            <a href="{{url('Admin/Employee')}}" class="m-1 btn btn-primary ">Back</a>
+                                        <a href="{{url('Admin/Employee')}}" class="m-1 btn btn-primary ">Back</a>
                                         @endif
                                     </div>
                                 </div>
@@ -60,24 +60,26 @@
                                                 <td>{{ $employee->email}}</td>
                                                 <td>@foreach ($depart as $data)
                                                     @if ($employee->department == $data->id)
-                                                        {{ $data->name }}
+                                                    {{ $data->name }}
                                                     @endif
-                                                @endforeach</td>
+                                                    @endforeach
+                                                </td>
                                                 <td>@foreach ($pos as $data)
                                                     @if ($employee->position == $data->id)
-                                                        {{ $data->name }}
+                                                    {{ $data->name }}
                                                     @endif
-                                                @endforeach</td>
+                                                    @endforeach
+                                                </td>
                                                 <td>{{$employee->date_of_assumption}}</td>
                                                 <td>{{ \Carbon\Carbon::parse( $employee->date_archive)->format('Y, M d - g:i A') }}</td>
                                                 @if(Auth::user()->user_type == 0)
                                                 <td>
-                                                    <a class=" rounded-1"  href="{{ url('SuperAdmin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                                    <a class=" rounded-1" href="{{ url('SuperAdmin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
                                                 </td>
 
                                                 @elseif(Auth::user()->user_type == 1)
                                                 <td>
-                                                    <a class=" rounded-1"  href="{{ url('Admin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                                    <a class=" rounded-1" href="{{ url('Admin/Employee/Restore/'.$employee->id)}}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
 
                                                 </td>
 
@@ -96,29 +98,29 @@
             </div>
         </div>
         @foreach($getNot['getNotify'] as $unread)
-                        <!-- Modal -->
-                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ $unread->description_message }}
-                                    </div>
-                                    <div class="modal-footer">
-                                        @if(Auth::user()->user_type == 0)
-                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 1)
-                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 2)
-                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+        <!-- Modal -->
+        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ $unread->description_message }}
+                    </div>
+                    <div class="modal-footer">
+                        @if(Auth::user()->user_type == 0)
+                        <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                        @elseif(Auth::user()->user_type == 1)
+                        <a href="{{ url('Admin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                        @elseif(Auth::user()->user_type == 2)
+                        <a href="{{ url('Employee/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
 
         @endsection

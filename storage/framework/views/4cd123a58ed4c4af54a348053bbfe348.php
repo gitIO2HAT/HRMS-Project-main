@@ -270,18 +270,18 @@
         <?php endif; ?>
 
         <?php if(Auth::user()->user_type == 2): ?>
-        <?php if(Request::segment(2)== 'Leave'): ?>
+        <?php if(Request::segment(2)== 'MyLeave'): ?>
         <li class="active">
-            <a href="l<?php echo e(url('Employee/Leave')); ?>">
+            <a href="<?php echo e(url('Employee/MyLeave')); ?>">
                 <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
-                <span class="text">Leave</span>
+                <span class="text">My Leave</span>
             </a>
         </li>
         <?php else: ?>
         <li>
-            <a href="<?php echo e(url('Employee/Leave')); ?>">
+            <a href="<?php echo e(url('Employee/MyLeave')); ?>">
                 <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
-                <span class="text">Leave</span>
+                <span class="text">My Leave</span>
             </a>
         </li>
         <?php endif; ?>

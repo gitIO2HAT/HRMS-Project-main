@@ -8,7 +8,8 @@
                 <div class="col-sm-12 col-xl-12">
                     <div>
                         <h2 class="text-dark text-start border-bottom border-success">Edit {{$getId->name}}
-                            {{$getId->lastname}}</h2>
+                            {{$getId->lastname}}
+                        </h2>
                     </div>
                     <div class="bg-white text-center p-4">
                         <div class="user-head">
@@ -23,7 +24,7 @@
                                         <div class="fields">
 
 
-                                        <div class="input-field">
+                                            <div class="input-field">
                                                 <label for="department">Department</label>
                                                 <select id="department" name="department" class="form-control">
                                                     <option value="" disabled selected>--Select Department--</option>
@@ -41,9 +42,10 @@
                                                 <select id="position" name="position" class="form-control">
                                                     <option value="">@foreach ($pos as $data)
                                                         @if ($getId->position == $data->id)
-                                                            {{ $data->name }}
+                                                        {{ $data->name }}
                                                         @endif
-                                                    @endforeach</option>
+                                                        @endforeach
+                                                    </option>
                                                 </select>
                                                 @if($errors->has('position'))
                                                 <span class="text-danger">{{ $errors->first('position') }}</span>
@@ -60,8 +62,8 @@
                                                     <option value="4" @if($getId->contract== '4') selected @endif>Job Order</option>
                                                     <option value="5" @if($getId->contract == '5') selected @endif>Seasonal</option>
                                                     @if ($errors->has('contract'))
-                                                        <span
-                                                            class="text-danger">{{ $errors->first('contract') }}</span>
+                                                    <span
+                                                        class="text-danger">{{ $errors->first('contract') }}</span>
                                                     @endif
                                                 </select>
                                             </div>
@@ -75,7 +77,7 @@
                                             <div class="input-field">
                                                 <label>End of Contract</label>
                                                 <input type="date" class="form-control" name="end_of_contract"
-                                                    value="{{$getId->end_of_contract}}" >
+                                                    value="{{$getId->end_of_contract}}">
                                                 @if($errors->has('birth_date'))
                                                 <span class="text-danger">{{ $errors->first('birth_date') }}</span>
                                                 @endif
@@ -83,7 +85,7 @@
                                             <div class="input-field">
                                                 <label>Daily Rate</label>
                                                 <input type="numeric" class="form-control" name="daily_rate"
-                                                    placeholder="e.g., 560" value="{{$getId->daily_rate}}" >
+                                                    placeholder="e.g., 560" value="{{$getId->daily_rate}}">
                                                 @if($errors->has('daily_rate'))
                                                 <span class="text-danger">{{ $errors->first('daily_rate') }}</span>
                                                 @endif
@@ -92,7 +94,7 @@
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-success">Submit</button>
-                              
+
                             </form>
                         </div>
                     </div>
@@ -101,30 +103,30 @@
         </div>
     </div>
     @foreach($getNot['getNotify'] as $unread)
-                        <!-- Modal -->
-                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ $unread->description_message }}
-                                    </div>
-                                    <div class="modal-footer">
-                                        @if(Auth::user()->user_type == 0)
-                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 1)
-                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 2)
-                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+    <!-- Modal -->
+    <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ $unread->description_message }}
+                </div>
+                <div class="modal-footer">
+                    @if(Auth::user()->user_type == 0)
+                    <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 1)
+                    <a href="{{ url('Admin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 2)
+                    <a href="{{ url('Employee/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {

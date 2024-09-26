@@ -177,11 +177,11 @@
                     </div>
                     <div class="modal-footer">
                         @if(Auth::user()->user_type == 0)
-                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                        <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
                         @elseif(Auth::user()->user_type == 1)
-                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                        <a href="{{ url('Admin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
                         @elseif(Auth::user()->user_type == 2)
-                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                        <a href="{{ url('Employee/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
                         @endif
                     </div>
                 </div>

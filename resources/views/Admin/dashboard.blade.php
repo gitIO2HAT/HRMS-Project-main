@@ -2,8 +2,8 @@
 
 @section('content')
 @if(\Carbon\Carbon::today()->between(
-    \Carbon\Carbon::parse(Auth::user()->end_of_contract)->subMonth(),
-    \Carbon\Carbon::parse(Auth::user()->end_of_contract)
+\Carbon\Carbon::parse(Auth::user()->end_of_contract)->subMonth(),
+\Carbon\Carbon::parse(Auth::user()->end_of_contract)
 ))
 <div class="col-sm-12 col-xl-12 bg-warning text-center py-3">
     <i class="fas fa-bell" style="font-size: 24px;"></i>
@@ -108,7 +108,7 @@
                                                                     <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-warning"></i> Ongoing</span>
 
                                                                     @elseif($announce->scheduled_date <= $currentDateTime && $announce->scheduled_end >= $currentDateTime)
-                                                                    <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-danger"></i> In Progress</span>
+                                                                        <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-danger"></i> In Progress</span>
                                                                         @endif
                                                                 </td>
 
@@ -150,28 +150,28 @@
         </div>
     </div>
     @foreach($getNot['getNotify'] as $unread)
-                        <!-- Modal -->
-                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ $unread->description_message }}
-                                    </div>
-                                    <div class="modal-footer">
-                                        @if(Auth::user()->user_type == 0)
-                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 1)
-                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 2)
-                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+    <!-- Modal -->
+    <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ $unread->description_message }}
+                </div>
+                <div class="modal-footer">
+                    @if(Auth::user()->user_type == 0)
+                    <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 1)
+                    <a href="{{ url('Admin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 2)
+                    <a href="{{ url('Employee/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
     @endsection

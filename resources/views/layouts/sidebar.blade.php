@@ -270,18 +270,18 @@
         @endif
 
         @if(Auth::user()->user_type == 2)
-        @if(Request::segment(2)== 'Leave')
+        @if(Request::segment(2)== 'MyLeave')
         <li class="active">
-            <a href="l{{url('Employee/Leave')}}">
+            <a href="{{url('Employee/MyLeave')}}">
                 <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
-                <span class="text">Leave</span>
+                <span class="text">My Leave</span>
             </a>
         </li>
         @else
         <li>
-            <a href="{{url('Employee/Leave')}}">
+            <a href="{{url('Employee/MyLeave')}}">
                 <i class="bx far fa-calendar-alt" style="color: #000000;"></i>
-                <span class="text">Leave</span>
+                <span class="text">My Leave</span>
             </a>
         </li>
         @endif

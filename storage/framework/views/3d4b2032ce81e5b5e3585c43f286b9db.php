@@ -139,11 +139,11 @@
                                     </div>
                                     <div class="modal-footer">
                                         <?php if(Auth::user()->user_type == 0): ?>
-                                        <button href="<?php echo e(url('SuperAdmin/Read/'.$unread->id)); ?>" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        <a href="<?php echo e(url('SuperAdmin/Read/'.$unread->id)); ?>" class="btn btn-success">Ok!</a>
                                         <?php elseif(Auth::user()->user_type == 1): ?>
-                                        <button href="<?php echo e(url('Admin/Read/'.$unread->id)); ?>" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        <a href="<?php echo e(url('Admin/Read/'.$unread->id)); ?>" class="btn btn-success">Ok!</a>
                                         <?php elseif(Auth::user()->user_type == 2): ?>
-                                        <button href="<?php echo e(url('Employee/Read/'.$unread->id)); ?>" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
+                                        <a href="<?php echo e(url('Employee/Read/'.$unread->id)); ?>" class="btn btn-success">Ok!</a>
                                         <?php endif; ?>
                                     </div>
                                 </div>

@@ -294,7 +294,6 @@ $growthRates[$years[$i]] = $growthRate;
 
     public function read($id)
     {
-
         $read = Message::getID($id);
         $read->inbox = 1;
         $read->save();

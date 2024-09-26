@@ -119,13 +119,13 @@
                                                 <tr>
                                                     <td class="text-center">{{ ($position->currentPage() - 1) * $position->perPage() + $index + 1 }}</td>
                                                     <td class="text-center">
-                                                    @foreach($departments as $depart)
+                                                        @foreach($departments as $depart)
 
                                                         @if($list->department_id === $depart->id)
-                                                            {{$depart->name}}
+                                                        {{$depart->name}}
                                                         @endif
 
-                                                    @endforeach
+                                                        @endforeach
                                                     </td>
                                                     <td class="text-center">
                                                         <span id="editable-span-pos-{{ $list->id }}" onclick="toggleEdit('pos-{{$list->id}}')">
@@ -140,11 +140,11 @@
 
 
                                                     <td class="text-center">
-                                                    @if(Auth::user()->user_type == 0)
-                                                    <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
+                                                        @if(Auth::user()->user_type == 0)
+                                                        <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
                                                             <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
                                                         </button>
-                                                    <a href="{{ url('/SuperAdmin/Department/DeletedPosition/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
+                                                        <a href="{{ url('/SuperAdmin/Department/DeletedPosition/'.$list->id) }}" onclick="return confirm('Are you sure you want to delete this permanently?');">
                                                             <i class="fas fa-trash-alt" style="color: #ee7c7c;"></i>
                                                         </a>
                                                         @elseif(Auth::user()->user_type == 1)
@@ -232,31 +232,29 @@
         </div>
     </div>
     @foreach($getNot['getNotify'] as $unread)
-                        <!-- Modal -->
-                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ $unread->description_message }}
-                                    </div>
-                                    <div class="modal-footer">
-                                        @if(Auth::user()->user_type == 0)
-                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 1)
-                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 2)
-                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+    <!-- Modal -->
+    <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ $unread->description_message }}
+                </div>
+                <div class="modal-footer">
+                    @if(Auth::user()->user_type == 0)
+                    <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 1)
+                    <a href="{{ url('Admin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 2)
+                    <a href="{{ url('Employee/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
 
-@endsection
-
-
+    @endsection

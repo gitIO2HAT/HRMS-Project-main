@@ -51,7 +51,7 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::get('/SuperAdmin/MyLeave', [LeaveController::class, 'myleave']);
     Route::get('/SuperAdmin/Credits', [LeaveController::class, 'credits']);
     Route::patch('/SuperAdmin/Credits/EditCredits/{id}', [LeaveController::class, 'editcredits']);
-    Route::patch('/SuperAdmin/Leave/AddLeave', [LeaveController::class, 'addleave']);
+    Route::post('/SuperAdmin/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::patch('/SuperAdmin/Leave/AddLeave/EditStatus/{id}', [LeaveController::class, 'editstatus']);
     Route::post('/SuperAdmin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
 
@@ -100,7 +100,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/Admin/MyLeave', [LeaveController::class, 'myleave']);
     Route::get('/Admin/Credits', [LeaveController::class, 'credits']);
     Route::patch('/Admin/Credits/EditCredits/{id}', [LeaveController::class, 'editcredits']);
-    Route::patch('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
+    Route::post('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::patch('/Admin/Leave/AddLeave/EditStatus/{id}', [LeaveController::class, 'editstatus']);
     Route::post('/Admin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
 

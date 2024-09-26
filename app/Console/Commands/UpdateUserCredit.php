@@ -41,8 +41,9 @@ class UpdateUserCredit extends Command
         $updated = User::whereRaw('DATE_ADD(created_at, INTERVAL 1 MONTH) <= ?', [$now])
             ->whereRaw('MOD(TIMESTAMPDIFF(DAY, created_at, NOW()), 30) = 0')
             ->update([
-                'sick_balance' => DB::raw('sick_balance + 1.25'),
-                'vacation_balance' => DB::raw('vacation_balance + 1.25')
+                'sick_leave' => DB::raw('sick_leave + 1.25'),
+                'vacation_leave' => DB::raw('vacation_leave + 1.25'),
+                'special_previlege_leave' => DB::raw('special_previlege_leave + 1.25')
             ]);
 
         if ($updated) {

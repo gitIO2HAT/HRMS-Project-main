@@ -16,7 +16,7 @@
                             </div>
 
                             <form method="POST" action="{{url('/Employee/MyAccount/Update')}}" enctype="multipart/form-data">
-                               @csrf
+                                @csrf
                                 <div class="row g-4">
                                     <div class="col-sm-3 col-xl-3 border-end  border-bottom">
                                         <div class="fields">
@@ -32,16 +32,17 @@
                                                 <h5 class="text-dark">{{Auth::user()->name}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</h5>
                                                 <h6 class="text-light">
                                                     @foreach ($depart as $data)
-                                                            @if (Auth::user()->department == $data->id)
-                                                                {{ $data->name }}
-                                                            @endif
-                                                        @endforeach
+                                                    @if (Auth::user()->department == $data->id)
+                                                    {{ $data->name }}
+                                                    @endif
+                                                    @endforeach
                                                 </h6>
                                                 <h6 class="text-light">@foreach ($pos as $data)
                                                     @if (Auth::user()->position == $data->id)
-                                                        {{ $data->name }}
+                                                    {{ $data->name }}
                                                     @endif
-                                                @endforeach</h6>
+                                                    @endforeach
+                                                </h6>
                                                 <h6 class="text-light"> @if(Auth::user()->contract == 1)
                                                     Regular
                                                     @elseif(Auth::user()->contract == 2)
@@ -68,9 +69,9 @@
                                     </div>
                                     <div class="col-sm-3 col-xl-3 border-bottom">
                                         <div class="fields">
-                                        <div class="input-field">
-                                                    <label class="text-start">Upload Personal Data Sheet</label>
-                                                    <div>
+                                            <div class="input-field">
+                                                <label class="text-start">Upload Personal Data Sheet</label>
+                                                <div>
                                                     @if(Auth::user()->pds_file)
                                                     @php
                                                     // Get the file extension
@@ -91,14 +92,14 @@
                                                     @else
                                                     No file available
                                                     @endif
-                                                    </div>
-                                                    <input type="file"
-                                                        class="form-control" name="pds_file" value="{{ asset('public/employeepdsfile/' . Auth::user()->pds_file) }}"
-                                                        required>
-                                                    @if ($errors->has('pds_file'))
-                                                        <span class="text-danger">{{ $errors->first('pds_file') }}</span>
-                                                    @endif
                                                 </div>
+                                                <input type="file"
+                                                    class="form-control" name="pds_file" value="{{ asset('public/employeepdsfile/' . Auth::user()->pds_file) }}"
+                                                    required>
+                                                @if ($errors->has('pds_file'))
+                                                <span class="text-danger">{{ $errors->first('pds_file') }}</span>
+                                                @endif
+                                            </div>
                                             <div class="input-field">
                                                 <label class="text-start">First Name</label>
                                                 <input type="text" placeholder="Enter First Name" class="form-control"
@@ -123,18 +124,18 @@
                                                 <span class="text-danger">{{ $errors->first('lastname') }}</span>
                                                 @endif
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                     <div class="col-sm-3 col-xl-3 border-bottom">
                                         <div class="fields">
-                                        <div class="input-field d-flex justify-content-between">
-                                                    <div>
+                                            <div class="input-field d-flex justify-content-between">
+                                                <div>
                                                     <label for="suffix">Suffix</label>
                                                     <select id="suffix" class="form-control" name="suffix">
                                                         <option selected disabled>--Select Suffix--</option>
                                                         <option
-                                                            value="Jr."@if (Auth::user()->suffix == 'Jr.') selected @endif>
+                                                            value="Jr." @if (Auth::user()->suffix == 'Jr.') selected @endif>
                                                             Jr.</option>
                                                         <option value="Sr."
                                                             @if (Auth::user()->suffix == 'Sr.') selected @endif>Sr.</option>
@@ -146,10 +147,10 @@
                                                             @if (Auth::user()->suffix == 'III') selected @endif>III</option>
                                                     </select>
                                                     @if ($errors->has('suffix'))
-                                                        <span class="text-danger">{{ $errors->first('suffix') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('suffix') }}</span>
                                                     @endif
                                                 </div>
-                                                    <div>
+                                                <div>
                                                     <label for="sex">Sex</label>
                                                     <select id="sex" class="form-control" name="sex" required>
                                                         <option selected disabled>--Select Sex--</option>
@@ -159,11 +160,11 @@
                                                             @if (Auth::user()->sex == 'Female') selected @endif>Female
                                                         </option>
                                                         @if ($errors->has('sex'))
-                                                            <span class="text-danger">{{ $errors->first('sex') }}</span>
+                                                        <span class="text-danger">{{ $errors->first('sex') }}</span>
                                                         @endif
                                                     </select>
-                                                    </div>
                                                 </div>
+                                            </div>
                                             <div class="input-field">
                                                 <label>Age</label>
                                                 <input type="number" placeholder="Enter Age" class="form-control"
@@ -281,7 +282,7 @@
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-success">Submit</button>
-                                                </form>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -289,28 +290,28 @@
         </div>
     </div>
     @foreach($getNot['getNotify'] as $unread)
-                        <!-- Modal -->
-                        <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ $unread->description_message }}
-                                    </div>
-                                    <div class="modal-footer">
-                                        @if(Auth::user()->user_type == 0)
-                                        <button href="{{ url('SuperAdmin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 1)
-                                        <button href="{{ url('Admin/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @elseif(Auth::user()->user_type == 2)
-                                        <button href="{{ url('Employee/Read/'.$unread->id)}}" type="button" class="btn btn-success" data-bs-dismiss="modal">Ok!</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+    <!-- Modal -->
+    <div class="modal fade" id="descriptionModal{{ $unread->id }}" tabindex="-1" aria-labelledby="descriptionModalLabel{{ $unread->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="descriptionModalLabel{{ $unread->id }}">{{$unread->title_message}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ $unread->description_message }}
+                </div>
+                <div class="modal-footer">
+                    @if(Auth::user()->user_type == 0)
+                    <a href="{{ url('SuperAdmin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 1)
+                    <a href="{{ url('Admin/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @elseif(Auth::user()->user_type == 2)
+                    <a href="{{ url('Employee/Read/'.$unread->id)}}" class="btn btn-success">Ok!</a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
     @endsection
