@@ -38,9 +38,7 @@
                     </form>
                 </div>
                 <div class="col-6 col-sm-6 col-xl-6 d-flex justify-content-end mt-2">
-                    <a type="button" class="mx-2 rounded-2 bg-success text-white p-2" data-bs-toggle="modal" data-bs-target="#addLeaveModal">
-                        View MY Card
-                    </a>
+                <a class=" rounded-1 p-2 bg-success text-white" href="{{ url('/Employee/Leave/MyLeaveCreditCard') }}">View My Leave Credit Card</a>
 
                 </div>
                 <div class="table-responsive">

@@ -51,14 +51,14 @@
         @if(Request::segment(2)== 'Department')
         <li class="active">
             <a href="{{url('SuperAdmin/Department')}}">
-                <i class="bx fab fa-windows" style="color: #000000;"></i>
+            <i class="bx fas fa-building" style="color: #000000;"></i>
                 <span class="text">Department</span>
             </a>
         </li>
         @else
         <li class="">
             <a href="{{url('SuperAdmin/Department')}}">
-                <i class="bx fab fa-windows" style="color: #000000;"></i>
+            <i class="bx fas fa-building" style="color: #000000;"></i>
                 <span class="text">Department</span>
             </a>
         </li>
@@ -160,14 +160,14 @@
         @if(Request::segment(2)== 'Department')
         <li class="active">
             <a href="{{url('Admin/Department')}}">
-                <i class="bx fab fa-windows" style="color: #000000;"></i>
+            <i class="bx fas fa-building" style="color: #000000;"></i>
                 <span class="text">Department</span>
             </a>
         </li>
         @else
         <li class="">
             <a href="{{url('Admin/Department')}}">
-                <i class="bx fab fa-windows" style="color: #000000;"></i>
+            <i class="bx fas fa-building" style="color: #000000;"></i>
                 <span class="text">Department</span>
             </a>
         </li>
@@ -294,14 +294,14 @@
         @if(Request::segment(2) == 'Attendance')
         <li class="active">
             <a href="{{url('SuperAdmin/Attendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('SuperAdmin/Attendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
             </a>
         </li>
@@ -309,14 +309,14 @@
         @if(Request::segment(2) == 'MyAttendance')
         <li class="active">
             <a href="{{url('SuperAdmin/MyAttendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">My Attendance</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('SuperAdmin/MyAttendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">My Attendance</span>
             </a>
         </li>
@@ -326,14 +326,14 @@
         @if(Request::segment(2) == 'Attendance')
         <li class="active">
             <a href="{{url('Admin/Attendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('Admin/Attendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
             </a>
         </li>
@@ -341,14 +341,14 @@
         @if(Request::segment(2) == 'MyAttendance')
         <li class="active">
             <a href="{{url('Admin/MyAttendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">My Attendance</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('Admin/MyAttendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">My Attendance</span>
             </a>
         </li>
@@ -357,14 +357,14 @@
         @if(Request::segment(2) == 'Attendance')
         <li class="active">
             <a href="{{url('Employee/Attendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('Employee/Attendance')}}">
-                <i class="bx fas fa-cog" style="color: #000000;"></i>
+            <i class="bx fas fa-calendar-check" style="color: #000000;"></i>
                 <span class="text">Attendance</span>
             </a>
         </li>

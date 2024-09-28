@@ -65,64 +65,57 @@
                         <form id="statusForm-{{ $user->id }}" method="POST" action="{{ url('/SuperAdmin/Credits/EditCredits/' . $user->id) }}">
                             @csrf
                             @method('PATCH')
+                            <div>
+                                <select id="contract" class="form-control" name="type" required>
+                                    <option selected disabled>--Select Leave Balance--</option>
+                                    <option value="sick_leave">Sick Leave Balance</option>
+                                    <option value="vacation_leave">Vacation Leave Balance</option>
+                                    <option value="special_previlege_leave">Special Previlege Leave Balance</option>
 
-                            <!-- Sick Leave with Add and Minus Buttons and Editable Input -->
-                            <label for="sick_leave_{{ $user->id }}">Sick Leave</label>
-                            <div class="input-group">
-                                <button type="button" class="btn btn-outline-secondary" onclick="decrementLeave('sick_leave_{{ $user->id }}', 0.1)">-</button>
-                                <input type="number" id="sick_leave_{{ $user->id }}" name="sick_leave" value="{{ $user->sick_leave }}" step="0.1" class="form-control">
-                                <button type="button" class="btn btn-outline-secondary" onclick="incrementLeave('sick_leave_{{ $user->id }}', 0.1)">+</button>
-                            </div>
-
-                            <!-- Vacation Leave with Add and Minus Buttons and Editable Input -->
-                            <label for="vacation_leave_{{ $user->id }}">Vacation Leave</label>
-                            <div class="input-group">
-                                <button type="button" class="btn btn-outline-secondary" onclick="decrementLeave('vacation_leave_{{ $user->id }}', 0.1)">-</button>
-                                <input type="number" id="vacation_leave_{{ $user->id }}" name="vacation_leave" value="{{ $user->vacation_leave }}" step="0.1" class="form-control">
-                                <button type="button" class="btn btn-outline-secondary" onclick="incrementLeave('vacation_leave_{{ $user->id }}', 0.1)">+</button>
+                                    @if ($errors->has('type'))
+                                    <span
+                                        class="text-danger">{{ $errors->first('type') }}</span>
+                                    @endif
+                                </select>
                             </div>
 
-                            <!-- Special Privilege Leave with Add and Minus Buttons and Editable Input -->
-                            <label for="special_previlege_leave_{{ $user->id }}">Special Privilege Leave</label>
-                            <div class="input-group">
-                                <button type="button" class="btn btn-outline-secondary" onclick="decrementLeave('special_previlege_leave_{{ $user->id }}', 0.1)">-</button>
-                                <input type="number" id="special_previlege_leave_{{ $user->id }}" name="special_previlege_leave" value="{{ $user->special_previlege_leave }}" step="0.1" class="form-control">
-                                <button type="button" class="btn btn-outline-secondary" onclick="incrementLeave('special_previlege_leave_{{ $user->id }}', 0.1)">+</button>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="#" class="button d-flex align-items-center p-2" onclick="increment()">+</a>
+                                <input type="number" id="numberInput" name="numberInput" min="-100" max="100" step="0.001" value="0.000" class="form-control my-2">
+                                <a href="#" class="button d-flex align-items-center p-2" onclick="decrement()">-</a>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </div>
+
+
+
+                            <script>
+                                // Function to increment the input value by 0.001
+                                function increment() {
+                                    var input = document.getElementById("numberInput");
+                                    var value = parseFloat(input.value);
+                                    if (value < 100) {
+                                        input.value = (value + 0.001).toFixed(3); // Increment by 0.001 and round to 3 decimals
+                                    }
+                                }
+
+                                // Function to decrement the input value by 0.001
+                                function decrement() {
+                                    var input = document.getElementById("numberInput");
+                                    var value = parseFloat(input.value);
+                                    if (value > -100) {
+                                        input.value = (value - 0.001).toFixed(3); // Decrement by 0.001 and round to 3 decimals
+                                    }
+                                }
+                            </script>
+                            <div class="modal-footer"><button type="submit" class="btn btn-success">Add</button></div>
+
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
         @endforeach
-
-        <!-- JavaScript for handling the increment and decrement of various leave types -->
-        <script>
-            function incrementLeave(leaveId, step) {
-                var input = document.getElementById(leaveId);
-                var value = parseFloat(input.value);
-                if (!isNaN(value)) {
-                    input.value = (value + step).toFixed(1);
-                }
-            }
-
-            function decrementLeave(leaveId, step) {
-                var input = document.getElementById(leaveId);
-                var value = parseFloat(input.value);
-                if (!isNaN(value) && value > 0) {
-                    input.value = (value - step).toFixed(1);
-                }
-            }
-
-            function resetLeaves(userId) {
-                document.getElementById('sick_leave_' + userId).value = '0.0'; // Reset Sick Leave
-                document.getElementById('vacation_leave_' + userId).value = '0.0'; // Reset Vacation Leave
-                document.getElementById('special_previlege_leave_' + userId).value = '0.0'; // Reset Special Leave
-            }
-        </script>
 
         @foreach($getNot['getNotify'] as $unread)
         <!-- Modal -->
@@ -149,4 +142,7 @@
             </div>
         </div>
         @endforeach
+
+        <!-- JavaScript for handling the increment and decrement of various leave types -->
+
         @endsection

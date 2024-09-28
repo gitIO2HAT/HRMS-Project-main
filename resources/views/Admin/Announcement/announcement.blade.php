@@ -37,7 +37,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach($getAnn as $index => $announce)
-                                            <tr>
+                                            <tr data-bs-toggle="modal" data-bs-target="#dataModal{{ $announce->id }}" style="cursor:pointer;">
                                                 <th class="border-bottom border-white" scope="row">{{ ($getAnn->currentPage() - 1) * $getAnn->perPage() + $index + 1 }}</th>
                                                 <td class="border-bottom border-white">{{$announce->title}}</td>
                                                 <td class="border-bottom border-white">{{ date('Y-m-d h:i A',
@@ -89,7 +89,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach($getCompleted as $index => $announce)
-                                            <tr>
+                                            <tr data-bs-toggle="modal" data-bs-target="#completeModal{{ $announce->id }}" style="cursor:pointer;">
                                                 <th class="border-bottom border-white" scope="row">{{ ($getCompleted->currentPage() - 1) * $getCompleted->perPage() + $index + 1 }}
                                                 </th>
                                                 <td class="border-bottom border-white">{{$announce->title}}</td>
@@ -223,6 +223,62 @@
 </div>
 @endforeach
 
+@foreach($getAnn as $announce)
+<!-- Modal -->
+<div class="modal fade" id="dataModal{{ $announce->id }}" tabindex="-1" aria-labelledby="dataModalLabel{{ $announce->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="dataModalLabel{{ $announce->id }}">
+                    {{ $announce->title }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ $announce->description }}
+            </div>
+            <div class="modal-footer">
+                @if(Auth::user()->user_type == 0)
+                <a href="{{ url('SuperAdmin/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                @elseif(Auth::user()->user_type == 1)
+                <a href="{{ url('Admin/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                @elseif(Auth::user()->user_type == 2)
+                <a href="{{ url('Employee/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+
+@foreach($getCompleted as $announce)
+<!-- Modal -->
+<div class="modal fade" id="completeModal{{ $announce->id }}" tabindex="-1" aria-labelledby="completeModalLabel{{ $announce->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="completeModalLabel{{ $announce->id }}">
+                    {{ $announce->title }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ $announce->description }}
+            </div>
+            <div class="modal-footer">
+                @if(Auth::user()->user_type == 0)
+                <a href="{{ url('SuperAdmin/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                @elseif(Auth::user()->user_type == 1)
+                <a href="{{ url('Admin/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                @elseif(Auth::user()->user_type == 2)
+                <a href="{{ url('Employee/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 
 

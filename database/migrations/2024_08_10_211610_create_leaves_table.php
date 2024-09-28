@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('leave_type')->nullable(); 
             $table->integer('leave_days')->nullable();
             $table->enum('details_leave', ['1', '2'])->nullable();
+            $table->enum('details_leave_sick', ['In Hospital', 'Out Patient'])->nullable();
             $table->enum('deleted', ['1', '2'])->default('1');
             $table->string('abroad')->nullable();
             $table->string('monetization', 255)->nullable();

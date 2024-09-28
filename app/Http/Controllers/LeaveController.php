@@ -20,6 +20,8 @@ use App\Models\Message;
 use App\Models\Leave;
 use App\Models\User;
 use App\Models\Leavetype;
+use App\Models\History;
+use App\Models\Department;
 
 class LeaveController extends Controller
 {
@@ -59,21 +61,49 @@ class LeaveController extends Controller
         $users = $users->get();
 
         $search = request('search'); // Get the search term from the request
+        if (auth()->user()->user_type == 0) {
+            // If the logged-in user's type is 0, fetch users whose type is not 0
+            $users->where('user_type', '!=', 0);
 
-        $leaveData = Leave::where('deleted', 1)
-            ->with('user', 'leavetype')
+            $leaveData = Leave::where('deleted', 1)
+            ->with('user', 'leavetype')// Exclude current user's leaves
             ->where(function ($query) use ($search) {
                 $query->whereHas('user', function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
                         ->orWhere('lastname', 'like', "%{$search}%")
                         ->orWhere('middlename', 'like', "%{$search}%");
                 })
-                    ->orWhereHas('leavetype', function ($query) use ($search) {
-                        $query->where('status', 'like', "%{$search}%");
-                    });
+                ->orWhereHas('leavetype', function ($query) use ($search) {
+                    $query->where('status', 'like', "%{$search}%");
+                });
             })
             ->orderBy('created_at', 'desc') // Sort in descending order by created date
             ->paginate(10, ['*'], 'page_leave');
+        } elseif (auth()->user()->user_type == 1) {
+            $leaveData = Leave::where('deleted', 1)
+            ->with('user', 'leavetype')
+            ->where('employee_id', '!=', Auth::user()->custom_id) // Exclude current user's leaves
+            ->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")
+                        ->orWhere('middlename', 'like', "%{$search}%");
+                })
+                ->orWhereHas('leavetype', function ($query) use ($search) {
+                    $query->where('status', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('created_at', 'desc') // Sort in descending order by created date
+            ->paginate(10, ['*'], 'page_leave');
+            // If the logged-in user's type is 1, fetch users whose type is neither 0 nor 1
+            $users->whereNotIn('user_type', [0, 1]);
+        } elseif (auth()->user()->user_type == 2) {
+            // If the logged-in user's type is 2, fetch users whose type is 2
+            $users->where('user_type', 2);
+        }
+        
+       
+    
 
 
 
@@ -941,6 +971,8 @@ class LeaveController extends Controller
             'to' => 'required|date|after_or_equal:from',
             'leave_days' => 'required|numeric|min:1',
             'details_leave' => 'nullable|in:1,2',
+            'details_leave_sick' => 'nullable|in:In Hospital,Out Patient',
+            
             'abroad' => 'nullable|string',
             'monetization' => 'nullable|file|mimes:jpg,jpeg,png|max:20480',
             'terminal' => 'nullable|file|mimes:jpg,jpeg,png|max:20480',
@@ -968,6 +1000,7 @@ class LeaveController extends Controller
         $leave->to = $request->to;
         $leave->leave_days = $request->leave_days;
         $leave->details_leave = $request->details_leave;
+        $leave->details_leave_sick = $request->details_leave_sick;
         $leave->abroad = $request->abroad;
 
         // Monetization document upload
@@ -1018,7 +1051,8 @@ class LeaveController extends Controller
 
         // Fetch the related user based on the employee_id in the leave
         $user = User::where('custom_id', $leave->employee_id)->where('is_archive', 1)->first();
-
+        $history = new History();
+       
         // Check if the user exists and is archived
         if (!$user) {
             return redirect()->back()->with('error', 'User not found or is not archived.');
@@ -1058,8 +1092,25 @@ class LeaveController extends Controller
 
                 // Check if the user has sufficient leave balance
                 if ($user->{$leaveField} >= $leave->leave_days) {
+                    // Subtract leave days from user balance
                     $user->{$leaveField} -= $leave->leave_days;
                     $user->save();
+
+                    // Insert data into history for sick leave or vacation leave
+                    if ($leave->leave_type == 1 || $leave->leave_type == 2) {
+                        $history->history_id = $user->custom_id;
+                       
+                        $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Vacation Leave';
+                        $history->v_wp = $leave->leave_days;  // Vacation leave
+                        $history->v_balance = $user->vacation_leave;
+                        $history->date_action = Carbon::now();
+                    } elseif ($leave->leave_type == 3) {
+                        $history->history_id = $user->custom_id;
+                        $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Sick Leave';
+                        $history->s_wp = $leave->leave_days;  // Vacation leave
+                        $history->s_balance = $user->sick_leave;
+                        $history->date_action = Carbon::now();
+                    }
                 } else {
                     return redirect()->back()->with('error', 'Insufficient balance!');
                 }
@@ -1071,6 +1122,7 @@ class LeaveController extends Controller
         // Update leave status
         $leave->status = $request->status;
         $leave->save();
+        $history->save();
 
         // Redirect based on user type
         $monitor = Auth::user();
@@ -1085,6 +1137,7 @@ class LeaveController extends Controller
 
 
 
+
     public function editCredits(Request $request, $id)
     {
         // Validate the form input
@@ -1095,14 +1148,38 @@ class LeaveController extends Controller
 
         // Retrieve the user by ID
         $user = User::findOrFail($id);
+        $history = new History();
+        $history->history_id = $user->custom_id;
 
         // Determine which leave balance to update based on the 'type' input
         switch ($request->input('type')) {
             case 'sick_leave':
                 $user->sick_leave += $request->input('numberInput');
+
+                $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Sick Leave';
+
+
+                if ($request->input('numberInput') > 0) {
+                    $history->s_earned = $request->input('numberInput');
+                    $history->s_balance = $user->sick_leave;
+                } else {
+                    $history->s_wp = $request->input('numberInput');
+                    $history->s_balance = $user->sick_leave;
+                }
+                $history->date_action = Carbon::now();
                 break;
             case 'vacation_leave':
                 $user->vacation_leave += $request->input('numberInput');
+                $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Vacation Leave';
+
+                if ($request->input('numberInput') > 0) {
+                    $history->v_earned = $request->input('numberInput');
+                    $history->v_balance = $user->vacation_leave;
+                } else {
+                    $history->v_wp = $request->input('numberInput');
+                    $history->v_balance = $user->vacation_leave;
+                }
+                $history->date_action = Carbon::now();
                 break;
             case 'special_previlege_leave':
                 $user->special_previlege_leave += $request->input('numberInput');
@@ -1113,6 +1190,7 @@ class LeaveController extends Controller
 
         // Save the updated user record
         $user->save();
+        $history->save();
 
         // Redirect back with a success message
         $monitor = Auth::user();
@@ -1123,5 +1201,113 @@ class LeaveController extends Controller
         };
 
         return redirect($viewPath)->with('success', 'Edit credits successfully updated.');
+    }
+
+
+
+    public function leavegeneratereports(Request $request)
+    {
+        // Retrieve history based on authenticated user's custom_id
+        $history = History::where('history_id', Auth::user()->custom_id) // Adjust if necessary
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            $department = Department::all(); // Accessing department name
+            
+
+        // Generate the PDF based on user type
+        if (Auth::user()->user_type == 0) {
+            // Superadmin view
+            $pdf = PDF::loadView('superadmin.leave.mycard', [
+                'history' => $history,
+                'department' => $department
+            ]);
+        } elseif (Auth::user()->user_type == 1) {
+            // Admin view
+            $pdf = PDF::loadView('admin.leave.mycard', [
+                'history' => $history,
+                'department' => $department
+            ]);
+        } elseif (Auth::user()->user_type == 2) {
+            // Employee view
+            $pdf = PDF::loadView('employee.leave.mycard', [
+                'history' => $history,
+                'department' => $department
+            ]);
+        }
+
+        // Return the PDF to be viewed in the browser
+        return $pdf->inline('mycard_report.pdf');
+    }
+
+
+    public function generateReports(Request $request)
+    {
+        // Retrieve input values for the date range and employee ID
+        $timeframeStart = $request->input('timeframeStart');
+        $timeframeEnd = $request->input('timeframeEnd');
+        $employeeIds = $request->input('employeeIds');
+        $employeetype = $request->input('employeetype');
+        $employeestatus = $request->input('employeestatus');
+
+        // Initialize the Leave query with the user relationship
+        if (Auth::user()->user_type == 0) {
+        $leaveData = Leave::query()->with('user','leavetype');
+        }
+        if (Auth::user()->user_type == 1) {
+            $leaveData = Leave::query()->where('employee_id','!=', 1)->with('user','leavetype');
+            }
+        $dateNow = $this->getInternetTime();
+        // Apply employee filter if an employee is selected
+        if ($employeeIds) {
+            $leaveData->where('employee_id', $employeeIds);
+        }
+        if ($employeetype) {
+            $leaveData->where('leave_type', $employeetype);
+        }
+        if ($employeestatus) {
+            $leaveData->where('status', $employeestatus);
+        }
+
+        // Apply date range filter if both start and end dates are provided
+        if ($timeframeStart && $timeframeEnd) {
+            $leaveData->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
+        }
+
+        // Get the filtered data
+        $leaveData = $leaveData->get();
+
+        // Count the records
+        $recordCount = $leaveData->count();
+
+        // Generate the PDF with the filtered data, count, and date range
+
+        if (Auth::user()->user_type == 0) {
+            $pdf = PDF::loadView('superadmin.leave.generatereports', [
+                'leaveData' => $leaveData,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds,
+                'employeestatus' => $employeestatus,
+                'employeetype' => $employeetype
+            ]);
+        }
+        if (Auth::user()->user_type == 1) {
+            $pdf = PDF::loadView('admin.leave.generatereports', [
+                'leaveData' => $leaveData,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds,
+                'employeestatus' => $employeestatus,
+                'employeetype' => $employeetype
+            ]);
+        }
+
+        // Return the PDF to be viewed in the browser
+        return $pdf->inline('leave_report.pdf');
     }
 }

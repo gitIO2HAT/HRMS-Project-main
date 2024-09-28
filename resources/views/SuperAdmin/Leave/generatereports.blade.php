@@ -140,7 +140,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $data->user->lastname }}, {{ $data->user->name }}</td>
-                        <td>{{ $data->leave_type }}</td>
+                        <td>{{ $data->leavetype->status }}</td>
                         <td colspan="2">{{ \Carbon\Carbon::parse($data->from)->format('Y, F j') }} -
                             {{ \Carbon\Carbon::parse($data->to)->format('Y, F j') }}</td>
                         <td>{{ $data->leave_days }}</td>

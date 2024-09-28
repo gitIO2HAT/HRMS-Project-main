@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\User;
+use App\Models\History;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -31,30 +32,59 @@ class UpdateUserCredit extends Command
      */
 
     // This is 1 Month
- public function handle()
-{
-    try {
-        // Get the current time
-        $now = Carbon::now();
+    public function handle()
+    {
+        DB::beginTransaction();
 
-        // Find and update all users where the difference between created_at and now is exactly 1 month
-        $updated = User::whereRaw('DATE_ADD(created_at, INTERVAL 1 MONTH) <= ?', [$now])
-            ->whereRaw('MOD(TIMESTAMPDIFF(DAY, created_at, NOW()), 30) = 0')
-            ->update([
-                'sick_leave' => DB::raw('sick_leave + 1.25'),
-                'vacation_leave' => DB::raw('vacation_leave + 1.25'),
-                'special_previlege_leave' => DB::raw('special_previlege_leave + 1.25')
-            ]);
+        try {
+            // Get the current time
+            $now = Carbon::now();
 
-        if ($updated) {
-            $this->info($updated . ' users have been updated successfully.');
-        } else {
-            $this->info('No users found to update.');
+            // Check if today is the 27th of the month
+            if ($now->day == 28) {
+                // Update all users by adding 1.25 to each leave type
+                $updated = User::query()->update([
+                    'sick_leave' => DB::raw('sick_leave + 1.25'),
+                    'vacation_leave' => DB::raw('vacation_leave + 1.25')
+                ]);
+
+                if ($updated) {
+                    // Insert a new record in the history table for each user
+                    User::all()->each(function ($user) use ($now) {
+                        // Update your handle() method accordingly
+                        History::create([
+                            'history_id' => $user->custom_id,
+                            'period' => $now->format('Y-m-01'),  // Set to the first day of the current month
+                            'v_earned' => 1.25,
+                            'v_balance' => $user->vacation_leave + 1.25, // Updated vacation leave balance
+                            's_earned' => 1.25,
+                            's_balance' => $user->sick_leave + 1.25,     // Updated sick leave balance
+                           // Include the current date and time
+                        ]);
+                    });
+
+                    DB::commit();  // Commit transaction
+                    $this->info($updated . ' users have been updated and history records created.');
+                } else {
+                    DB::rollBack();
+                    $this->info('No users found to update.');
+                }
+            } else {
+                DB::rollBack();
+                $this->info('Today is not the first day of the month. No updates were made.');
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->error('Error occurred: ' . $e->getMessage());
         }
-    } catch (\Exception $e) {
-        $this->error('Error occurred: ' . $e->getMessage());
-    } 
-}
+    }
+
+
+
+
+
+
+
 
 
     /** For testing
@@ -86,7 +116,7 @@ class UpdateUserCredit extends Command
      */
 
 
-  /*  public function handle()
+    /*  public function handle()
     {
         try {
             // Get the current time

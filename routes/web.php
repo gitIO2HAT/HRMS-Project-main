@@ -53,7 +53,8 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::patch('/SuperAdmin/Credits/EditCredits/{id}', [LeaveController::class, 'editcredits']);
     Route::post('/SuperAdmin/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::patch('/SuperAdmin/Leave/AddLeave/EditStatus/{id}', [LeaveController::class, 'editstatus']);
-    Route::post('/SuperAdmin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
+    Route::get('/SuperAdmin/Leave/MyLeaveCreditCard', [LeaveController::class, 'leavegeneratereports']);
+    Route::post('/SuperAdmin/Leave/GenerateReports', [LeaveController::class, 'generateReports']);
 
     Route::get('/SuperAdmin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('/SuperAdmin/Announcement', [AnnouncementController::class, 'save_task']);
@@ -102,7 +103,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::patch('/Admin/Credits/EditCredits/{id}', [LeaveController::class, 'editcredits']);
     Route::post('/Admin/Leave/AddLeave', [LeaveController::class, 'addleave']);
     Route::patch('/Admin/Leave/AddLeave/EditStatus/{id}', [LeaveController::class, 'editstatus']);
-    Route::post('/Admin/Leave/GenerateReports', [LeaveController::class, 'generatereports']);
+    Route::get('/Admin/Leave/MyLeaveCreditCard', [LeaveController::class, 'leavegeneratereports']);
+    Route::post('/Admin/Leave/GenerateReports', [LeaveController::class, 'generateReports']);
 
     Route::get('/Admin/Announcement', [AnnouncementController::class, 'announcement']);
     Route::post('Admin/Announcement', [AnnouncementController::class, 'save_task']);
@@ -139,6 +141,7 @@ Route::group(['middleware' => 'employee'], function () {
     Route::get('/Employee/Dashboard', [DashboardController::class, 'dashboard']);
 
     Route::get('/Employee/MyLeave', [LeaveController::class, 'myleave']);
+    Route::get('/Employee/Leave/MyLeaveCreditCard', [LeaveController::class, 'leavegeneratereports']);
 
 
     Route::get('/Employee/MyAccount', [MyAccountController::class, 'myaccount']);

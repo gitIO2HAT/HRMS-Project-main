@@ -24,7 +24,7 @@
                     <a type="button" class="mx-2 rounded-2 bg-success text-white p-2" data-bs-toggle="modal" data-bs-target="#addLeaveModal">
                         Add Leave
                     </a>
-                    <a type="button" class="mx-2 rounded-2 bg-warning text-dark p-2" data-bs-toggle="modal" data-bs-target="#addLeaveModal">
+                    <a type="button" class="mx-2 rounded-2 bg-warning text-dark p-2" data-bs-toggle="modal" data-bs-target="#generateModal">
                         Generate Reports
                     </a>
                 </div>
@@ -156,7 +156,6 @@
                     <!-- Form content here -->
                     <form action="/SuperAdmin/Leave/AddLeave" method="POST" enctype="multipart/form-data">
                         @csrf
-                        @
                         <div class="text-center">
 
                             <div>
@@ -180,7 +179,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
                             <div id="details-leave-container" class="hidden">
                                 <label for="details-leave">Details Leave</label>
                                 <select id="details-leave" name="details_leave" class="form-control underline-input">
@@ -193,7 +191,14 @@
                                     <input type="text" name="abroad" id="abroad" class="form-control underline-input">
                                 </div>
                             </div>
-
+                            <div id="details-sick-container" class="hidden">
+                                <label for="details-sick">Details Leave</label>
+                                <select id="details-sick" name="details_leave_sick" class="form-control underline-input">
+                                    <option value="" disabled selected>Details Leave</option>
+                                    <option value="In Hospital">In Hospital</option>
+                                    <option value="Out Patient">Out Patient</option>
+                                </select>
+                            </div>
                             <div id="details-monetization-container" class="hidden">
                                 <label for="monetization_leave">Upload Document for Monetization Leave</label>
                                 <input type="file" name="monetization" id="monetization_leave" class="form-control underline-input">
@@ -206,7 +211,19 @@
                                 <label for="adoption_leave">Upload Document for Adoption Leave</label>
                                 <input type="file" name="adoption" id="adoption_leave" class="form-control underline-input">
                             </div>
+                            <script>
+                                document.getElementById('leave_type').addEventListener('change', function() {
+                                    const selectedLeaveType = this.value;
+                                    const detailsLeaveContainer = document.getElementById('details-sick-container');
 
+                                    if (selectedLeaveType == '3') {
+                                        detailsLeaveContainer.classList.remove('hidden'); // Show the "Details Leave" section
+                                    } else {
+                                        detailsLeaveContainer.classList.add('hidden'); // Hide the "Details Leave" section
+                                    }
+                                });
+                            </script>
+                            
                             <script>
                                 document.getElementById('details-leave').addEventListener('change', function() {
                                     const selectedLeaveType = this.value;
@@ -368,6 +385,54 @@
     </div>
     @endforeach
 
+    <div class="modal fade" id="generateModal" tabindex="-1" aria-labelledby="generateModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="generateModalLabel">Generate Reports</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url('/SuperAdmin/Leave/GenerateReports') }}" method="POST">
+                        @csrf <!-- Add CSRF token for security -->
+                        <label class="text-dark" for="employeeIds">Select User</label>
+                        <select id="employeeIds" name="employeeIds" class="form-control underline-input">
+                            <option value="" selected>--Select All--</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label class="text-dark" for="employeetype">Select Type</label>
+                        <select id="employeetype" name="employeetype" class="form-control underline-input">
+                            <option value="" selected>--Select All--</option>
+                            @foreach ($leavetype as $leave)
+                                <option value="$leave->id">{{$leave->status}}</option>
+                            @endforeach
+                        </select>
+                        <label class="text-dark" for="employeestatus">Select Status</label>
+                        <select id="employeestatus" name="employeestatus" class="form-control underline-input">
+                            <option value="" selected>--Select All--</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Declined">Declined</option>
+                        </select>
+                        <label for="timeframeStart">From:</label>
+                        <input type="date" name="timeframeStart" id="timeframeStart"
+                            class="form-control underline-input">
+                        <label for="timeframeEnd">To:</label>
+                        <input type="date" name="timeframeEnd" id="timeframeEnd"
+                            class="form-control underline-input">
+                        <div class="text-center mt-1">
+                            <button type="submit" class="btn btn-info">Generate Reports</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     @endsection

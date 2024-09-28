@@ -45,25 +45,33 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
+
                                                                     @foreach($getAnn as $index => $announce)
-                                                                    <tr>
-                                                                        <th class="border-bottom border-white" scope="row">{{ ($getAnn->currentPage() - 1) * $getAnn->perPage() + $index + 1 }}</th>
-                                                                        <td class="border-bottom border-white">{{$announce->title}}</td>
-                                                                        <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
-                                                            strtotime($announce->scheduled_date)) }}</td>
-                                                                        <td class="border-bottom border-white">{{ date('Y, M d - h:i A',
-                                                            strtotime($announce->scheduled_end)) }}</td>
+                                                                    <tr data-bs-toggle="modal" data-bs-target="#dataModal{{ $announce->id }}" style="cursor:pointer;">
+                                                                        <th class="border-bottom border-white" scope="row">
+                                                                            {{ ($getAnn->currentPage() - 1) * $getAnn->perPage() + $index + 1 }}
+                                                                        </th>
+                                                                        <td class="border-bottom border-white">{{ $announce->title }}</td>
+                                                                        <td class="border-bottom border-white">
+                                                                            {{ date('Y, M d - h:i A', strtotime($announce->scheduled_date)) }}
+                                                                        </td>
+                                                                        <td class="border-bottom border-white">
+                                                                            {{ date('Y, M d - h:i A', strtotime($announce->scheduled_end)) }}
+                                                                        </td>
                                                                         <td class="border-bottom border-white">
                                                                             @if($announce->scheduled_date > $currentDateTime)
-                                                                            <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-warning"></i> Ongoing</span>
-
+                                                                            <span class="rounded-pill shadow p-2">
+                                                                                <i class="far fa-dot-circle text-warning"></i> Ongoing
+                                                                            </span>
                                                                             @elseif($announce->scheduled_date <= $currentDateTime && $announce->scheduled_end >= $currentDateTime)
-                                                                                <span class=" rounded-pill shadow p-2"><i class="far fa-dot-circle text-danger"></i> In Progress</span>
+                                                                                <span class="rounded-pill shadow p-2">
+                                                                                    <i class="far fa-dot-circle text-danger"></i> In Progress
+                                                                                </span>
                                                                                 @endif
                                                                         </td>
-
                                                                     </tr>
                                                                     @endforeach
+
                                                                 </tbody>
                                                             </table>
 
@@ -129,4 +137,33 @@
                 </div>
             </div>
             @endforeach
+
+            @foreach($getAnn as $announce)
+            <!-- Modal -->
+            <div class="modal fade" id="dataModal{{ $announce->id }}" tabindex="-1" aria-labelledby="dataModalLabel{{ $announce->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="dataModalLabel{{ $announce->id }}">
+                                {{ $announce->title }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{ $announce->description }}
+                        </div>
+                        <div class="modal-footer">
+                            @if(Auth::user()->user_type == 0)
+                            <a href="{{ url('SuperAdmin/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                            @elseif(Auth::user()->user_type == 1)
+                            <a href="{{ url('Admin/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                            @elseif(Auth::user()->user_type == 2)
+                            <a href="{{ url('Employee/Read/'.$announce->id) }}" class="btn btn-success">Ok!</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+
             @endsection
