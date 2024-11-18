@@ -29,7 +29,7 @@
                                                     onchange="displayImage(this)">
                                             </div>
                                             <div class="border-bottom border-light ">
-                                                <h5 class="text-dark">{{Auth::user()->name}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</h5>
+                                                <h5 class="text-dark">{{Auth::user()->lastname}}, {{Auth::user()->name}} {{Auth::user()->middlename}} @if(Auth::user()->suffix == 'N/A')  @else {{Auth::user()->suffix}}@endif</h5>
                                                 <h6 class="text-light">
                                                     @foreach ($depart as $data)
                                                     @if (Auth::user()->department == $data->id)
@@ -111,7 +111,7 @@
                                             <div class="input-field">
                                                 <label>Middle Name</label>
                                                 <input type="text" placeholder="Enter Middle Name" class="form-control"
-                                                    name="middlename" value="{{Auth::user()->middlename}}" required>
+                                                    name="middlename" value="{{Auth::user()->middlename}}" >
                                                 @if($errors->has('middlename'))
                                                 <span class="text-danger">{{ $errors->first('middlename') }}</span>
                                                 @endif
@@ -145,6 +145,8 @@
                                                             @if (Auth::user()->suffix == 'II') selected @endif>II</option>
                                                         <option value="III"
                                                             @if (Auth::user()->suffix == 'III') selected @endif>III</option>
+                                                            <option value="N/A"
+                                                            @if (Auth::user()->suffix == 'N/A') selected @endif>N/A</option>
                                                     </select>
                                                     @if ($errors->has('suffix'))
                                                     <span class="text-danger">{{ $errors->first('suffix') }}</span>

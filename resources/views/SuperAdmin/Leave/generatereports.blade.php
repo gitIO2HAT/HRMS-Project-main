@@ -90,7 +90,7 @@
 
     <div class="border">
         <div>
-            <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }}</p>
+            <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }} {{ Auth::user()->middlename }} @if($Auth::user()->suffix == 'N/A')  @else {{$Auth::user()->suffix}}@endif</p>
             @if ($employeeIds == !null)
                 <p><b>Employee ID:</b> {{ $employeeIds }}</p>
             @endif
@@ -139,7 +139,7 @@
                 @foreach ($leaveData as $index => $data)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $data->user->lastname }}, {{ $data->user->name }}</td>
+                        <td>{{ $data->user->lastname }}, {{ $data->user->name }} {{ $data->user->middlename }} @if($data->user->suffix == 'N/A')  @else {{$data->user->suffix}}@endif</td>
                         <td>{{ $data->leavetype->status }}</td>
                         <td colspan="2">{{ \Carbon\Carbon::parse($data->from)->format('Y, F j') }} -
                             {{ \Carbon\Carbon::parse($data->to)->format('Y, F j') }}</td>

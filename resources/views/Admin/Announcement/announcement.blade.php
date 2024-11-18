@@ -174,7 +174,7 @@
                                                                                 <input type="checkbox" name="selected_users[]" value="{{ $user->id}}" class="form-check-input" style="display: none;">
                                                                             </div>
                                                                         </td>
-                                                                        <td>{{ $user->name }} {{ $user->lastname }}</td>
+                                                                        <td>{{ $user->lastname }}, {{ $user->name }} {{ $user->middlename }} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif</td>
                                                                         <!-- Add more table cells for other user attributes if needed -->
                                                                     </tr>
                                                                     @endforeach

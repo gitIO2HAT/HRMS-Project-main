@@ -55,18 +55,18 @@
                                             <tr>
                                                 <th scope="row">{{ ($getEmployee->currentPage() - 1) * $getEmployee->perPage() + $index + 1 }}</th>
                                                 <td>{{ $employee->custom_id}}</td>
-                                                <td>{{ $employee->name}} {{ $employee->lastname}}</td>
+                                                <td>{{ $employee->lastname}}, {{ $employee->name}} @if($employee->suffix == 'N/A')  @else {{$employee->suffix}}@endif</td>
 
                                                 <td>{{ $employee->email}}</td>
                                                 <td>@foreach ($depart as $data)
                                                     @if ($employee->department == $data->id)
-                                                    {{ $data->name }}
+                                                    {{ $data->abbreviation }}
                                                     @endif
                                                     @endforeach
                                                 </td>
                                                 <td>@foreach ($pos as $data)
                                                     @if ($employee->position == $data->id)
-                                                    {{ $data->name }}
+                                                    {{ $data->abbreviation }}
                                                     @endif
                                                     @endforeach
                                                 </td>

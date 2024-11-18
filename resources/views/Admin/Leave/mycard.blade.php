@@ -89,7 +89,7 @@
                     <th colspan="12">Leave Credit Card</th>
                 </tr>
                 <tr>
-                    <th colspan="4">Name: {{Auth::user()->lastname}}, {{Auth::user()->name}} {{Auth::user()->middlename}}</th>
+                    <th colspan="4">Name: {{Auth::user()->lastname}}, {{Auth::user()->name}} {{Auth::user()->middlename}} @if(Auth::user()->suffix == 'N/A')  @else {{Auth::user()->suffix}}@endif</th>
                     <th colspan="4">
                         @foreach($department as $depart)
                         @if($depart->id == Auth::user()->department) <!-- Assuming department_id is a foreign key in users table -->

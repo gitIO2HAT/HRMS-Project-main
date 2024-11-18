@@ -250,8 +250,7 @@
                                                 </option>
                                                 @foreach ($usersadmin as $user)
                                                 <option value="{{ $user->custom_id }}">
-                                                    {{ $user->lastname }},
-                                                    {{ $user->name }}
+                                                    {{ $user->lastname }}, {{ $user->name }} {{ $user->middlename }} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif
                                                 </option>
                                                 @endforeach
                                             </select>

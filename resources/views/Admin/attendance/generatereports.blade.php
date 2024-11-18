@@ -93,7 +93,7 @@
 
     <div class="border">
         <div>
-            <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }}</p>
+            <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }} {{ Auth::user()->middlename }} @if(Auth::user()->suffix == 'N/A')  @else {{Auth::user()->suffix}}@endif</p>
             @if ($employeeIds == !null)
                 <p><b>Employee ID:</b> {{ $employeeIds }}</p>
             @endif
@@ -139,7 +139,7 @@
                 @foreach ($attendancedata as $index => $data)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $data->user->lastname }}, {{ $data->user->name }}</td>
+                        <td>{{ $data->user->lastname }}, {{ $data->user->name }} {{ $data->user->middlename }} @if($data->user->suffix == 'N/A')  @else {{$data->user->suffix}}@endif</td>
                         <td>{{ \Carbon\Carbon::parse($data->date)->format('Y, F j') }}</td>
                         <td>{{ \Carbon\Carbon::parse($data->punch_in_am_first)->format('g:i A') }}</td>
                         <td>{{ \Carbon\Carbon::parse($data->punch_in_am_second)->format('g:i A') }}</td>

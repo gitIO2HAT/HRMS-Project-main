@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('department_id');
             $table->string('name');
+            $table->string('abbreviation');
             $table->enum('deleted', ['1', '2'])->default('1');
             $table->timestamps();
     

@@ -31,7 +31,7 @@
                                             <div class="input-field">
                                                 <label>Middle Name</label>
                                                 <input type="text" placeholder="Enter Middle Name"
-                                                    class="form-control" name="middlename" value="" required>
+                                                    class="form-control" name="middlename" value="" >
                                                 @if ($errors->has('middlename'))
                                                 <span class="text-danger">{{ $errors->first('middlename') }}</span>
                                                 @endif
@@ -52,7 +52,8 @@
                                                     <option value="Sr.">Sr.</option>
                                                     <option value="I">I</option>
                                                     <option value="II">II</option>
-                                                    <option value="III">II</option>
+                                                    <option value="III">III</option>
+                                                    <option value="N/A">N/A</option>
                                                 </select>
                                                 @if ($errors->has('suffix'))
                                                 <span class="text-danger">{{ $errors->first('suffix') }}</span>

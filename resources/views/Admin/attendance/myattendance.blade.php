@@ -175,10 +175,9 @@
                                                                     src="{{ asset('public/accountprofile/' . $punch->user->profile_pic) }}"
                                                                     alt=""
                                                                     style="width: 40px; height: 40px;">
-                                                                {{ $punch->user->name }}
-                                                                {{ $punch->user->lastname }}
+                                                                {{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }} @if($punch->user->suffix == 'N/A')  @else {{$punch->user->suffix}}@endif
                                                             </td>
-                                                            <td class="text-dark">
+                                                            <td class="text-dark"> 
                                                                 {{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}
                                                             </td>
                                                             <td class="text-dark">

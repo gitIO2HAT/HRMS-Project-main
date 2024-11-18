@@ -22,8 +22,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('lastname', 255);
-            $table->string('middlename', 30);
-            $table->enum('suffix', ['Jr.', 'Sr.', 'I', 'II', 'III'])->nullable();
+            $table->string('middlename', 30)->nullable();
+            $table->enum('suffix', ['Jr.', 'Sr.', 'I', 'II', 'III','N/A'])->nullable();
             $table->enum('contract', ['1', '2', '3', '4', '5']);
             $table->enum('sex', ['Male', 'Female', 'Other']);
             $table->integer('age')->default(18);

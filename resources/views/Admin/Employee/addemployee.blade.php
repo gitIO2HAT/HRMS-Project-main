@@ -50,6 +50,7 @@
                                                     <option value="I">I</option>
                                                     <option value="II">II</option>
                                                     <option value="III">II</option>
+                                                    <option value="N/A">N/A</option>
                                                 </select>
                                                 @if($errors->has('suffix'))
                                                 <span class="text-danger">{{ $errors->first('suffix') }}</span>

@@ -7,8 +7,8 @@
                 @include('layouts._message')
                 <div class="col-sm-12 col-xl-12">
                     <div>
-                        <h2 class="text-dark text-start border-bottom border-success">Edit {{$getId->name}}
-                            {{$getId->lastname}}
+                        <h2 class="text-dark text-start border-bottom border-success">Edit {{$getId->lastname}}, {{$getId->name}} {{$getId->middlename}} @if($getId->suffix == 'N/A')  @else {{$getId->suffix}}@endif
+                            
                         </h2>
                     </div>
                     <div class="bg-white text-center p-4">

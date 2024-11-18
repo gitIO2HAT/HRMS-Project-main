@@ -51,7 +51,7 @@
                             <td><img class="rounded-circle me-lg-2"
                                     src="{{ asset('public/accountprofile/' .$leave->user->profile_pic) }}"
                                     alt="" style="width: 40px; height: 40px;">
-                                {{$leave->user->lastname}}, {{$leave->user->name}} {{$leave->user->middlename}}
+                                {{$leave->user->lastname}}, {{$leave->user->name}} {{$leave->user->middlename}} @if($leave->user->suffix == 'N/A')  @else {{$leave->user->suffix}}@endif
                             </td>
                             <td>{{$leave->leavetype->status}}</td>
                             <td>{{ \Carbon\Carbon::parse($leave->from)->format('F j, Y') }} - {{ \Carbon\Carbon::parse($leave->to)->format('F j, Y') }}</td>
@@ -163,7 +163,7 @@
                                 <select id="employee_id" name="employee_id" class="form-control underline-input">
                                     <option value="" disabled selected>Select Employee</option>
                                     @foreach($users as $user)
-                                    <option value="{{ $user->custom_id }}">{{ $user->lastname }},{{ $user->name }} {{ $user->middlename }}</option>
+                                    <option value="{{ $user->custom_id }}">{{ $user->lastname }},{{ $user->name }} {{ $user->middlename }} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('employee_id'))

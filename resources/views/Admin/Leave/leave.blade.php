@@ -407,7 +407,7 @@
                         <select id="employeeIds" name="employeeIds" class="form-control underline-input">
                             <option value="" selected>--Select All--</option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
+                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }} {{ $user->middlename }} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif
                                 </option>
                             @endforeach
                         </select>

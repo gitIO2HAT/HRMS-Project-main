@@ -37,7 +37,7 @@
                             @foreach($users as $index => $user)
                             <tr>
                                 <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td>
-                                <td>{{$user->lastname}}, {{$user->name}} {{$user->middlename}}</td>
+                                <td>{{$user->lastname}}, {{$user->name}} {{$user->middlename}} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif</td>
                                 <td>{{$user->sick_leave}}</td>
                                 <td>{{$user->vacation_leave}}</td>
                                 <td>{{$user->special_previlege_leave}}</td>

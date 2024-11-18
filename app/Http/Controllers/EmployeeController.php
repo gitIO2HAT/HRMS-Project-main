@@ -567,9 +567,9 @@ class EmployeeController extends Controller
         // Create a new user instance
         $request->validate([
             'name' => 'required|string|max:30',
-            'middlename' => 'required|string|max:30',
+            'middlename' => 'nullable|string|max:30',
             'lastname' => 'required|string|max:30',
-            'suffix' => 'nullable|in:Jr.,Sr.,I,II,III',
+            'suffix' => 'nullable|in:Jr.,Sr.,I,II,III,N/A',
             'sex' => 'required|in:Male,Female,Other',
             'age' => 'required|integer|min:18',
             'birth_date' => 'required|date',

@@ -74,7 +74,7 @@
                 <h3 class=" text-start  text-white">Personal Information:</h3>
                 </p>
             </div>
-            <h3 class="text-dark">{{ $getId->name }} {{ $getId->middlename }} {{ $getId->lastname }}</h3>
+            <h3 class="text-dark">{{ $getId->lastname }}, {{ $getId->name }} {{ $getId->middlename }} @if($getId->suffix == 'N/A')  @else {{$getId->suffix}}@endif </h3>
 
             <div class="col-sm-4 col-xl-4 text-start text-dark ">
                 <p>Email:</p>

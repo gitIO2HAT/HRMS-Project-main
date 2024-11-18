@@ -21,7 +21,7 @@
                                             <button style="display: none;" type="hidden" class="btn btn-success m-1" onclick="clearSearch()">Clear</button>
                                         </form>
                                     </div>
-                                    <div class="col-sm-2 ms-5 ">
+                                    <div class="col-sm-2 ms-1 ">
                                         @if(Auth::user()->user_type == 0)
                                         <a href="{{url('/SuperAdmin/Department')}}" class="m-1 btn btn-white "><i class="fas fa-arrow-left" style="color: #000000;"> Back</i></a>
                                         @elseif(Auth::user()->user_type == 1)
@@ -130,7 +130,6 @@
         });
     });
 </script>
-
 
 
 @endsection

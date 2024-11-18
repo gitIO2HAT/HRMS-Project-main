@@ -63,7 +63,7 @@
                                 <td><img class="rounded-circle me-lg-2"
                                         src="{{ asset('public/accountprofile/' .$leave->user->profile_pic) }}"
                                         alt="" style="width: 40px; height: 40px;">
-                                    {{$leave->user->lastname}}, {{$leave->user->name}} {{$leave->user->middlename}}
+                                    {{$leave->user->lastname}}, {{$leave->user->name}} {{$leave->user->middlename}} @if($leave->user->suffix == 'N/A')  @else {{$leave->user->suffix}}@endif
                                 </td>
                                 <td>{{$leave->leavetype->status}}</td>
                                 <td>{{ \Carbon\Carbon::parse($leave->from)->format('F j, Y') }} - {{ \Carbon\Carbon::parse($leave->to)->format('F j, Y') }}</td>

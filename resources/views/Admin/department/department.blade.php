@@ -23,7 +23,7 @@
                                             <button style="display: none;" type="hidden" class="btn btn-success m-1" onclick="clearSearch()">Clear</button>
                                         </form>
                                     </div>
-                                    <div class="col-sm-2 ms-5 ">
+                                    <div class="col-sm-2 ">
                                         @if(Auth::user()->user_type == 0)
                                         <a href="{{url('/SuperAdmin/Department/DepartmentArchived')}}" class="m-1 btn btn-warning "><i class="far fa-file-archive" style="color: #000000;"></i> Archived</a>
                                         @elseif(Auth::user()->user_type == 1)
@@ -184,9 +184,13 @@
                     <form action="/Admin/Department/AddDepartment" method="POST">
                         @csrf
                         <div class="text-center">
-                            <input type="text" placeholder="Department Name" class="form-control underline-input" name="name">
+                            <input type="text" placeholder="Department Name" class="form-control underline-input" name="name" required>
                             @if($errors->has('name'))
                             <span class="text-danger">{{ $errors->first('name') }}</span>
+                            @endif
+                            <input type="text" placeholder="Department abbreviation" class="form-control underline-input" name="abbreviation" required>
+                            @if($errors->has('abbreviation'))
+                            <span class="text-danger">{{ $errors->first('abbreviation') }}</span>
                             @endif
                             <button type="submit" class="btn btn-success mt-3">Add</button>
                         </div>
@@ -222,9 +226,13 @@
 
                         <div class="row g-4">
                             <div class="text-center">
-                                <input type="text" placeholder="Position Name" class="form-control underline-input" name="name" value="">
+                                <input type="text" placeholder="Position Name" class="form-control underline-input" name="name" required>
                                 @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
+                                @endif
+                                <input type="text" placeholder="Position abbreviation" class="form-control underline-input" name="abbreviation" required>
+                                @if($errors->has('abbreviation'))
+                                <span class="text-danger">{{ $errors->first('abbreviation') }}</span>
                                 @endif
                                 <button type="submit" class="btn btn-success mt-2">Add</button>
                             </div>

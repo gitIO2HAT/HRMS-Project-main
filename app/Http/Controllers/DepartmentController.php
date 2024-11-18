@@ -572,11 +572,14 @@ $growthRates[$years[$i]] = $growthRate;
 
         $request->validate([
             'name' => 'string|max:50|unique:departments,name',
+            'abbreviation' => 'string|max:50|unique:departments,abbreviation',
         ], [
             'name.unique' => 'This name has already been taken.',
+            'abbreviation.unique' => 'This abbreviation has already been taken.',
         ]);
 
         $department->name = $request->name;
+        $department->abbreviation = $request->abbreviation;
         $department->save();
 
         return redirect()->back()->with('success', 'Department successfully added');
@@ -587,10 +590,11 @@ $growthRates[$years[$i]] = $growthRate;
         $department = Department::getId($id);
         $request->validate([
             'name' => 'required|string|max:50|unique:departments,name,' . $request->id,
+            'abbreviation' => 'required|string|max:50|unique:departments,abbreviation,'. $request->id,
         ],[
             'name.unique' => 'This name has already been taken.',
         ]);
-
+        $department->abbreviation = $request->abbreviation;
         $department->name = $request->name;
         $department->save();
 
@@ -602,12 +606,14 @@ $growthRates[$years[$i]] = $growthRate;
 
         $position = Position::getId($id);
         $request->validate([
-            'name' => 'required|string|max:50|unique:departments,name,' . $request->id,
+            'name' => 'required|string|max:50|unique:positions,name,' . $request->id,
+            'abbreviation' => 'required|string|max:50|unique:positions,abbreviation,'. $request->id,
         ],[
             'name.unique' => 'This name has already been taken.',
         ]);
 
         $position->name = $request->name;
+        $position->abbreviation = $request->abbreviation;
         $position->save();
 
         return redirect()->back()->with('success', 'Department successfully updated');
@@ -620,7 +626,8 @@ $growthRates[$years[$i]] = $growthRate;
         $position = new Position;
 
         $request->validate([
-            'name' => 'required|string|max:50|unique:positions,name',
+            'name' => 'required|string|max:50',
+            'abbreviation' => 'required|string|max:50',
             'department_id' => 'required|integer|exists:departments,id',
         ], [
             'name.required' => 'The name field is required.',
@@ -630,7 +637,7 @@ $growthRates[$years[$i]] = $growthRate;
         ]);
 
 
-
+        $position->abbreviation = $request->abbreviation;
         $position->name = $request->name;
         $position->department_id = $request->department_id;
 
