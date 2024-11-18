@@ -1100,13 +1100,13 @@ class LeaveController extends Controller
                     if ($leave->leave_type == 1 || $leave->leave_type == 2) {
                         $history->history_id = $user->custom_id;
                        
-                        $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Vacation Leave';
+                        $history->particular = Carbon::parse($leave->from)->format('M. j'). '-' .Carbon::parse($leave->to)->format('j, Y'). '-' . 'Vacation Leave';
                         $history->v_wp = $leave->leave_days;  // Vacation leave
                         $history->v_balance = $user->vacation_leave;
                         $history->date_action = Carbon::now();
                     } elseif ($leave->leave_type == 3) {
                         $history->history_id = $user->custom_id;
-                        $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Sick Leave';
+                        $history->particular = Carbon::parse($leave->from)->format('M. j'). '-' .Carbon::parse($leave->to)->format('j, Y'). '-' . 'Sick Leave';
                         $history->s_wp = $leave->leave_days;  // Vacation leave
                         $history->s_balance = $user->sick_leave;
                         $history->date_action = Carbon::now();
@@ -1156,7 +1156,7 @@ class LeaveController extends Controller
             case 'sick_leave':
                 $user->sick_leave += $request->input('numberInput');
 
-                $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Sick Leave';
+               
 
 
                 if ($request->input('numberInput') > 0) {
@@ -1166,11 +1166,11 @@ class LeaveController extends Controller
                     $history->s_wp = $request->input('numberInput');
                     $history->s_balance = $user->sick_leave;
                 }
-                $history->date_action = Carbon::now();
+                $history->period = Carbon::now();
                 break;
             case 'vacation_leave':
                 $user->vacation_leave += $request->input('numberInput');
-                $history->particular = Carbon::now()->format('F j, Y'). '-' . 'Vacation Leave';
+               
 
                 if ($request->input('numberInput') > 0) {
                     $history->v_earned = $request->input('numberInput');
@@ -1179,7 +1179,7 @@ class LeaveController extends Controller
                     $history->v_wp = $request->input('numberInput');
                     $history->v_balance = $user->vacation_leave;
                 }
-                $history->date_action = Carbon::now();
+                $history->period = Carbon::now();
                 break;
             case 'special_previlege_leave':
                 $user->special_previlege_leave += $request->input('numberInput');
@@ -1209,7 +1209,7 @@ class LeaveController extends Controller
     {
         // Retrieve history based on authenticated user's custom_id
         $history = History::where('history_id', Auth::user()->custom_id) // Adjust if necessary
-            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
 
             $department = Department::all(); // Accessing department name

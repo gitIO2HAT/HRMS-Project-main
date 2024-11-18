@@ -29,7 +29,7 @@
                                             </div>
                                             <div class="input-field">
                                                 <label>Middle Name</label>
-                                                <input type="text" placeholder="Enter Middle Name" class="form-control" name="middlename" value="" required>
+                                                <input type="text" placeholder="Enter Middle Name" class="form-control" name="middlename" value="" >
                                                 @if($errors->has('middlename'))
                                                 <span class="text-danger">{{ $errors->first('middlename') }}</span>
                                                 @endif

@@ -42,9 +42,9 @@
 
                 </div>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table text-start align-middle ">
                         <thead>
-                            <tr class="text-center">
+                            <tr class="">
                                 <th scope="col">#</th>
                                 <th scope="col">Employee Name</th>
                                 <th scope="col">Leave Type</th>
@@ -58,9 +58,9 @@
                         <tbody>
                             @foreach($leaveData as $index => $leave)
                             @if($leave->employee_id == Auth::user()->custom_id)
-                            <tr class="text-center">
+                            <tr class="">
                                 <td>{{ ($leaveData->currentPage() - 1) * $leaveData->perPage() + $index + 1 }}</td>
-                                <td><img class="rounded-circle me-lg-2"
+                                <td class="text-capitalize"><img class="rounded-circle me-lg-2"
                                         src="{{ asset('public/accountprofile/' .$leave->user->profile_pic) }}"
                                         alt="" style="width: 40px; height: 40px;">
                                     {{$leave->user->lastname}}, {{$leave->user->name}} {{$leave->user->middlename}} @if($leave->user->suffix == 'N/A')  @else {{$leave->user->suffix}}@endif

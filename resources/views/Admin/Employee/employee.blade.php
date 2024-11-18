@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table text-start align-middle ">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -66,7 +66,7 @@
                                             <tr>
                                                 <th scope="row">{{ ($getEmployee->currentPage() - 1) * $getEmployee->perPage() + $index + 1 }}</th>
                                                 <td>{{ $employee->custom_id }}</td>
-                                                <td>{{ $employee->lastname }}, {{ $employee->name }} {{ $employee->middlename }} @if($employee->suffix == 'N/A')  @else {{$employee->suffix}}@endif</td>
+                                                <td class="text-capitalize">{{ $employee->lastname }}, {{ $employee->name }} {{ $employee->middlename }} @if($employee->suffix == 'N/A')  @else {{$employee->suffix}}@endif</td>
 
                                                 <td>{{ $employee->email }}</td>
                                                 <td>@foreach ($depart as $data)

@@ -42,13 +42,13 @@
                                 </a>
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-responsive table-hover">
+                                    <table class="table table-striped table-responsive table-hover text-start">
                                         <thead>
                                             <tr>
-                                                <th class="text-center">#</th>
-                                                <th class="text-center">Department</th>
-                                                <th class="text-center">Year Published</th>
-                                                <th class="text-center">Action</th>
+                                                <th class="">#</th>
+                                                <th class="">Department</th>
+                                                <th class="">Year Published</th>
+                                                <th class="">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -56,17 +56,17 @@
                                             <form action="{{ url('/Admin/Department/UpdateDepartment/'.$list->id) }}" method="POST">
                                                 @csrf
                                                 <tr>
-                                                    <td class="text-center">{{ ($departments->currentPage() - 1) * $departments->perPage() + $index + 1 }}</td>
-                                                    <td class="text-center">
+                                                    <td class="">{{ ($departments->currentPage() - 1) * $departments->perPage() + $index + 1 }}</td>
+                                                    <td class="">
                                                         <span id="editable-span-dept-{{ $list->id }}" onclick="toggleEdit('dept-{{$list->id}}')">
                                                             {{ $list->name }}
                                                         </span>
-                                                        <input type="text" id="editable-input-dept-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control text-center" style="display:none;" onblur="toggleEdit('dept-{{$list->id}}')">
+                                                        <input type="text" id="editable-input-dept-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control " style="display:none;" onblur="toggleEdit('dept-{{$list->id}}')">
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="">
                                                         {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="">
                                                         @if(Auth::user()->user_type == 0)
                                                         <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
                                                             <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>
@@ -101,14 +101,14 @@
 
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
+                                    <table class="table table-striped table-hover text-start">
                                         <thead>
                                             <tr>
-                                                <th class="text-center">#</th>
-                                                <th class="text-center">Department</th>
-                                                <th class="text-center">Position</th>
-                                                <th class="text-center">Year Published</th>
-                                                <th class="text-center">Action</th>
+                                                <th class="">#</th>
+                                                <th class="">Department</th>
+                                                <th class="">Position</th>
+                                                <th class="">Year Published</th>
+                                                <th class="">Action</th>
 
                                             </tr>
                                         </thead>
@@ -117,8 +117,8 @@
                                             <form action="{{ url('/Admin/Department/UpdatePosition/'.$list->id) }}" method="POST">
                                                 @csrf
                                                 <tr>
-                                                    <td class="text-center">{{ ($position->currentPage() - 1) * $position->perPage() + $index + 1 }}</td>
-                                                    <td class="text-center">
+                                                    <td class="">{{ ($position->currentPage() - 1) * $position->perPage() + $index + 1 }}</td>
+                                                    <td class="">
                                                         @foreach($departments as $depart)
 
                                                         @if($list->department_id === $depart->id)
@@ -127,19 +127,19 @@
 
                                                         @endforeach
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="">
                                                         <span id="editable-span-pos-{{ $list->id }}" onclick="toggleEdit('pos-{{$list->id}}')">
                                                             {{ $list->name }}
                                                         </span>
-                                                        <input type="text" id="editable-input-pos-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control text-center" style="display:none;" onblur="toggleEdit('pos-{{$list->id}}')">
+                                                        <input type="text" id="editable-input-pos-{{ $list->id }}" name="name" value="{{ $list->name }}" class="form-control" style="display:none;" onblur="toggleEdit('pos-{{$list->id}}')">
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="">
                                                         {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                                     </td>
 
 
 
-                                                    <td class="text-center">
+                                                    <td class="">
                                                         @if(Auth::user()->user_type == 0)
                                                         <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
                                                             <i class="fas fa-save" style="color: #63E6BE; font-size: 18px;"></i>

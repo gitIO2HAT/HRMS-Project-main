@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table text-start align-middle ">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -37,7 +37,11 @@
                             @foreach($users as $index => $user)
                             <tr>
                                 <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td>
-                                <td>{{$user->lastname}}, {{$user->name}} {{$user->middlename}} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif</td>
+                                <td class="text-capitalize"><img class="rounded-circle me-lg-2"
+                                        src="{{ asset('public/accountprofile/' .$user->profile_pic) }}"
+                                        alt="" style="width: 40px; height: 40px;">
+                                    {{$user->lastname}}, {{$user->name}} {{$user->middlename}} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif
+                                </td>
                                 <td>{{$user->sick_leave}}</td>
                                 <td>{{$user->vacation_leave}}</td>
                                 <td>{{$user->special_previlege_leave}}</td>
@@ -70,7 +74,7 @@
                                     <option selected disabled>--Select Leave Balance--</option>
                                     <option value="sick_leave">Sick Leave Balance</option>
                                     <option value="vacation_leave">Vacation Leave Balance</option>
-                                    <option value="special_previlege_leave">Special Previlege Leave Balance</option>
+                                
 
                                     @if ($errors->has('type'))
                                     <span
@@ -107,7 +111,7 @@
                                     }
                                 }
                             </script>
-                            <div class="modal-footer"><button type="submit" class="btn btn-success">Add</button></div>
+                            <div class="modal-footer"><button type="submit" class="btn btn-success">Update</button></div>
 
 
                         </form>

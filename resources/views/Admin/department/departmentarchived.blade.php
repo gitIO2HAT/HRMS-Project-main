@@ -40,13 +40,13 @@
 
 
 
-                                <table class="table table-striped table-responsive table-hover">
+                                <table class="table table-striped table-responsive table-hover text-start">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Department</th>
-                                            <th class="text-center">Year Published</th>
-                                            <th class="text-center">Action</th>
+                                            <th class="">#</th>
+                                            <th class="">Department</th>
+                                            <th class="">Year Published</th>
+                                            <th class="">Action</th>
 
                                         </tr>
                                     </thead>
@@ -54,16 +54,16 @@
                                         @foreach($departments as $index => $list)
 
                                         <tr>
-                                            <td class="text-center">{{ ($departments->currentPage() - 1) * $departments->perPage() + $index + 1 }}</td>
-                                            <td class="text-center">
+                                            <td class="">{{ ($departments->currentPage() - 1) * $departments->perPage() + $index + 1 }}</td>
+                                            <td class="">
                                                 {{ $list->name }}
                                             </td>
-                                            <td class="text-center">
+                                            <td class="">
                                                 {{ \Carbon\Carbon::parse($list->created_at)->format('Y') }}
                                             </td>
-                                            <td class="text-center">
+                                            <td class="">
                                                 @if(Auth::user()->user_type == 0)
-                                            <td class="text-center"><a href="{{ url('/SuperAdmin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
+                                            <td class=""><a href="{{ url('/SuperAdmin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>
                                                 @elseif(Auth::user()->user_type == 1)
 
                                                 <a href="{{ url('/Admin/Department/DeletedRestored/'.$list->id) }}"> <i class="fas fa-trash-restore" style="color: #63E6BE;"></i></a>

@@ -124,7 +124,7 @@
                 <tr>
                     <td>
                         @if($his->period)
-                        {{ \Carbon\Carbon::parse($his->period)->format('F-Y') }}
+                        {{ \Carbon\Carbon::parse($his->period)->format('M-Y') }}
                         @else
                         <!-- or leave it blank if you prefer -->
                         @endif
@@ -148,7 +148,7 @@
                     <td>{{$his->s_wop}}</td>
                     <td>
                         @if($his->date_action)
-                        {{ \Carbon\Carbon::parse($his->date_action)->format('d-F-Y') }}
+                        {{ \Carbon\Carbon::parse($his->date_action)->format('d-M-Y') }}
                         @else
                         <!-- or leave it blank if you prefer -->
                         @endif

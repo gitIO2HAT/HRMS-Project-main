@@ -92,16 +92,16 @@
                             <div class="bg-white rounded-3 h-100 p-4">
                                 <h6 class="mb-4">Bordered Table</h6>
 
-                                <table class="table table-striped table-hover table-responsive table-bordered">
-                                    <thead class="text-dark text-center">
+                                <table class="table table-striped table-hover table-responsive table-bordered text-start align-middle ">
+                                    <thead class="text-dark">
                                         <tr>
-                                            <th class="bg-head" scope="col" colspan="7">Attendance History</th>
+                                            <th class="bg-head text-center" scope="col" colspan="7">Attendance History</th>
 
                                         </tr>
                                         <tr class="bg-title">
-                                            <th class="centered" scope="col" rowspan="2">#</th>
-                                            <th class="centered" scope="col" rowspan="2">Employee ID</th>
-                                            <th class="centered" scope="col" rowspan="2">Date</th>
+                                            <th class="" scope="col" rowspan="2">#</th>
+                                            <th class="" scope="col" rowspan="2">Employee ID</th>
+                                            <th class="" scope="col" rowspan="2">Date</th>
                                             <th scope="col" colspan="2">Morning</th>
                                             <th scope="col" colspan="2">Afternoon</th>
                                         </tr>
@@ -112,11 +112,11 @@
                                             <th class="bg-afternoon" scope="col">Clock Out</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="text-center">
+                                    <tbody class="">
                                         @foreach($getPunch as $index => $punch)
                                         <tr>
                                             <th scope="row">{{ ($getPunch->currentPage() - 1) * $getPunch->perPage() + $index + 1 }}</th>
-                                            <td class="text-dark"><img class="rounded-circle me-lg-2"
+                                            <td class="text-dark text-capitalize"><img class="rounded-circle me-lg-2"
                                                     src="{{ asset('public/accountprofile/' . $punch->user->profile_pic) }}"
                                                     alt=""
                                                     style="width: 40px; height: 40px;">
