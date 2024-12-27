@@ -177,7 +177,7 @@
                         <button type="submit" class="btn">Send Password Reset Link</button>
                     </div>
                     <div class="login" style=" margin-top:10px;">
-                        <a class="btn" href="\">Login</a>
+                        <a class="btn" href="{{ url('/LoginUser') }}">Login</a>
                     </div>
 
                 </form>

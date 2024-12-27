@@ -12624,4 +12624,16 @@ fieldset:disabled .btn {
     .d-print-none {
         display: none !important
     }
+    .custom-table {
+        background-color: transparent !important;
+        border-radius: 10%;
+        border-collapse: collapse; /* Prevents spacing between table cells */
+    }
+    
+    .custom-table th, 
+    .custom-table td {
+        background-color: transparent !important;
+        color: white; /* Ensures text color contrasts with your background */
+    }
+
 }

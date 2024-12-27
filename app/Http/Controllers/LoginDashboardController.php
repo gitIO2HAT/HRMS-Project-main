@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Log;
 
 class LoginDashboardController extends Controller
 {
+    public function fingerprint(Request $request)
+    {
+        return view('loginform.fingerprint');
+    }
+
     public function login(Request $request)
     {
         return view('loginform.login');

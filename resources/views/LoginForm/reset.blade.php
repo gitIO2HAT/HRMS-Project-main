@@ -199,7 +199,7 @@
 
 
                         <label for=""></label>
-                        <a class="text-end"href="{{ url('/') }}">Log In</a>
+                        <a class="text-end" href="{{ url('/LoginUser') }}">Log In</a>
                     </div>
                     <div class="login">
                         <button type="submit" class="btn">Change Password</button>

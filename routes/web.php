@@ -25,7 +25,8 @@ use App\Models\Attendance;
 |
 */
 
-Route::get('/', [LoginDashboardController::class, 'login'])->name('login');
+Route::get('/', [LoginDashboardController::class, 'fingerprint'])->name('fingerprint');
+Route::get('/LoginUser', [LoginDashboardController::class, 'login'])->name('login');
 Route::post('login', [LoginDashboardController::class, 'AuthLogin']);
 Route::get('/ForgetPassword', [LoginDashboardController::class, 'forgetpassword']);
 Route::post('/ForgetPassword/Reset', [LoginDashboardController::class, 'sendResetLinkEmail']);

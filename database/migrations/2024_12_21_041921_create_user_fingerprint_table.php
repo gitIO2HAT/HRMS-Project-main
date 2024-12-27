@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('user_fingerprint', function (Blueprint $table) {
             $table->id();
             $table->string('user_id'); // Ensure custom_id in users is also a string
-            $table->binary('fingerprint_id'); // Use binary for storing BLOB data
+            $table->binary('fingerprint_id');
+            $table->binary('fingerprint_id2');
+            $table->binary('fingerprint_id3'); // Use binary for storing BLOB data
             $table->string('status'); // Use snake_case for consistency
-        
             // Foreign key constraint
             $table->foreign('user_id')->references('custom_id')->on('users')->onDelete('cascade');
         
