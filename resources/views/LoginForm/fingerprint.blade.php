@@ -142,48 +142,48 @@
 
     <div class=" row mt-5 ">
 
-        <div id="Aboutme" class="row col-12 col-sm-12 col-xl-8 text-white text-center">
-            <div class="col-6 col-sm-6 col-xl-6 px-4">
+        <div id="Aboutme" class="row col-12 col-sm-12 col-xl-8 text-dark text-center">
+            <div class="col-6 col-sm-6 col-xl-6 px-2">
                 <h3 class="text-start">January 1, 2025</h3>
             </div>
-            <div class="col-6 col-sm-6 col-xl-6 px-4">
+            <div class="col-6 col-sm-6 col-xl-6 px-2">
                 <h3 class="text-end">08:00 AM</h3>
             </div>
 
-            <table class="table text-center mx-4 border border-dark rounded-3" style="background-color: transparent;">
+            <table class="table text-center mx-2 border border-dark rounded-3" style="background-color: transparent;">
                 <tbody>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Name</th>
-                        <td style="border: none; background-color: transparent; color: white;">John Doe</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Name</th>
+                        <td style="border: none; background-color: transparent; color: black;">{{$firstRecord->user_id}}</td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Department</th>
-                        <td style="border: none; background-color: transparent; color: white;">Human Resources</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Department</th>
+                        <td style="border: none; background-color: transparent; color: black;">{{$firstRecord->user->department}}</td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Position</th>
-                        <td style="border: none; background-color: transparent; color: white;">HR Staff</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Position</th>
+                        <td style="border: none; background-color: transparent; color: black;">{{$firstRecord->user->position}}</td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Time-in AM</th>
-                        <td style="border: none; background-color: transparent; color: white;">08:00 AM</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-in AM</th>
+                        <td style="border: none; background-color: transparent; color: black;">08:00 AM</td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Time-out AM</th>
-                        <td style="border: none; background-color: transparent; color: white;">12:00 PM</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-out AM</th>
+                        <td style="border: none; background-color: transparent; color: black;">12:00 PM</td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Time-in PM</th>
-                        <td style="border: none; background-color: transparent; color: white;">01:00 PM</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-in PM</th>
+                        <td style="border: none; background-color: transparent; color: black;">01:00 PM</td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: white;">Time-out PM</th>
-                        <td style="border: none; background-color: transparent; color: white;">05:00 PM</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-out PM</th>
+                        <td style="border: none; background-color: transparent; color: black;">05:00 PM</td>
                     </tr>
                 </tbody>
             </table>
 
-            <table class="table text-center mx-4 border border-dark rounded-3" style="background-color: transparent;">
+            <table class="table text-center mx-2 border border-dark rounded-3" style="background-color: transparent;">
                 <Thead>
                     <tr>
                         <th>Name</th>
@@ -192,8 +192,8 @@
                 </Thead>
                 <tbody>
                     <tr>
-                        <td style="border: none; background-color: transparent; color: white;">John Doe</td>
-                        <td style="border: none; background-color: transparent; color: white;">John Doe</td>
+                        <td style="border: none; background-color: transparent; color: black;">John Doe</td>
+                        <td style="border: none; background-color: transparent; color: black;">John Doe</td>
                     </tr>   
                 </tbody>
             </table>
@@ -202,7 +202,7 @@
 
         <div class="col-12 col-sm-12 col-xl-4  text-center align-content-center">
             <img src="img/user.png" alt="Profile Picture" class="shadow img-fluid rounded-circle mb-3"
-                style="width: 400px; height: 400px;">
+                style="width: 300px; height: 300px;">
         </div>
 
 

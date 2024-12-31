@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -14,12 +15,21 @@ class LoginDashboardController extends Controller
 {
     public function fingerprint(Request $request)
     {
-        return view('loginform.fingerprint');
+        $recentUpdates = Attendance::whereDate('updated_at', today())
+        ->with('user')->get();
+        $firstRecord = $recentUpdates->sortByDesc('updated_at')->first();
+        $fingerprintviewpage = 'loginform.fingerprint';
+
+        return view($fingerprintviewpage, [
+            'firstRecord' => $firstRecord
+        ]);
     }
 
     public function login(Request $request)
     {
+
         return view('loginform.login');
+        
     }
 
     public function forgetpassword(Request $request)
