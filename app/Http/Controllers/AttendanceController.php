@@ -39,10 +39,45 @@ class AttendanceController extends Controller
         $userId = Auth::user()->custom_id;
         $timezone = 'Asia/Manila';
         Carbon::setLocale('en'); // Optional: Set locale if needed
-
-        // Get the start and end of the current week in Asia/Manila timezone
         $startOfWeek = Carbon::now($timezone)->startOfWeek();
         $endOfWeek = Carbon::now($timezone)->endOfWeek();
+
+        $todayduration = Attendance::where('user_id', $userId)
+            ->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->get()
+            ->map(function ($attendance) {
+                // Parse punch times
+                $amStart = Carbon::parse($attendance->punch_in_am_first); // Morning start
+                $amEnd = Carbon::parse($attendance->punch_in_am_second);  // Morning end
+                $pmStart = Carbon::parse($attendance->punch_in_pm_first); // Afternoon start
+                $pmEnd = Carbon::parse($attendance->punch_in_pm_second);  // Afternoon end
+        
+                // Define morning and afternoon ranges
+                $morningStart = Carbon::createFromTime(8, 0);
+                $morningEnd = Carbon::createFromTime(11, 59);
+                $afternoonStart = Carbon::createFromTime(13, 0); // 1:00 PM
+                $afternoonEnd = Carbon::createFromTime(17, 0);   // 5:00 PM
+        
+                // Calculate morning duration
+                $morningDuration = $amStart->between($morningStart, $morningEnd) || $amEnd->between($morningStart, $morningEnd)
+                    ? $amStart->max($morningStart)->diffInMinutes($amEnd->min($morningEnd))
+                    : 0;
+        
+                // Calculate afternoon duration
+                $afternoonDuration = $pmStart->between($afternoonStart, $afternoonEnd) || $pmEnd->between($afternoonStart, $afternoonEnd)
+                    ? $pmStart->max($afternoonStart)->diffInMinutes($pmEnd->min($afternoonEnd))
+                    : 0;
+        
+                // Return total duration for the day in hours
+                return ($morningDuration + $afternoonDuration) / 60; // Convert minutes to hours
+            })
+            ->sum(); // Sum durations for the week
+        
+        // Output the total duration in hours
+        
+        
+        // Get the start and end of the current week in Asia/Manila timezone
+        
         $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])->sum('total_duration');
         $weeklyProgressBar = $weekly;
 
@@ -344,6 +379,7 @@ class AttendanceController extends Controller
             'getNot' => $getNot,
             'weeklyFinal' => $weeklyFinal,
             'weeklyProgressBar' => $weeklyProgressBar,
+            'todayduration' => $todayduration,
             'monthlyFinal' => $monthlyFinal,
             'monthlyProgressBar' => $monthlyProgressBar,
             'monthlyRemaining' => $monthlyRemaining,
@@ -409,6 +445,36 @@ class AttendanceController extends Controller
         // Get the start and end of the current week in Asia/Manila timezone
         $startOfWeek = Carbon::now($timezone)->startOfWeek();
         $endOfWeek = Carbon::now($timezone)->endOfWeek();
+        $todayduration = Attendance::where('user_id', $userId)
+        ->whereBetween('date', [$startOfWeek, $endOfWeek])
+        ->get()
+        ->map(function ($attendance) {
+            // Parse punch times
+            $amStart = Carbon::parse($attendance->punch_in_am_first); // Morning start
+            $amEnd = Carbon::parse($attendance->punch_in_am_second);  // Morning end
+            $pmStart = Carbon::parse($attendance->punch_in_pm_first); // Afternoon start
+            $pmEnd = Carbon::parse($attendance->punch_in_pm_second);  // Afternoon end
+    
+            // Define morning and afternoon ranges
+            $morningStart = Carbon::createFromTime(8, 0);
+            $morningEnd = Carbon::createFromTime(11, 59);
+            $afternoonStart = Carbon::createFromTime(13, 0); // 1:00 PM
+            $afternoonEnd = Carbon::createFromTime(17, 0);   // 5:00 PM
+    
+            // Calculate morning duration
+            $morningDuration = $amStart->between($morningStart, $morningEnd) || $amEnd->between($morningStart, $morningEnd)
+                ? $amStart->max($morningStart)->diffInMinutes($amEnd->min($morningEnd))
+                : 0;
+    
+            // Calculate afternoon duration
+            $afternoonDuration = $pmStart->between($afternoonStart, $afternoonEnd) || $pmEnd->between($afternoonStart, $afternoonEnd)
+                ? $pmStart->max($afternoonStart)->diffInMinutes($pmEnd->min($afternoonEnd))
+                : 0;
+    
+            // Return total duration for the day in hours
+            return ($morningDuration + $afternoonDuration) / 60; // Convert minutes to hours
+        })
+        ->sum(); // Sum durations for the week
         $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])->sum('total_duration');
         $weeklyProgressBar = $weekly;
 
@@ -713,6 +779,7 @@ class AttendanceController extends Controller
             'getNot' => $getNot,
             'weeklyFinal' => $weeklyFinal,
             'weeklyProgressBar' => $weeklyProgressBar,
+            'todayduration' => $todayduration,
             'monthlyFinal' => $monthlyFinal,
             'monthlyProgressBar' => $monthlyProgressBar,
             'monthlyRemaining' => $monthlyRemaining,

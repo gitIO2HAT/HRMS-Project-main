@@ -79,7 +79,7 @@ return new class extends Migration
                 'phonenumber' => '1234567890',
                 'daily_rate' => 100.00,
                 'custom_id' => '1',
-                'end_of_contract' => '2024-12-31',
+                'end_of_contract' => '2025-12-31',
                 'is_archive' => '1',
                 'contract' => '1',
                 'civil_status' => 'Single',

@@ -13,137 +13,7 @@
                                     <div class="row g-4">
                                         <div class="col-sm-12 col-xl-7 rounded">
                                             <div class=" bg-white rounded-3  h-100 p-4">
-                                                <h1 class="mb-6 text-start text-dark">
-                                                    <div id="current-date-superadmin"></div>
-                                                </h1>
-                                                <div style="background-color:#f9f9f9"
-                                                    class="shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                                                    <h6 class="text-start text-dark">Punch In at</h6>
-                                                    <div id="current-date1-superadmin"></div>
-
-                                                </div>
-                                                <h3 class="text-dark hours-circle"><span id="todays-hours">0s</span>
-                                                </h3>
-                                                <div class="d-flex justify-content-center">
-                                                    <form action="{{ '/SuperAdmin/ClockIn' }}" method="POST"
-                                                        class="me-2">
-                                                        @csrf
-                                                        <button type="submit"
-                                                            class="btn btn-orange hidden rounded-pill"
-                                                            id="clockInButton">Clock In</button>
-                                                    </form>
-                                                    <form action="{{ '/SuperAdmin/ClockOut' }}" method="POST"
-                                                        class="me-2">
-                                                        @csrf
-                                                        <button type="submit"
-                                                            class="btn btn-orange hidden rounded-pill"
-                                                            id="clockOutButton">Clock Out</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div class="col-sm-12 col-xl-5 rounded">
-                                            <div class="bg-white rounded-3 h-100 p-4">
-                                                <div class="row g-4">
-                                                    <div class="col-sm-12">
-                                                        <div class="bg-white rounded-3 h-100 p-4">
-                                                            <h4 class="text-dark mb-4">Statistics</h4>
-                                                            <div
-                                                                class="bg-today shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
-                                                                <div class="d-flex justify-content-between">
-                                                                    <h6 class="text-start text-dark">Today</h6>
-                                                                    <span id="todays-hours-stat">0 / 8 hrs</span>
-                                                                </div>
-                                                                <div class="d-flex justify-content-center">
-                                                                    <progress id="progressBar" value="0"
-                                                                        max="28800"></progress>
-                                                                </div>
-                                                            </div>
-
-                                                            <div
-                                                                class="bg-week shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
-                                                                <div class="d-flex justify-content-between">
-                                                                    <h6 class="text-start text-dark">This Week</h6>
-                                                                    <span id="week-stats">{{ $weeklyFinal }} / 40
-                                                                        hrs</span>
-                                                                </div>
-                                                                <div class="d-flex justify-content-center">
-                                                                    <progress id="progressBar"
-                                                                        value="{{ $weeklyProgressBar }}"
-                                                                        max="144000"></progress>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="bg-month shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
-                                                                <div class="d-flex justify-content-between">
-                                                                    <h6 class="text-start text-dark">This Month</h6>
-                                                                    <span id="month-stats">{{ $monthlyFinal }}/ 160
-                                                                        hrs</span>
-                                                                </div>
-                                                                <div class="d-flex justify-content-center">
-                                                                    <progress id="progressBar"
-                                                                        value="{{ $monthlyProgressBar }}"
-                                                                        max="576000"></progress>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="bg-remaining shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
-                                                                <div class="d-flex justify-content-between">
-                                                                    <h6 class="text-start text-dark">Remaining</h6>
-                                                                    <span
-                                                                        id="month-stats">{{ $monthlyRemainingFinals }}/
-                                                                        160 hrs</span>
-                                                                </div>
-                                                                <div class="d-flex justify-content-center">
-                                                                    <progress id="progressBar"
-                                                                        value="{{ $monthlyRemaining }}"
-                                                                        max="576000"></progress>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal fade" id="generateReportsModal" tabindex="-1" aria-labelledby="generateReportsModalLabel"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title text-dark" id="generateReportsModalLabel">Generate Reports</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="{{ url('/SuperAdmin/Attendance/GenerateReports') }}" method="POST">
-                                                            @csrf <!-- Add CSRF token for security -->
-                                                            <label class="text-dark" for="employeeIds">Select User</label>
-                                                            <select id="employeeIds" name="employeeIds" class="form-control underline-input">
-                                                                <option value="" selected>--Select All--</option>
-                                                                @foreach ($users as $user)
-                                                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
-                                                                </option>
-                                                                @endforeach
-                                                            </select>
-                                                            <label for="timeframeStart">From:</label>
-                                                            <input type="date" name="timeframeStart" id="timeframeStart"
-                                                                class="form-control underline-input">
-                                                            <label for="timeframeEnd">To:</label>
-                                                            <input type="date" name="timeframeEnd" id="timeframeEnd"
-                                                                class="form-control underline-input">
-                                                            <div class="text-center mt-1">
-                                                                <button type="submit" class="btn btn-info">Generate Reports</button>
-                                                            </div>
-                                                        </form>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-xl-12 ">
-                                            <div class="bg-white rounded-3 h-100 p-4">
-                                                <table
+                                            <table
                                                     class="table table-striped table-hover table-responsive table-bordered text-start align-middle ">
                                                     <thead class="text-dark">
                                                         <tr>
@@ -241,6 +111,110 @@
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                        
+                                             
+
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-12 col-xl-5 rounded">
+                                            <div class="bg-white rounded-3 h-100 p-4">
+                                                <div class="row g-4">
+                                                    <div class="col-sm-12">
+                                                        <div class="bg-white rounded-3 h-100 p-4">
+                                                            <h4 class="text-dark mb-4">Statistics</h4>
+                                                            <div
+                                                                class="bg-today shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h6 class="text-start text-dark">Today</h6>
+                                                                    <span >{{$todayduration}} / 8 hrs</span>
+                                                                </div>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <progress id="todayduration" value="0"
+                                                                        max="28800"></progress>
+                                                                </div>
+                                                            </div>
+
+                                                            <div
+                                                                class="bg-week shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h6 class="text-start text-dark">This Week</h6>
+                                                                    <span id="week-stats">{{ $weeklyFinal }} / 40
+                                                                        hrs</span>
+                                                                </div>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <progress id="progressBar"
+                                                                        value="{{ $weeklyProgressBar }}"
+                                                                        max="144000"></progress>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="bg-month shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h6 class="text-start text-dark">This Month</h6>
+                                                                    <span id="month-stats">{{ $monthlyFinal }}/ 160
+                                                                        hrs</span>
+                                                                </div>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <progress id="progressBar"
+                                                                        value="{{ $monthlyProgressBar }}"
+                                                                        max="576000"></progress>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="bg-remaining shadow-sm p-3 mb-5 bg-body-tertiary rounded-2 ">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h6 class="text-start text-dark">Remaining</h6>
+                                                                    <span
+                                                                        id="month-stats">{{ $monthlyRemainingFinals }}/
+                                                                        160 hrs</span>
+                                                                </div>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <progress id="progressBar"
+                                                                        value="{{ $monthlyRemaining }}"
+                                                                        max="576000"></progress>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="generateReportsModal" tabindex="-1" aria-labelledby="generateReportsModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-dark" id="generateReportsModalLabel">Generate Reports</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{ url('/SuperAdmin/Attendance/GenerateReports') }}" method="POST">
+                                                            @csrf <!-- Add CSRF token for security -->
+                                                            <label class="text-dark" for="employeeIds">Select User</label>
+                                                            <select id="employeeIds" name="employeeIds" class="form-control underline-input">
+                                                                <option value="" selected>--Select All--</option>
+                                                                @foreach ($users as $user)
+                                                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
+                                                                </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <label for="timeframeStart">From:</label>
+                                                            <input type="date" name="timeframeStart" id="timeframeStart"
+                                                                class="form-control underline-input">
+                                                            <label for="timeframeEnd">To:</label>
+                                                            <input type="date" name="timeframeEnd" id="timeframeEnd"
+                                                                class="form-control underline-input">
+                                                            <div class="text-center mt-1">
+                                                                <button type="submit" class="btn btn-info">Generate Reports</button>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      
 
 
                                                 <script>
@@ -446,3 +420,4 @@
                                                     checkTimeAndDisplayButton();
                                                 </script>
                                                 @endsection
+                                   

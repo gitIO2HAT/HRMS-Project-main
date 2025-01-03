@@ -20,7 +20,7 @@
         margin-left: 10px;
         margin-right: 10px;
         padding-top: 100px;
-        background-image: url('img/BG.png');
+        background-image: url("img/testingBG.png");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -36,7 +36,7 @@
         left: 0;
         right: 0;
         z-index: 1000;
-        background-color: rgba(235, 229, 229, 0.288);
+        background-color: #1c9445;
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -62,7 +62,7 @@
     }
 
     .custom-text:hover {
-        color: aqua;
+        color: rgb(25, 206, 70);
 
     }
 
@@ -127,86 +127,133 @@
 
 <body id="Home" class=".container-xxl">
 
-    <header class="header-custom d-flex justify-content-between align-items-end px-5">
-        <div class="text-start">
-            <h1 class="text-white" id="visited-name"></h1>
+    <header class="header-custom d-flex justify-content-between align-items-center px-5">
+        <div class="d-flex justify-content-between text-start">
+            <img src="img/user3.png" class="p-2" width="100px" height="100px">
+            <div class="p-2">
+                <h6>Republic of the Philippines</h6>
+                <h6><u>Province of Davao Del Sur - Region XI</u></h6>
+                <h5>MUNICIPALITY OF SULOP</h5>
+            </div>
         </div>
-        <div class="pb-3">
-            <a class="custom-text mx-2" href="#Home">Home</a>
-            <a class="custom-text mx-2" href="#Aboutme">About Me</a>
-            <a class="custom-text mx-2" href="#Certificates">Certificates</a>
-            <a class="custom-text mx-2" href="#Services">Services</a>
-            <a class="custom-text mx-2" href="{{ url('/LoginUser') }}">login</a>
+        <div class="d-flex btn btn-white custom-text border-dark justify-content-center align-items-center fs-5">
+            <a class="custom-text" href="{{ url('/LoginUser') }}">Log In</a>
         </div>
     </header>
+
 
     <div class=" row mt-5 ">
 
         <div id="Aboutme" class="row col-12 col-sm-12 col-xl-8 text-dark text-center">
-            <div class="col-6 col-sm-6 col-xl-6 px-2">
-                <h3 class="text-start">January 1, 2025</h3>
-            </div>
-            <div class="col-6 col-sm-6 col-xl-6 px-2">
-                <h3 class="text-end">08:00 AM</h3>
-            </div>
 
-            <table class="table text-center mx-2 border border-dark rounded-3" style="background-color: transparent;">
+            <table class="table text-center ms-5 mt-5 border border-dark rounded-3" style="background-color: transparent; font-size: 40px;">
                 <tbody>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Name</th>
-                        <td style="border: none; background-color: transparent; color: black;">{{$firstRecord->user_id}}</td>
+                        <th scope="row" colspan="3" class="text-start ps-5" style="border: none; background-color: transparent; color: black;">
+                            <div id="current-date2-superadmin"></div>
+                        </th>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Department</th>
-                        <td style="border: none; background-color: transparent; color: black;">{{$firstRecord->user->department}}</td>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Name:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $firstRecord->user->name ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Position</th>
-                        <td style="border: none; background-color: transparent; color: black;">{{$firstRecord->user->position}}</td>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Department:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $departments->name ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-in AM</th>
-                        <td style="border: none; background-color: transparent; color: black;">08:00 AM</td>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Position:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $positions->name ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-out AM</th>
-                        <td style="border: none; background-color: transparent; color: black;">12:00 PM</td>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Time-In AM:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $firstRecord->punch_in_am_first ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-in PM</th>
-                        <td style="border: none; background-color: transparent; color: black;">01:00 PM</td>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Time-Out AM:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $firstRecord->punch_in_am_second ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
                     </tr>
                     <tr>
-                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">Time-out PM</th>
-                        <td style="border: none; background-color: transparent; color: black;">05:00 PM</td>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Time-In PM:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $firstRecord->punch_in_pm_first ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-start" style="border: none; background-color: transparent; color: black;"></th>
+                        <td class="text-end" style="border: none; background-color: transparent; color: black;">Time-Out PM:</td>
+                        <th scope="row" class="text-center" style="border: none; background-color: transparent; color: black;">{{ $firstRecord->punch_in_pm_first ?? 'NO DATA'}}</th>
+                        <td style="border: none; background-color: transparent; color: black;"></td>
                     </tr>
                 </tbody>
             </table>
 
-            <table class="table text-center mx-2 border border-dark rounded-3" style="background-color: transparent;">
-                <Thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Time</th>
-                    </tr>
-                </Thead>
-                <tbody>
-                    <tr>
-                        <td style="border: none; background-color: transparent; color: black;">John Doe</td>
-                        <td style="border: none; background-color: transparent; color: black;">John Doe</td>
-                    </tr>   
-                </tbody>
-            </table>
 
         </div>
 
         <div class="col-12 col-sm-12 col-xl-4  text-center align-content-center">
-            <img src="img/user.png" alt="Profile Picture" class="shadow img-fluid rounded-circle mb-3"
-                style="width: 300px; height: 300px;">
+            <img src="{{ asset('public/accountprofile/' . $firstRecord->user->profile_pic) }}" alt="Profile Picture" class="shadow img-fluid rounded-circle mb-3"
+                style="width: 400px; height: 400px;">
         </div>
-
-
     </div>
+
+    <script>
+        function updateTime() {
+            const today1 = new Date();
+            const day1 = today1.getDate();
+            const daySuffix1 = (day1) => {
+                if (day1 > 3 && day1 < 21) return 'th';
+                switch (day1 % 10) {
+                    case 1:
+                        return "st";
+                    case 2:
+                        return "nd";
+                    case 3:
+                        return "rd";
+                    default:
+                        return "th";
+                }
+            };
+
+            const daysOfWeek1 = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const months1 = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+
+            const dayOfWeek1 = daysOfWeek1[today1.getDay()];
+            const month1 = months1[today1.getMonth()];
+            const year1 = today1.getFullYear();
+
+            let hours1 = today1.getHours();
+            const minutes1 = today1.getMinutes().toString().padStart(2, '0');
+            const seconds1 = today1.getSeconds().toString().padStart(2, '0');
+            const ampm1 = hours1 >= 12 ? ' PM' : ' AM';
+            hours1 = hours1 % 12;
+            hours1 = hours1 ? hours1 : 12; // the hour '0' should be '12'
+            const timeString1 = `${hours1}:${minutes1}:${seconds1}${ampm1}`;
+
+            const dateString1 =
+                `<span class="date1">${dayOfWeek1}, ${day1}${daySuffix1(day1)} ${month1} ${year1} ${timeString1}</span>`;
+            document.getElementById('current-date2-superadmin').innerHTML = dateString1;
+        }
+
+        // Update the time every second
+        setInterval(updateTime, 1000);
+
+        // Initial call to display the time immediately on page load
+        updateTime();
+    </script>
 
 
 

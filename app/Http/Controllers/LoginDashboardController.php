@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Department;
+use App\Models\Position;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -15,15 +17,25 @@ class LoginDashboardController extends Controller
 {
     public function fingerprint(Request $request)
     {
-        $recentUpdates = Attendance::whereDate('updated_at', today())
-        ->with('user')->get();
-        $firstRecord = $recentUpdates->sortByDesc('updated_at')->first();
-        $fingerprintviewpage = 'loginform.fingerprint';
-
-        return view($fingerprintviewpage, [
-            'firstRecord' => $firstRecord
+        $attendance = Attendance::with('user')->get();
+        $firstRecord = Attendance::with('user')
+            ->orderBy('updated_at', 'desc')
+            ->first();
+    
+        // Correct the department query to use the user’s department
+        $departments = Department::where('id', $firstRecord->user->department)->first();
+    
+        $positions = position::where('id', $firstRecord->user->position)->first();
+    
+        return view('loginform.fingerprint', [
+            'firstRecord' => $firstRecord,
+            'departments' => $departments,
+            'positions' => $positions,
+            'attendance' => $attendance
         ]);
     }
+    
+
 
     public function login(Request $request)
     {
