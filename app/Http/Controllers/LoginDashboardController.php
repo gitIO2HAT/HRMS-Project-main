@@ -18,14 +18,20 @@ class LoginDashboardController extends Controller
     public function fingerprint(Request $request)
     {
         $attendance = Attendance::with('user')->get();
+    
         $firstRecord = Attendance::with('user')
             ->orderBy('updated_at', 'desc')
             ->first();
     
-        // Correct the department query to use the user’s department
-        $departments = Department::where('id', $firstRecord->user->department)->first();
+        // Initialize variables as null in case $firstRecord or its user is null
+        $departments = null;
+        $positions = null;
     
-        $positions = position::where('id', $firstRecord->user->position)->first();
+        // Check if firstRecord and its related user exist
+        if ($firstRecord && $firstRecord->user) {
+            $departments = Department::find($firstRecord->user->department);
+            $positions = Position::find($firstRecord->user->position);
+        }
     
         return view('loginform.fingerprint', [
             'firstRecord' => $firstRecord,
@@ -34,6 +40,7 @@ class LoginDashboardController extends Controller
             'attendance' => $attendance
         ]);
     }
+    
     
 
 

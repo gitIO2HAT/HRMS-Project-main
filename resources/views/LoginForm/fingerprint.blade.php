@@ -201,10 +201,16 @@
 
         </div>
 
-        <div class="col-12 col-sm-12 col-xl-4  text-center align-content-center">
-            <img src="{{ asset('public/accountprofile/' . $firstRecord->user->profile_pic) }}" alt="Profile Picture" class="shadow img-fluid rounded-circle mb-3"
+        <div class="col-12 col-sm-12 col-xl-4 text-center align-content-center">
+            <img 
+                src="{{ $firstRecord && $firstRecord->user && $firstRecord->user->profile_pic 
+                    ? asset('public/accountprofile/' . $firstRecord->user->profile_pic) 
+                    : asset('public/accountprofile/default.png') }}" 
+                alt="Profile Picture" 
+                class="shadow img-fluid rounded-circle mb-3"
                 style="width: 400px; height: 400px;">
         </div>
+        
     </div>
 
     <script>

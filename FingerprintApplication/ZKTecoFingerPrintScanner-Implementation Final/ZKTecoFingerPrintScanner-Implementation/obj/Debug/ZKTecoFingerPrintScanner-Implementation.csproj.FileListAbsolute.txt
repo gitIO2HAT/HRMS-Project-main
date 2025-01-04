@@ -1,0 +1,104 @@
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\Dofe_Re_Entry.UserControls.DeviceController.FingerPrintControl.resources
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.StatusBar.resources
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Master.resources
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Properties.Resources.resources
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.GenerateResource.cache
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CoreCompileInputs.cache
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe.config
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\libzkfpcsharp.dll
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CopyComplete
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+E:\Workspace\BitBucket\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csprojAssemblyReference.cache
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe.config
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csprojResolveAssemblyReference.cache
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\Dofe_Re_Entry.UserControls.DeviceController.FingerPrintControl.resources
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.StatusBar.resources
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Master.resources
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Properties.Resources.resources
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.GenerateResource.Cache
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CoreCompileInputs.cache
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+D:\BioMatrix\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\ZKTecoFingerPrintScanner-Implementation\bin\Debug\libzkfpcsharp.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csprojAssemblyReference.cache
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\libzkfpcsharp.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe.config
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\Dofe_Re_Entry.UserControls.DeviceController.FingerPrintControl.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.StatusBar.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Master.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Properties.Resources.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.GenerateResource.cache
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CoreCompileInputs.cache
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CopyComplete
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\Google.Protobuf.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\MySql.Data.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Buffers.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Memory.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZstdNet.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\BouncyCastle.Crypto.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\Google.Protobuf.pdb
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\Google.Protobuf.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\MySql.Data.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Buffers.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Memory.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.MatchFingerPrint.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csprojAssemblyReference.cache
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\Dofe_Re_Entry.UserControls.DeviceController.FingerPrintControl.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.MatchFingerPrint.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.StatusBar.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Master.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Properties.Resources.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.GenerateResource.cache
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CoreCompileInputs.cache
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\libzkfpcsharp.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe.config
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.exe
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZKTecoFingerPrintScanner-Implementation.pdb
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\Google.Protobuf.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\MySql.Data.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Buffers.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Memory.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\ZstdNet.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\BouncyCastle.Crypto.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\Google.Protobuf.pdb
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\Google.Protobuf.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\MySql.Data.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Buffers.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Memory.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner-Implementation.csproj.CopyComplete
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\obj\Debug\ZKTecoFingerPrintScanner_Implementation.Controls.AdminLogin.resources
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\BCrypt.Net-Next.dll
+C:\Users\Lharyl Panares\Desktop\ZKTecoFingerPrintScanner-Implementation-master - Copy (Has working save method)\ZKTecoFingerPrintScanner-Implementation\bin\Debug\BCrypt.Net-Next.xml
