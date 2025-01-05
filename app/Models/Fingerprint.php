@@ -9,14 +9,14 @@ class Fingerprint extends Model
 {
     use HasFactory;
 
-    public $table = 'fingerprint_id';
+    public $table = 'user_fingerprint';
     protected $fillable = [
         'user_id',
-        'fingerprint_id', 
+        'template', 
         'status'
     ];
 
-    public function fingerprint_id(){
+    public function user(){
 
         return $this->belongsTo(User::class, 'user_id', 'custom_id');
     }

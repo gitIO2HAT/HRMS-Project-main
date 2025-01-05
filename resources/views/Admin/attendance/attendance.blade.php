@@ -152,31 +152,33 @@
                 </div>
                 <div class="col-sm-12 col-xl-12 ">
                     <div class="bg-white rounded-3 h-100 p-4">
-                        <h6 class="mb-4">Bordered Table</h6>
                         <table class="table table-striped table-hover table-responsive table-bordered text-start align-middle ">
                             <thead class="text-dark">
                                 <tr>
-                                    <th class="bg-head text-center" scope="col" colspan="7">
-                                        Attendance History</th>
+                                    <th class="bg-head text-center" scope="col" colspan="9">Attendance Employee</th>
+
                                 </tr>
                                 <tr class="bg-title">
                                     <th class="" scope="col" rowspan="2">#</th>
-                                    <th class="" scope="col" rowspan="2">
-                                        Employee Name</th>
-                                    <th class="" scope="col" rowspan="2">Date
-                                    </th>
+                                    <th class="" scope="col" rowspan="2">Employee ID</th>
+                                    <th class="" scope="col" rowspan="2">Date</th>
                                     <th scope="col" colspan="2">Morning</th>
                                     <th scope="col" colspan="2">Afternoon</th>
+                                    <th scope="col" colspan="2">Undertime</th>
                                 </tr>
                                 <tr>
                                     <th class="bg-morning" scope="col">Clock In</th>
                                     <th class="bg-afternoon" scope="col">Clock Out</th>
                                     <th class="bg-morning" scope="col">Clock In</th>
                                     <th class="bg-afternoon" scope="col">Clock Out</th>
+                                    <th class="bg-morning" scope="col">Hours</th>
+                                    <th class="bg-afternoon" scope="col">Minutes</th>
                                 </tr>
                             </thead>
                             <tbody class="">
                                 @foreach ($getall as $index => $punch)
+                                @foreach($attendanceData as $data)
+                                @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
                                 @if($punch->user_id != Auth::user()->custom_id)
                                 <tr>
                                     <th scope="row">{{ ($getall->currentPage() - 1) * $getall->perPage() + $index + 1 }}</th>
@@ -218,8 +220,32 @@
                                         {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
                                         @endif
                                     </td>
+                                    @if($data['total_minutes'] <= 480)
+                                        @php
+                                        $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
+                                        $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
+                                        $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
+                                        @endphp
+                                        @if($remainingMinutesMod> 10)
+                                        <td style="color: red;">
+                                            {{ $remainingHours }}
+                                        </td>
+                                        <td style="color: red;">
+                                            {{ $remainingMinutesMod }}
+                                        </td>
+                                        @else
+                                        <td class="text-dark">
+
+                                        </td>
+                                        <td class="text-dark">
+
+                                        </td>
+                                        @endif
+                                        @endif
                                 </tr>
                                 @endif
+                                @endif
+                                @endforeach
                                 @endforeach
                             </tbody>
                         </table>
@@ -249,7 +275,7 @@
                                                 </option>
                                                 @foreach ($usersadmin as $user)
                                                 <option value="{{ $user->custom_id }}">
-                                                    {{ $user->lastname }}, {{ $user->name }} {{ $user->middlename }} @if($user->suffix == 'N/A')  @else {{$user->suffix}}@endif
+                                                    {{ $user->lastname }}, {{ $user->name }} {{ $user->middlename }} @if($user->suffix == 'N/A') @else {{$user->suffix}}@endif
                                                 </option>
                                                 @endforeach
                                             </select>

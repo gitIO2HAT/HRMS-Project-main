@@ -12,6 +12,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyAccountController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\FingerprintController;
 use App\Models\Attendance;
 
 /*
@@ -82,6 +83,10 @@ Route::group(['middleware' => 'superadmin'], function () {
 
     Route::get('/SuperAdmin/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/SuperAdmin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
+
+    Route::get('/SuperAdmin/Fingerprint', [FingerprintController::class, 'fingerprint']);
+    Route::get('/SuperAdmin/Fingerprint/Active/{id}', [FingerprintController::class, 'Active']);
+    Route::get('/SuperAdmin/Fingerprint/NotActive/{id}', [FingerprintController::class, 'NotActive']);
 });
 
 Route::group(['middleware' => 'admin'], function () {
@@ -133,6 +138,10 @@ Route::group(['middleware' => 'admin'], function () {
 
     Route::get('/Admin/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/Admin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
+
+    Route::get('/Admin/Fingerprint', [FingerprintController::class, 'fingerprint']);
+    Route::get('/Admin/Fingerprint/Active/{id}', [FingerprintController::class, 'Active']);
+    Route::get('/Admin/Fingerprint/NotActive/{id}', [FingerprintController::class, 'NotActive']);
 });
 
 

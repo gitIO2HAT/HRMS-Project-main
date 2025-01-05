@@ -227,7 +227,7 @@
                                 @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
-                                <input type="text" placeholder="Position Name" class="form-control underline-input" name="abbreviation" required>
+                                <input type="text" placeholder="Position abbreviation" class="form-control underline-input" name="abbreviation" required>
                                 @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif

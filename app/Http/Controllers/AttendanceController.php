@@ -24,16 +24,16 @@ class AttendanceController extends Controller
     {
         // Get notifications
         $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
-        ->selectRaw('COUNT(messages.is_read) AS unread')
-        ->selectRaw('COUNT(messages.inbox) AS inbox')
-        ->leftJoin('messages', function($join) {
-            $join->on('users.id', '=', 'messages.send_to')
-                 ->where('messages.inbox', '=', 0);
-        })
-        ->where('users.id', Auth::id())
-        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
-        ->get();
-    
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
         $query = Message::getNotify();
 
         $userId = Auth::user()->custom_id;
@@ -42,56 +42,80 @@ class AttendanceController extends Controller
         $startOfWeek = Carbon::now($timezone)->startOfWeek();
         $endOfWeek = Carbon::now($timezone)->endOfWeek();
 
-        $todayduration = Attendance::where('user_id', $userId)
-            ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->get()
-            ->map(function ($attendance) {
-                // Parse punch times
-                $amStart = Carbon::parse($attendance->punch_in_am_first); // Morning start
-                $amEnd = Carbon::parse($attendance->punch_in_am_second);  // Morning end
-                $pmStart = Carbon::parse($attendance->punch_in_pm_first); // Afternoon start
-                $pmEnd = Carbon::parse($attendance->punch_in_pm_second);  // Afternoon end
-        
-                // Define morning and afternoon ranges
-                $morningStart = Carbon::createFromTime(8, 0);
-                $morningEnd = Carbon::createFromTime(11, 59);
-                $afternoonStart = Carbon::createFromTime(13, 0); // 1:00 PM
-                $afternoonEnd = Carbon::createFromTime(17, 0);   // 5:00 PM
-        
-                // Calculate morning duration
-                $morningDuration = $amStart->between($morningStart, $morningEnd) || $amEnd->between($morningStart, $morningEnd)
-                    ? $amStart->max($morningStart)->diffInMinutes($amEnd->min($morningEnd))
-                    : 0;
-        
-                // Calculate afternoon duration
-                $afternoonDuration = $pmStart->between($afternoonStart, $afternoonEnd) || $pmEnd->between($afternoonStart, $afternoonEnd)
-                    ? $pmStart->max($afternoonStart)->diffInMinutes($pmEnd->min($afternoonEnd))
-                    : 0;
-        
-                // Return total duration for the day in hours
-                return ($morningDuration + $afternoonDuration) / 60; // Convert minutes to hours
-            })
-            ->sum(); // Sum durations for the week
-        
-        // Output the total duration in hours
-        
-        
-        // Get the start and end of the current week in Asia/Manila timezone
-        
-        $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])->sum('total_duration');
-        $weeklyProgressBar = $weekly;
+        $TodayMorning = Attendance::where('user_id', $userId)
+            ->whereDate('created_at', '=', Carbon::today()) // Ensures it's for today
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_minutes')
+            ->value('total_minutes') ?? 0;
 
-        $weeklyFinal = ($weekly <= 3599) ? floor($weekly / 60) . 'm' : floor($weekly / 3600) . 'h';
+        $TodayAfternoon = Attendance::where('user_id', $userId)
+            ->whereDate('created_at', '=', Carbon::today()) // Ensures it's for today
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_minutes')
+            ->value('total_minutes') ?? 0;
 
-        // Get the start and end of the current month in Asia/Manila timezone
-        $startOfMonth = Carbon::now($timezone)->startOfMonth();
-        $endOfMonth = Carbon::now($timezone)->endOfMonth();
-        $monthly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])->sum('total_duration');
-        $monthlyProgressBar = $monthly;
-        $monthlyRemaining = 576000 - $monthlyProgressBar;
 
-        $monthlyFinal = ($monthly <= 3599) ? floor($monthly / 60) . 'm' : floor($monthly / 3600) . 'h';
-        $monthlyRemainingFinals = ($monthlyRemaining <= 3599) ? floor($monthlyRemaining / 60) . 'm' : floor($monthlyRemaining / 3600) . 'h';
+
+        $WeekMorning = Attendance::where('user_id', $userId)
+            ->whereBetween('date', [$startOfWeek, $endOfWeek]) // Use whereBetween for date range
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_minutes')
+            ->value('total_minutes');
+
+        $WeekAfternoon = Attendance::where('user_id', $userId)
+            ->whereBetween('date', [$startOfWeek, $endOfWeek]) // Use whereBetween for date range
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_minutes')
+            ->value('total_minutes');
+
+        $MonthMorning = Attendance::where('user_id', $userId)
+            ->whereYear('date', Carbon::now()->year) // Use Carbon to get the current year
+            ->whereMonth('date', Carbon::now()->month) // Use Carbon to get the current month
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_minutes')
+            ->value('total_minutes');
+
+        $MonthAfternoon = Attendance::where('user_id', $userId)
+            ->whereYear('date', Carbon::now()->year) // Use Carbon to get the current year
+            ->whereMonth('date', Carbon::now()->month) // Use Carbon to get the current month
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_minutes')
+            ->value('total_minutes');
+
+        //Undertime calculation
+        $userAttendance = Attendance::select('user_id', 'date')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_am_minutes')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_pm_minutes')
+            ->groupBy('user_id', 'date')
+            ->get();
+
+        $attendanceData = $userAttendance->map(function ($attendance) {
+            $totalMinutes = $attendance->total_am_minutes + $attendance->total_pm_minutes;
+            return [
+                'user_id' => $attendance->user_id,
+                'date' => $attendance->date,
+                'total_minutes' => $totalMinutes,
+            ];
+        });
+
+        $TodayMinutes = $TodayMorning + $TodayAfternoon;
+        $TodaySeconds = $TodayMinutes * 60;
+        $TodayHours = floor($TodayMinutes / 60);
+        $TodaysMinutes = $TodayMinutes  % 60;
+        $Today = "{$TodayHours}:{$TodaysMinutes}";
+
+        $WeekMinutes = $WeekMorning + $WeekAfternoon;
+        $WeekSeconds = $WeekMinutes * 60;
+        $WeekHours = floor($WeekMinutes / 60);
+        $WeeksMinutes = $WeekMinutes  % 60;
+        $Week = "{$WeekHours}:{$WeeksMinutes}";
+
+        $MonthMinutes = $MonthMorning + $MonthAfternoon;
+        $MonthSeconds = $MonthMinutes * 60;
+        $MonthHours = floor($MonthMinutes / 60);
+        $MonthsMinutes = $MonthMinutes  % 60;
+        $Month = "{$MonthHours}:{$MonthsMinutes}";
+
+        $MonthRemainingSeconds = 576000 - $MonthSeconds;
+        $MonthRemainingMinutes = $MonthRemainingSeconds / 60;
+        $MonthRemainingHours = floor($MonthRemainingMinutes / 60);
+        $MonthRemainingsMinutes = $MonthRemainingMinutes  % 60;
+        $MonthRemaining = "{$MonthRemainingHours}:{$MonthRemainingsMinutes}";
+
 
         // Get selected year and month from the request, or default to current year and month
         $selectedYear = $request->input('year', Carbon::now($timezone)->year);
@@ -125,7 +149,7 @@ class AttendanceController extends Controller
         // Get recent punches
         $getPunch = Attendance::where('user_id', $userId)->orderBy('created_at', 'desc')->take(10)->paginate(10);
         $getall = Attendance::with('user')
-        ->where('user_id', '!=', 1)->orderBy('created_at', 'desc')->take(10)->paginate(10);
+            ->where('user_id', '!=', 1)->orderBy('created_at', 'desc')->take(10)->paginate(10);
         // Search for employee records
         $search = $request->input('search');
 
@@ -240,11 +264,11 @@ class AttendanceController extends Controller
             }
 
             $usersadmin = user::where('user_type', 2)
-            ->where('is_archive', 1)
+                ->where('is_archive', 1)
                 ->get();
         } else {
             $usersadmin = user::where('user_type', 2)
-            ->where('is_archive', 1)
+                ->where('is_archive', 1)
                 ->get();
 
             $users = user::where('user_type', [0, 1])
@@ -377,13 +401,15 @@ class AttendanceController extends Controller
         return view($viewPath, [
             'notification' => $notification,
             'getNot' => $getNot,
-            'weeklyFinal' => $weeklyFinal,
-            'weeklyProgressBar' => $weeklyProgressBar,
-            'todayduration' => $todayduration,
-            'monthlyFinal' => $monthlyFinal,
-            'monthlyProgressBar' => $monthlyProgressBar,
-            'monthlyRemaining' => $monthlyRemaining,
-            'monthlyRemainingFinals' => $monthlyRemainingFinals,
+            'Today' => $Today,
+            'TodaySeconds' => $TodaySeconds,
+            'Week' => $Week,
+            'WeekSeconds' => $WeekSeconds,
+            'Month' => $Month,
+            'MonthSeconds' => $MonthSeconds,
+            'MonthRemaining' => $MonthRemaining,
+            'MonthRemainingSeconds' => $MonthRemainingSeconds,
+            'attendanceData' => $attendanceData,
             'getPunch' => $getPunch,
             'employeeRecords' => $employeeRecords,
             'dailySeries' => $dailySeries,
@@ -426,16 +452,16 @@ class AttendanceController extends Controller
     {
         // Get notifications
         $notification['notify'] = User::select('users.id', 'users.name', 'users.lastname', 'users.email')
-        ->selectRaw('COUNT(messages.is_read) AS unread')
-        ->selectRaw('COUNT(messages.inbox) AS inbox')
-        ->leftJoin('messages', function($join) {
-            $join->on('users.id', '=', 'messages.send_to')
-                 ->where('messages.inbox', '=', 0);
-        })
-        ->where('users.id', Auth::id())
-        ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
-        ->get();
-    
+            ->selectRaw('COUNT(messages.is_read) AS unread')
+            ->selectRaw('COUNT(messages.inbox) AS inbox')
+            ->leftJoin('messages', function ($join) {
+                $join->on('users.id', '=', 'messages.send_to')
+                    ->where('messages.inbox', '=', 0);
+            })
+            ->where('users.id', Auth::id())
+            ->groupBy('users.id', 'users.name', 'users.lastname', 'users.email')
+            ->get();
+
         $query = Message::getNotify();
 
         $userId = Auth::user()->custom_id;
@@ -445,50 +471,80 @@ class AttendanceController extends Controller
         // Get the start and end of the current week in Asia/Manila timezone
         $startOfWeek = Carbon::now($timezone)->startOfWeek();
         $endOfWeek = Carbon::now($timezone)->endOfWeek();
-        $todayduration = Attendance::where('user_id', $userId)
-        ->whereBetween('date', [$startOfWeek, $endOfWeek])
-        ->get()
-        ->map(function ($attendance) {
-            // Parse punch times
-            $amStart = Carbon::parse($attendance->punch_in_am_first); // Morning start
-            $amEnd = Carbon::parse($attendance->punch_in_am_second);  // Morning end
-            $pmStart = Carbon::parse($attendance->punch_in_pm_first); // Afternoon start
-            $pmEnd = Carbon::parse($attendance->punch_in_pm_second);  // Afternoon end
-    
-            // Define morning and afternoon ranges
-            $morningStart = Carbon::createFromTime(8, 0);
-            $morningEnd = Carbon::createFromTime(11, 59);
-            $afternoonStart = Carbon::createFromTime(13, 0); // 1:00 PM
-            $afternoonEnd = Carbon::createFromTime(17, 0);   // 5:00 PM
-    
-            // Calculate morning duration
-            $morningDuration = $amStart->between($morningStart, $morningEnd) || $amEnd->between($morningStart, $morningEnd)
-                ? $amStart->max($morningStart)->diffInMinutes($amEnd->min($morningEnd))
-                : 0;
-    
-            // Calculate afternoon duration
-            $afternoonDuration = $pmStart->between($afternoonStart, $afternoonEnd) || $pmEnd->between($afternoonStart, $afternoonEnd)
-                ? $pmStart->max($afternoonStart)->diffInMinutes($pmEnd->min($afternoonEnd))
-                : 0;
-    
-            // Return total duration for the day in hours
-            return ($morningDuration + $afternoonDuration) / 60; // Convert minutes to hours
-        })
-        ->sum(); // Sum durations for the week
-        $weekly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfWeek, $endOfWeek])->sum('total_duration');
-        $weeklyProgressBar = $weekly;
 
-        $weeklyFinal = ($weekly <= 3599) ? floor($weekly / 60) . 'm' : floor($weekly / 3600) . 'h';
+        $TodayMorning = Attendance::where('user_id', $userId)
+            ->whereDate('created_at', '=', Carbon::today()) // Ensures it's for today
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_minutes')
+            ->value('total_minutes') ?? 0;
 
-        // Get the start and end of the current month in Asia/Manila timezone
-        $startOfMonth = Carbon::now($timezone)->startOfMonth();
-        $endOfMonth = Carbon::now($timezone)->endOfMonth();
-        $monthly = Attendance::where('user_id', $userId)->whereBetween('date', [$startOfMonth, $endOfMonth])->sum('total_duration');
-        $monthlyProgressBar = $monthly;
-        $monthlyRemaining = 576000 - $monthlyProgressBar;
+        $TodayAfternoon = Attendance::where('user_id', $userId)
+            ->whereDate('created_at', '=', Carbon::today()) // Ensures it's for today
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_minutes')
+            ->value('total_minutes') ?? 0;
 
-        $monthlyFinal = ($monthly <= 3599) ? floor($monthly / 60) . 'm' : floor($monthly / 3600) . 'h';
-        $monthlyRemainingFinals = ($monthlyRemaining <= 3599) ? floor($monthlyRemaining / 60) . 'm' : floor($monthlyRemaining / 3600) . 'h';
+
+
+        $WeekMorning = Attendance::where('user_id', $userId)
+            ->whereBetween('date', [$startOfWeek, $endOfWeek]) // Use whereBetween for date range
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_minutes')
+            ->value('total_minutes');
+
+        $WeekAfternoon = Attendance::where('user_id', $userId)
+            ->whereBetween('date', [$startOfWeek, $endOfWeek]) // Use whereBetween for date range
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_minutes')
+            ->value('total_minutes');
+
+        $MonthMorning = Attendance::where('user_id', $userId)
+            ->whereYear('date', Carbon::now()->year) // Use Carbon to get the current year
+            ->whereMonth('date', Carbon::now()->month) // Use Carbon to get the current month
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_minutes')
+            ->value('total_minutes');
+
+        $MonthAfternoon = Attendance::where('user_id', $userId)
+            ->whereYear('date', Carbon::now()->year) // Use Carbon to get the current year
+            ->whereMonth('date', Carbon::now()->month) // Use Carbon to get the current month
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_minutes')
+            ->value('total_minutes');
+
+        //Undertime calculation
+        $userAttendance = Attendance::select('user_id', 'date')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_am_minutes')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_pm_minutes')
+            ->groupBy('user_id', 'date')
+            ->get();
+
+        $attendanceData = $userAttendance->map(function ($attendance) {
+            $totalMinutes = $attendance->total_am_minutes + $attendance->total_pm_minutes;
+            return [
+                'user_id' => $attendance->user_id,
+                'date' => $attendance->date,
+                'total_minutes' => $totalMinutes,
+            ];
+        });
+
+        $TodayMinutes = $TodayMorning + $TodayAfternoon;
+        $TodaySeconds = $TodayMinutes * 60;
+        $TodayHours = floor($TodayMinutes / 60);
+        $TodaysMinutes = $TodayMinutes  % 60;
+        $Today = "{$TodayHours}:{$TodaysMinutes}";
+
+        $WeekMinutes = $WeekMorning + $WeekAfternoon;
+        $WeekSeconds = $WeekMinutes * 60;
+        $WeekHours = floor($WeekMinutes / 60);
+        $WeeksMinutes = $WeekMinutes  % 60;
+        $Week = "{$WeekHours}:{$WeeksMinutes}";
+
+        $MonthMinutes = $MonthMorning + $MonthAfternoon;
+        $MonthSeconds = $MonthMinutes * 60;
+        $MonthHours = floor($MonthMinutes / 60);
+        $MonthsMinutes = $MonthMinutes  % 60;
+        $Month = "{$MonthHours}:{$MonthsMinutes}";
+
+        $MonthRemainingSeconds = 576000 - $MonthSeconds;
+        $MonthRemainingMinutes = $MonthRemainingSeconds / 60;
+        $MonthRemainingHours = floor($MonthRemainingMinutes / 60);
+        $MonthRemainingsMinutes = $MonthRemainingMinutes  % 60;
+        $MonthRemaining = "{$MonthRemainingHours}:{$MonthRemainingsMinutes}";
 
         // Get selected year and month from the request, or default to current year and month
         $selectedYear = $request->input('year', Carbon::now($timezone)->year);
@@ -522,9 +578,9 @@ class AttendanceController extends Controller
         // Get recent punches
         $getPunch = Attendance::where('user_id', $userId)->orderBy('created_at', 'desc')->take(10)->paginate(10);
         $getall = Attendance::with('user')
-        ->where('user_id', '=', Auth::user()->custom_id)
-        ->orderBy('created_at', 'desc')
-        ->paginate(10); // No need for take(10) if you're paginating 10 records per page
+            ->where('user_id', '=', Auth::user()->custom_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10); // No need for take(10) if you're paginating 10 records per page
 
         // Search for employee records
         $search = $request->input('search');
@@ -640,11 +696,11 @@ class AttendanceController extends Controller
             }
 
             $usersadmin = user::where('user_type', 2)
-            ->where('is_archive', 1)
+                ->where('is_archive', 1)
                 ->get();
         } else {
             $usersadmin = user::where('user_type', 2)
-            ->where('is_archive', 1)
+                ->where('is_archive', 1)
                 ->get();
 
             $users = user::where('user_type', [0, 1])
@@ -777,13 +833,15 @@ class AttendanceController extends Controller
         return view($viewPath, [
             'notification' => $notification,
             'getNot' => $getNot,
-            'weeklyFinal' => $weeklyFinal,
-            'weeklyProgressBar' => $weeklyProgressBar,
-            'todayduration' => $todayduration,
-            'monthlyFinal' => $monthlyFinal,
-            'monthlyProgressBar' => $monthlyProgressBar,
-            'monthlyRemaining' => $monthlyRemaining,
-            'monthlyRemainingFinals' => $monthlyRemainingFinals,
+            'Today' => $Today,
+            'TodaySeconds' => $TodaySeconds,
+            'Week' => $Week,
+            'WeekSeconds' => $WeekSeconds,
+            'Month' => $Month,
+            'MonthSeconds' => $MonthSeconds,
+            'MonthRemaining' => $MonthRemaining,
+            'MonthRemainingSeconds' => $MonthRemainingSeconds,
+            'attendanceData' => $attendanceData,
             'getPunch' => $getPunch,
             'employeeRecords' => $employeeRecords,
             'dailySeries' => $dailySeries,
@@ -910,26 +968,27 @@ class AttendanceController extends Controller
         return redirect()->back()->with('success', 'Clock Out successfully!');
     }
 
-    public function currentTime()
-    {
-        $user = Auth::user();
-        $now = $this->getInternetTime(); // Use the internet time
-        $attendance = Attendance::where('user_id', $user->custom_id)->where('date', $now->toDateString())->first();
 
-        if ($attendance) {
-            $totalDuration = $attendance->total_duration;
-            if ($attendance->start_time && !$attendance->end_time) {
-                $totalDuration += $now->diffInSeconds($attendance->start_time);
-            }
-        } else {
-            $totalDuration = 0;
-        }
-
-        return response()->json(['totalDuration' => $totalDuration]);
-    }
 
     public function generateReports(Request $request)
     {
+
+        //Undertime calculation
+        $userAttendance = Attendance::select('user_id', 'date')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_am_minutes')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_pm_minutes')
+            ->groupBy('user_id', 'date')
+            ->get();
+
+        $attendanceData = $userAttendance->map(function ($attendance) {
+            $totalMinutes = $attendance->total_am_minutes + $attendance->total_pm_minutes;
+            return [
+                'user_id' => $attendance->user_id,
+                'date' => $attendance->date,
+                'total_minutes' => $totalMinutes,
+            ];
+        });
+
         // Retrieve input values for the date range and employee ID
         $timeframeStart = $request->input('timeframeStart');
         $timeframeEnd = $request->input('timeframeEnd');
@@ -940,33 +999,34 @@ class AttendanceController extends Controller
 
 
         if (Auth::user()->user_type == 0) {
-            $attendancedata = Attendance::query()->with('user');
-            }
-            if (Auth::user()->user_type == 1) {
-                $attendancedata = Attendance::query()->where('user_id','!=', 1)->with('user');
-                }
+            $attendancegenerate = Attendance::query()->with('user');
+        }
+        if (Auth::user()->user_type == 1) {
+            $attendancegenerate = Attendance::query()->where('user_id', '!=', 1)->with('user');
+        }
 
         $dateNow = $this->getInternetTime();
 
         // Apply employee filter if an employee is selected
         if ($employeeIds) {
-            $attendancedata->where('user_id', $employeeIds);
+            $attendancegenerate->where('user_id', $employeeIds);
         }
         // Apply date range filter if both start and end dates are provided
         if ($timeframeStart && $timeframeEnd) {
-            $attendancedata->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
+            $attendancegenerate->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
         }
 
         // Get the filtered data
-        $attendancedata = $attendancedata->get();
+        $attendancegenerate = $attendancegenerate->get();
 
         // Count the records
-        $recordCount = $attendancedata->count();
+        $recordCount = $attendancegenerate->count();
 
         // Generate the PDF with the filtered data, count, and date range
         if (Auth::user()->user_type == 0) {
             $pdf = PDF::loadView('superadmin.attendance.generatereports', [
-                'attendancedata' => $attendancedata,
+                'attendancegenerate' => $attendancegenerate,
+                'attendanceData' => $attendanceData,
                 'recordCount' => $recordCount,
                 'timeframeStart' => $timeframeStart,
                 'timeframeEnd' => $timeframeEnd,
@@ -976,7 +1036,8 @@ class AttendanceController extends Controller
         }
         if (Auth::user()->user_type == 1) {
             $pdf = PDF::loadView('admin.attendance.generatereports', [
-                'attendancedata' => $attendancedata,
+                'attendancegenerate' => $attendancegenerate,
+                'attendanceData' => $attendanceData,
                 'recordCount' => $recordCount,
                 'timeframeStart' => $timeframeStart,
                 'timeframeEnd' => $timeframeEnd,

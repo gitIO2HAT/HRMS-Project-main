@@ -48,6 +48,7 @@
         .border div:nth-child(3) {
             text-align: center;
         }
+
         .border div:last-child {
             text-align: center;
         }
@@ -58,6 +59,7 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         table,
         th,
         td {
@@ -93,19 +95,20 @@
 
     <div class="border">
         <div>
-            <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }} {{ Auth::user()->middlename }} @if(Auth::user()->suffix == 'N/A')  @else {{Auth::user()->suffix}}@endif</p>
+            <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }} {{ Auth::user()->middlename }} @if(Auth::user()->suffix == 'N/A') @else {{Auth::user()->suffix}}@endif</p>
             @if ($employeeIds == !null)
-                <p><b>Employee ID:</b> {{ $employeeIds }}</p>
+            <p><b>Employee ID:</b> {{ $employeeIds }}</p>
             @endif
 
         </div>
 
         <div>
             @if ($timeframeStart && $timeframeEnd == !null)
-                <p><b>TIME FRAME:</b> {{ \Carbon\Carbon::parse($timeframeStart)->format('Y, F j') }} -
-                    {{ \Carbon\Carbon::parse($timeframeEnd)->format('Y, F j') }}</p>
+            <p><b>TIME FRAME:</b> {{ \Carbon\Carbon::parse($timeframeStart)->format('Y, F j') }} -
+                {{ \Carbon\Carbon::parse($timeframeEnd)->format('Y, F j') }}
+            </p>
             @else
-                <p><b>TIME FRAME:</b> All</p>
+            <p><b>TIME FRAME:</b> All</p>
             @endif
 
         </div>
@@ -122,10 +125,11 @@
             <thead>
                 <tr>
                     <th rowspan="2">#</th>
-                    <th  rowspan="2">Full Name</th>
-                    <th  rowspan="2">Date</th>
+                    <th rowspan="2">Full Name</th>
+                    <th rowspan="2">Date</th>
                     <th colspan="2">Morning</th>
                     <th colspan="2">Afernoon</th>
+                    <th colspan="2">Undertime</th>
                 </tr>
                 <tr>
 
@@ -133,19 +137,47 @@
                     <th>Clock Out</th>
                     <th>Clock In</th>
                     <th>Clock Out</th>
+                    <th>Hours</th>
+                    <th>Minutes</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($attendancedata as $index => $data)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $data->user->lastname }}, {{ $data->user->name }} {{ $data->user->middlename }} @if($data->user->suffix == 'N/A')  @else {{$data->user->suffix}}@endif</td>
-                        <td>{{ \Carbon\Carbon::parse($data->date)->format('Y, F j') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($data->punch_in_am_first)->format('g:i A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($data->punch_in_am_second)->format('g:i A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($data->punch_in_pm_first)->format('g:i A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($data->punch_in_pm_second)->format('g:i A') }}</td>
-                    </tr>
+                @foreach ($attendancegenerate as $index => $punch)
+                @foreach($attendanceData as $data)
+                @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }} @if($punch->user->suffix == 'N/A') @else {{$punch->user->suffix}}@endif</td>
+                    <td>{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}</td>
+                    @if($data['total_minutes'] <= 480)
+                        @php
+                        $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
+                        $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
+                        $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
+                        @endphp
+                        @if($remainingMinutesMod> 10)
+                        <td style="color: red;">
+                            {{ $remainingHours }}
+                        </td>
+                        <td style="color: red;">
+                            {{ $remainingMinutesMod }}
+                        </td>
+                        @else
+                        <td class="text-dark">
+
+                        </td>
+                        <td class="text-dark">
+
+                        </td>
+                        @endif
+                        @endif
+                </tr>
+                @endif
+                @endforeach
                 @endforeach
             </tbody>
         </table>
