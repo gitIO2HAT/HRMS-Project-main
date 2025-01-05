@@ -141,14 +141,14 @@
         @if(Request::segment(2) == 'Fingerprint')
         <li class="active">
             <a href="{{url('SuperAdmin/Fingerprint')}}">
-                <i class="bx fas fa-bullhorn" style="color: #000000;"></i>
+                <i class="bx fas fa-fingerprint" style="color: #000000;"></i>
                 <span class="text">Fingerprint</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('SuperAdmin/Fingerprint')}}">
-                <i class="bx fas fa-bullhorn" style="color: #000000;"></i>
+            <i class="bx fas fa-fingerprint" style="color: #000000;"></i>
                 <span class="text">Fingerprint</span>
             </a>
         </li>
@@ -267,14 +267,14 @@
         @if(Request::segment(2) == 'Fingerprint')
         <li class="active">
             <a href="{{url('Admin/Fingerprint')}}">
-                <i class="bx fas fa-bullhorn" style="color: #000000;"></i>
+            <i class="bx fas fa-fingerprint" style="color: #000000;"></i>
                 <span class="text">Fingerprint</span>
             </a>
         </li>
         @else
         <li>
             <a href="{{url('Admin/Fingerprint')}}">
-                <i class="bx fas fa-bullhorn" style="color: #000000;"></i>
+            <i class="bx fas fa-fingerprint" style="color: #000000;"></i>
                 <span class="text">Fingerprint</span>
             </a>
         </li>

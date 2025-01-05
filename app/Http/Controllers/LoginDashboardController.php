@@ -15,33 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class LoginDashboardController extends Controller
 {
-    public function fingerprint(Request $request)
-    {
-        $attendance = Attendance::with('user')->get();
-    
-        $firstRecord = Attendance::with('user')
-            ->orderBy('updated_at', 'desc')
-            ->first();
-    
-        // Initialize variables as null in case $firstRecord or its user is null
-        $departments = null;
-        $positions = null;
-    
-        // Check if firstRecord and its related user exist
-        if ($firstRecord && $firstRecord->user) {
-            $departments = Department::find($firstRecord->user->department);
-            $positions = Position::find($firstRecord->user->position);
-        }
-    
-        return view('loginform.fingerprint', [
-            'firstRecord' => $firstRecord,
-            'departments' => $departments,
-            'positions' => $positions,
-            'attendance' => $attendance
-        ]);
-    }
-    
-    
+
 
 
     public function login(Request $request)
