@@ -1050,4 +1050,117 @@ class AttendanceController extends Controller
         // Return the PDF to be viewed in the browser
         return $pdf->inline('Attendace_report.pdf');
     }
+
+    public function dtrreports(Request $request)
+    {
+        $userId = Auth::user()->custom_id;
+        $timezone = 'Asia/Manila';
+
+        $selectedYear = $request->input('year', Carbon::now($timezone)->year);
+        $selectedMonth = $request->input('month', Carbon::now($timezone)->month);
+
+        // Generate a series of all days in the selected month of the selected year
+        $startOfMonth = Carbon::create($selectedYear, $selectedMonth, 1, 0, 0, 0, $timezone)->startOfMonth();
+        $endOfMonth = $startOfMonth->copy()->endOfMonth();
+        $allDays = [];
+        $currentDate = $startOfMonth->copy();
+        while ($currentDate->lte($endOfMonth)) {
+            $allDays[] = $currentDate->toDateString();
+            $currentDate->addDay();
+        }
+
+        // Fetch daily series data
+        $dailySeries = Attendance::selectRaw('DATE(date) as date, SUM(total_duration) as total_duration')
+            ->where('user_id', $userId)
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->groupBy(DB::raw('DATE(date)'))
+            ->orderBy('date')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->date => $item->total_duration];
+            })
+            ->toArray();
+
+        // Ensure all days have an entry, even if the total duration is zero
+        $dailySeries = array_merge(array_fill_keys($allDays, 0), $dailySeries);
+
+        //Undertime calculation
+        $userAttendance = Attendance::select('user_id', 'date')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_am_minutes')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_pm_minutes')
+            ->groupBy('user_id', 'date')
+            ->get();
+
+        $attendanceData = $userAttendance->map(function ($attendance) {
+            $totalMinutes = $attendance->total_am_minutes + $attendance->total_pm_minutes;
+            return [
+                'user_id' => $attendance->user_id,
+                'date' => $attendance->date,
+                'total_minutes' => $totalMinutes,
+            ];
+        });
+
+        // Retrieve input values for the date range and employee ID
+        $timeframeStart = $request->input('timeframeStart');
+        $timeframeEnd = $request->input('timeframeEnd');
+        $employeeIds = $request->input('employeeIds');
+
+
+        // Initialize the Leave query with the user relationship
+
+
+        if (Auth::user()->user_type == 0) {
+            $attendancegenerate = Attendance::query()->with('user');
+        }
+        if (Auth::user()->user_type == 1) {
+            $attendancegenerate = Attendance::query()->where('user_id', '!=', 1)->with('user');
+        }
+
+        $dateNow = $this->getInternetTime();
+
+               // Apply employee filter if an employee is selected
+        if ($employeeIds) {
+            $attendancegenerate->where('user_id', $employeeIds);
+        }
+        // Apply date range filter if both start and end dates are provided
+        if ($timeframeStart && $timeframeEnd) {
+            $attendancegenerate->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
+        }
+
+        // Get the filtered data
+        $attendancegenerate = $attendancegenerate->get();
+
+        // Count the records
+        $recordCount = $attendancegenerate->count();
+
+        // Generate the PDF with the filtered data, count, and date range
+        if (Auth::user()->user_type == 0) {
+            $pdf = PDF::loadView('superadmin.attendance.dtrreports', [
+                'attendancegenerate' => $attendancegenerate,
+                'dailySeries' => $dailySeries,
+                'attendanceData' => $attendanceData,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds
+            ]);
+        }
+        if (Auth::user()->user_type == 1) {
+            $pdf = PDF::loadView('admin.attendance.dtrreports', [
+                'attendancegenerate' => $attendancegenerate,
+                'dailySeries' => $dailySeries,
+                'attendanceData' => $attendanceData,
+                'recordCount' => $recordCount,
+                'timeframeStart' => $timeframeStart,
+                'timeframeEnd' => $timeframeEnd,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds
+            ]);
+        }
+
+
+        // Return the PDF to be viewed in the browser
+        return $pdf->inline('Daily_Time_Record.pdf');
+    }
 }

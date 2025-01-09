@@ -12,6 +12,10 @@
                                 <div class=" pt-4 px-4 ">
                                     <div class="row g-4">
                                         <div class="col-sm-12 col-xl-7 rounded">
+                                        <a type="button" class="btn btn-info mx-2 d-flex align-items-center"
+                                            data-bs-toggle="modal" data-bs-target="#DTRReportsModal">
+                                            Generate Reports
+                                        </a>
                                             <div class=" bg-white rounded-3  h-100 p-4">
                                                 <table
                                                     class="table table-striped table-hover table-responsive table-bordered text-start align-middle ">
@@ -235,6 +239,41 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="modal fade" id="DTRReportsModal" tabindex="-1" aria-labelledby="DTRReportsModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="DTRReportsModalLabel">Generate Reports</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url('/SuperAdmin/Attendance/DailyTimeRecord') }}" method="POST">
+                                            @csrf <!-- Add CSRF token for security -->
+                                            <label class="text-dark" for="employeeIds">Select User</label>
+                                            <select id="employeeIds" name="employeeIds" class="form-control underline-input">
+                                                <option value="" selected>--Select All--</option>
+                                                @foreach ($users as $user)
+                                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            <label for="timeframeStart">From:</label>
+                                            <input type="date" name="timeframeStart" id="timeframeStart"
+                                                class="form-control underline-input">
+                                            <label for="timeframeEnd">To:</label>
+                                            <input type="date" name="timeframeEnd" id="timeframeEnd"
+                                                class="form-control underline-input">
+                                            <div class="text-center mt-1">
+                                                <button type="submit" class="btn btn-info">Generate Reports</button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
