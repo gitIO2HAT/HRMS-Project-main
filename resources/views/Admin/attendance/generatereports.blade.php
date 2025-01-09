@@ -143,41 +143,64 @@
             </thead>
             <tbody>
                 @foreach ($attendancegenerate as $index => $punch)
-                @foreach($attendanceData as $data)
-                @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }} @if($punch->user->suffix == 'N/A') @else {{$punch->user->suffix}}@endif</td>
-                    <td>{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}</td>
-                    @if($data['total_minutes'] <= 480)
-                        @php
-                        $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
-                        $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
-                        $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
-                        @endphp
-                        @if($remainingMinutesMod> 10)
-                        <td style="color: red;">
-                            {{ $remainingHours }}
-                        </td>
-                        <td style="color: red;">
-                            {{ $remainingMinutesMod }}
-                        </td>
-                        @else
-                        <td class="text-dark">
+                    @foreach($attendanceData as $data)
+                        @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }} @if($punch->user->suffix == 'N/A') @else {{$punch->user->suffix}}@endif</td>
+                            <td>{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
+                            <td>@if($punch->punch_in_am_first != null)
+                                    {{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}
+                                @else
+                                    No data
+                                @endif
+                            </td>
+                            <td>
+                                @if($punch->punch_in_am_second != null)
+                                    {{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}
+                                @else
+                                    No data
+                                @endif
+                            </td>
+                            <td>
+                                @if($punch->punch_in_pm_first != null)
+                                    {{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}
+                                @else
+                                
+                                @endif
+                            </td>
+                            <td>
+                                @if($punch->punch_in_pm_second != null)
+                                    {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
+                                @else
+                                
+                                @endif
+                            </td>
+                            @if($data['total_minutes'] <= 480)
+                                @php
+                                    $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
+                                    $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
+                                    $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
+                                @endphp
+                                @if($remainingMinutesMod> 10)
+                                    <td style="color: red;">
+                                        {{ $remainingHours }}
+                                    </td>
+                                    <td style="color: red;">
+                                        {{ $remainingMinutesMod }}
+                                    </td>
+                                @else
+                                    <td class="text-dark">
 
-                        </td>
-                        <td class="text-dark">
+                                    </td>
+                                    <td class="text-dark">
 
-                        </td>
+                                    </td>
+                                @endif
+                            @endif
+                        </tr>
                         @endif
-                        @endif
-                </tr>
-                @endif
-                @endforeach
+                    @endforeach
                 @endforeach
             </tbody>
         </table>

@@ -1007,7 +1007,7 @@ class AttendanceController extends Controller
 
         $dateNow = $this->getInternetTime();
 
-        // Apply employee filter if an employee is selected
+               // Apply employee filter if an employee is selected
         if ($employeeIds) {
             $attendancegenerate->where('user_id', $employeeIds);
         }
