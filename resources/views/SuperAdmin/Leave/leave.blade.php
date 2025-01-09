@@ -408,7 +408,7 @@
                         <select id="employeetype" name="employeetype" class="form-control underline-input">
                             <option value="" selected>--Select All--</option>
                             @foreach ($leavetype as $leave)
-                                <option value="$leave->id">{{$leave->status}}</option>
+                                <option value="{{$leave->id}}">{{$leave->status}}</option>
                             @endforeach
                         </select>
                         <label class="text-dark" for="employeestatus">Select Status</label>

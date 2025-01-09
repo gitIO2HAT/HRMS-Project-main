@@ -11,7 +11,7 @@ class Leave extends Model
 
     // Define the table name if it's not the plural form of the model name
     // protected $table = 'leaves'; // Uncomment this line if the table name is different
-
+    public $table = 'leaves';
     protected $fillable = [
         'employee_id',
         'from',

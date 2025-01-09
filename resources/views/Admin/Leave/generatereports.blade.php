@@ -96,8 +96,8 @@
             @if ($employeeIds == !null)
                 <p><b>Employee ID:</b> {{ $employeeIds }}</p>
             @endif
-            @if ($employeetype == !null)
-            <p><b>Leave Type:</b> {{ $employeetype }}</p>
+            @if ($statustype == !null)
+            <p><b>Leave Type:</b> {{ $statustype->status }}</p>
             @else
             <p><b>Leave Type:</b> All</p>
         @endif

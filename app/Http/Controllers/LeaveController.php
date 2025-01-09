@@ -1250,6 +1250,8 @@ class LeaveController extends Controller
         $employeetype = $request->input('employeetype');
         $employeestatus = $request->input('employeestatus');
 
+        $statustype = Leavetype::find($employeetype);
+
         // Initialize the Leave query with the user relationship
         if (Auth::user()->user_type == 0) {
         $leaveData = Leave::query()->with('user','leavetype');
@@ -1284,6 +1286,7 @@ class LeaveController extends Controller
 
         if (Auth::user()->user_type == 0) {
             $pdf = PDF::loadView('superadmin.leave.generatereports', [
+                'statustype' => $statustype,
                 'leaveData' => $leaveData,
                 'recordCount' => $recordCount,
                 'timeframeStart' => $timeframeStart,
@@ -1296,6 +1299,7 @@ class LeaveController extends Controller
         }
         if (Auth::user()->user_type == 1) {
             $pdf = PDF::loadView('admin.leave.generatereports', [
+                'statustype' => $statustype,
                 'leaveData' => $leaveData,
                 'recordCount' => $recordCount,
                 'timeframeStart' => $timeframeStart,
