@@ -1007,7 +1007,7 @@ class AttendanceController extends Controller
 
         $dateNow = $this->getInternetTime();
 
-               // Apply employee filter if an employee is selected
+        // Apply employee filter if an employee is selected
         if ($employeeIds) {
             $attendancegenerate->where('user_id', $employeeIds);
         }
@@ -1053,6 +1053,65 @@ class AttendanceController extends Controller
 
     public function dtrreports(Request $request)
     {
+        // Current month and year
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // Define the API endpoint and your API key
+        $apiUrl = 'https://calendarific.com/api/v2/holidays';
+        $apiKey = 'v4icmLHHGviXfA83Mo4OadIED7mQeGNg'; // Replace with your API key
+
+        // Fetch holidays from API
+        $response = Http::get($apiUrl, [
+            'api_key' => $apiKey,
+            'country' => 'PH', // Country code for the Philippines
+            'year' => $currentYear,
+        ]);
+
+        $holidays = [];
+        if ($response->successful()) {
+            foreach ($response->json()['response']['holidays'] as $holiday) {
+                // Filter holidays by the current month
+                $holidayDate = Carbon::parse($holiday['date']['iso']);
+                if ($holidayDate->month == $currentMonth) {
+                    $holidays[] = [
+                        'name' => $holiday['name'],
+                        'date' => $holiday['date']['iso'], // The holiday date in ISO format
+                        'description' => $holiday['description'] ?? 'No description available',
+                    ];
+                }
+            }
+        }
+
+        // Log the response for debugging
+        if ($response->successful()) {
+            Log::info('Holiday API Response: Success', ['response' => $response->json()]);
+        } else {
+            Log::error('Holiday API Response: Failure', ['status' => $response->status(), 'error_message' => $response->body()]);
+        }
+
+        $startOfMonthDate = Carbon::create($currentYear, $currentMonth, 1);
+        $endOfMonthDate = $startOfMonthDate->copy()->endOfMonth();
+
+        $weekends = [];
+        $holidayDates = [];
+
+        for ($date = $startOfMonthDate; $date->lte($endOfMonthDate); $date->addDay()) {
+            // Check for Saturday or Sunday
+            if ($date->isSaturday() || $date->isSunday()) {
+                $weekends[] = $date->toDateString();
+            }
+
+            // Check for holidays by comparing the date
+            foreach ($holidays as $holiday) {
+                if ($date->toDateString() === $holiday['date']) {
+                    $holidayDates[] = $date->toDateString();
+                }
+            }
+        }
+
+
+
         $userId = Auth::user()->custom_id;
         $timezone = 'Asia/Manila';
 
@@ -1118,7 +1177,7 @@ class AttendanceController extends Controller
 
         $dateNow = $this->getInternetTime();
 
-               // Apply employee filter if an employee is selected
+        // Apply employee filter if an employee is selected
         if ($employeeIds) {
             $attendancegenerate->where('user_id', $employeeIds);
         }
@@ -1143,7 +1202,9 @@ class AttendanceController extends Controller
                 'timeframeStart' => $timeframeStart,
                 'timeframeEnd' => $timeframeEnd,
                 'dateNow' => $dateNow,
-                'employeeIds' => $employeeIds
+                'employeeIds' => $employeeIds,
+                'weekends' => $weekends,
+                'holidays' => $holidayDates
             ]);
         }
         if (Auth::user()->user_type == 1) {
@@ -1155,7 +1216,9 @@ class AttendanceController extends Controller
                 'timeframeStart' => $timeframeStart,
                 'timeframeEnd' => $timeframeEnd,
                 'dateNow' => $dateNow,
-                'employeeIds' => $employeeIds
+                'employeeIds' => $employeeIds,
+                'weekends' => $weekends,
+                'holidays' => $holidayDates
             ]);
         }
 

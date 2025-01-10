@@ -48,6 +48,7 @@
         .border div:nth-child(3) {
             text-align: center;
         }
+
         .border div:last-child {
             text-align: center;
         }
@@ -58,6 +59,7 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         table,
         th,
         td {
@@ -95,17 +97,18 @@
         <div>
             <p><b>SORTED BY:</b>{{ Auth::user()->lastname }}, {{ Auth::user()->name }}</p>
             @if ($employeeIds == !null)
-                <p><b>Employee ID:</b> {{ $employeeIds }}</p>
+            <p><b>Employee ID:</b> {{ $employeeIds }}</p>
             @endif
 
         </div>
 
         <div>
             @if ($timeframeStart && $timeframeEnd == !null)
-                <p><b>TIME FRAME:</b> {{ \Carbon\Carbon::parse($timeframeStart)->format('Y, F j') }} -
-                    {{ \Carbon\Carbon::parse($timeframeEnd)->format('Y, F j') }}</p>
+            <p><b>TIME FRAME:</b> {{ \Carbon\Carbon::parse($timeframeStart)->format('Y, F j') }} -
+                {{ \Carbon\Carbon::parse($timeframeEnd)->format('Y, F j') }}
+            </p>
             @else
-                <p><b>TIME FRAME:</b> All</p>
+            <p><b>TIME FRAME:</b> All</p>
             @endif
 
         </div>
@@ -118,7 +121,7 @@
     </div>
 
     <div>
-    <table>
+        <table>
             <thead>
                 <tr>
                     <th rowspan="2">#</th>
@@ -138,86 +141,96 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach ($dailySeries as $date => $details)
-                {{-- Get attendance records for the current day --}}
+                @foreach ($dailySeries as $date => $details)
                 @php
-                    $currentDay = \Carbon\Carbon::parse($date)->format('M d');
-                    $dayRecords = $attendancegenerate->filter(function ($punch) use ($date) {
-                    return $punch->date === $date;});
+                $currentDay = \Carbon\Carbon::parse($date)->format('M d');
+                $isWeekend = in_array($date, $weekends); // Check if the date is a weekend
+                $isHoliday = in_array($date, $holidays); // Check if the date is a holiday
+                $dayRecords = $attendancegenerate->filter(function ($punch) use ($date) {
+                return $punch->date === $date;
+                });
                 @endphp
-                    
-                @if ($dayRecords->isEmpty())
-                    {{-- Display a blank row for days without attendance records --}}
-                    <tr>
-                        <td>{{ $currentDay }}</td>
-                        <td colspan="8">No records available</td>
-                    </tr>
+
+                @if ($isWeekend && $dayRecords->isEmpty())
+                {{-- Display "Weekend" if it's a weekend and no attendance records exist --}}
+                <tr>
+                    <td>{{ $currentDay }}</td>
+                    <td colspan="8" style="color: blue;">Weekend</td>
+                </tr>
+                @elseif ($isHoliday && $dayRecords->isEmpty())
+                {{-- Display "Holiday" if it's a holiday and no attendance records exist --}}
+                <tr>
+                    <td>{{ $currentDay }}</td>
+                    <td colspan="8" style="color: green;">Holiday</td>
+                </tr>
+                @elseif ($dayRecords->isEmpty())
+                {{-- Display a blank row for other days without attendance records --}}
+                <tr>
+                    <td>{{ $currentDay }}</td>
+                    <td colspan="8">No records available</td>
+                </tr>
                 @else
-                    {{-- Display rows for days with attendance records --}}
-                    @foreach ($dayRecords as $index => $punch)
-                        @foreach($attendanceData as $data)
-                            @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
-                                <tr>
-                                    {{-- Display the Day only for the first record of the day --}}
-                                    <td>{{ $currentDay }}</td>
+                {{-- Display rows for days with attendance records --}}
+                @foreach ($dayRecords as $index => $punch)
+                @foreach ($attendanceData as $data)
+                @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
+                <tr>
+                    {{-- Display the Day only for the first record of the day --}}
+                    <td>{{ $currentDay }}</td>
 
-                                    {{-- Display attendance details --}}
-                                    <td>{{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }} @if ($punch->user->suffix !== 'N/A') {{ $punch->user->suffix }} @endif</td>
-                                    <td>@if($punch->punch_in_am_first != null)
-                                            {{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}
-                                        @else
-                                            No data
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($punch->punch_in_am_second != null)
-                                            {{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}
-                                        @else
-                                            No data
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($punch->punch_in_pm_first != null)
-                                            {{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}
-                                        @else
-                                        
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($punch->punch_in_pm_second != null)
-                                            {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
-                                        @else
-                                        
-                                        @endif
-                                    </td>
-                                    @if($data['total_minutes'] <= 480)
-                                        @php
-                                            $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
-                                            $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
-                                            $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
-                                        @endphp
-                                        @if($remainingMinutesMod> 10)
-                                            <td style="color: red;">
-                                                {{ $remainingHours }}
-                                            </td>
-                                            <td style="color: red;">
-                                                {{ $remainingMinutesMod }}
-                                            </td>
-                                        @else
-                                            <td class="text-dark">
-
-                                            </td>
-                                            <td class="text-dark">
-
-                                            </td>
-                                        @endif
-                                    @endif
-                                </tr>
-                            @endif
-                        @endforeach
-                    @endforeach
+                    {{-- Display attendance details --}}
+                    <td>
+                        {{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }}
+                        @if ($punch->user->suffix !== 'N/A') {{ $punch->user->suffix }} @endif
+                    </td>
+                    <td>
+                        @if ($punch->punch_in_am_first != null)
+                        {{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}
+                        @else
+                        
+                        @endif
+                    </td>
+                    <td>
+                        @if ($punch->punch_in_am_second != null)
+                        {{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}
+                        @else
+                        
+                        @endif
+                    </td>
+                    <td>
+                        @if ($punch->punch_in_pm_first != null)
+                        {{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}
+                        @else
+                        
+                        @endif
+                    </td>
+                    <td>
+                        @if ($punch->punch_in_pm_second != null)
+                        {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
+                        @else
+                        
+                        @endif
+                    </td>
+                    @if ($data['total_minutes'] <= 480)
+                        @php
+                        $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
+                        $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
+                        $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
+                        @endphp
+                        @if ($remainingMinutesMod> 10)
+                        <td style="color: red;">{{ $remainingHours }}</td>
+                        <td style="color: red;">{{ $remainingMinutesMod }}</td>
+                        @else
+                        <td></td>
+                        <td></td>
+                        @endif
+                        @endif
+                </tr>
                 @endif
-            @endforeach
+                @endforeach
+                @endforeach
+                @endif
+                @endforeach
             </tbody>
         </table>
     </div>
