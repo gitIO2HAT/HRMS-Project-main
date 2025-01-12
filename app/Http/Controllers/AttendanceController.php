@@ -1128,6 +1128,8 @@ class AttendanceController extends Controller
             $currentDate->addDay();
         }
 
+       
+
         // Fetch daily series data
         $dailySeries = Attendance::selectRaw('DATE(date) as date, SUM(total_duration) as total_duration')
             ->where('user_id', $userId)
@@ -1142,22 +1144,7 @@ class AttendanceController extends Controller
 
         // Ensure all days have an entry, even if the total duration is zero
         $dailySeries = array_merge(array_fill_keys($allDays, 0), $dailySeries);
-
         //Undertime calculation
-        $userAttendance = Attendance::select('user_id', 'date')
-            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_am_first, punch_in_am_second)) as total_am_minutes')
-            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, punch_in_pm_first, punch_in_pm_second)) as total_pm_minutes')
-            ->groupBy('user_id', 'date')
-            ->get();
-
-        $attendanceData = $userAttendance->map(function ($attendance) {
-            $totalMinutes = $attendance->total_am_minutes + $attendance->total_pm_minutes;
-            return [
-                'user_id' => $attendance->user_id,
-                'date' => $attendance->date,
-                'total_minutes' => $totalMinutes,
-            ];
-        });
 
         // Retrieve input values for the date range and employee ID
         $timeframeStart = $request->input('timeframeStart');
@@ -1197,7 +1184,6 @@ class AttendanceController extends Controller
             $pdf = PDF::loadView('superadmin.attendance.dtrreports', [
                 'attendancegenerate' => $attendancegenerate,
                 'dailySeries' => $dailySeries,
-                'attendanceData' => $attendanceData,
                 'recordCount' => $recordCount,
                 'timeframeStart' => $timeframeStart,
                 'timeframeEnd' => $timeframeEnd,
@@ -1211,7 +1197,6 @@ class AttendanceController extends Controller
             $pdf = PDF::loadView('admin.attendance.dtrreports', [
                 'attendancegenerate' => $attendancegenerate,
                 'dailySeries' => $dailySeries,
-                'attendanceData' => $attendanceData,
                 'recordCount' => $recordCount,
                 'timeframeStart' => $timeframeStart,
                 'timeframeEnd' => $timeframeEnd,
