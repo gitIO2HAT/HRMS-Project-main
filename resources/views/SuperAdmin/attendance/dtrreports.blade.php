@@ -164,7 +164,7 @@
                                 $punch_in_time = (new DateTime($punch['punch_in_am_first']))->format('H:i:s');
                                 $punch_out_time = (new DateTime($punch['punch_in_am_second']))->format('H:i:s');
 
-                                if ($punch_in_time < '08:00:00' || $punch_out_time> '12:00:00') {
+                                if ($punch_in_time < '08:00:00' && $punch_out_time> '12:00:00') {
                                     $punch_in = new DateTime("08:00:00");
                                     $punch_out = new DateTime("12:00:00");
                                     } else {
@@ -181,7 +181,7 @@
                                     $punch_in_time_pm = (new DateTime($punch['punch_in_pm_first']))->format('H:i:s');
                                     $punch_out_time_pm = (new DateTime($punch['punch_in_pm_second']))->format('H:i:s');
 
-                                    if ($punch_in_time_pm < '13:00:00' || $punch_out_time_pm> '17:00:00') {
+                                    if ($punch_in_time_pm < '13:00:00' && $punch_out_time_pm> '17:00:00') {
                                         $punch_in_pm = new DateTime("13:00:00");
                                         $punch_out_pm = new DateTime("17:00:00");
                                         } else {

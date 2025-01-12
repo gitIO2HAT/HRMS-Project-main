@@ -48,6 +48,7 @@
         .border div:nth-child(3) {
             text-align: center;
         }
+
         .border div:last-child {
             text-align: center;
         }
@@ -58,6 +59,7 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         table,
         th,
         td {
@@ -118,7 +120,7 @@
     </div>
 
     <div>
-    <table>
+        <table>
             <thead>
                 <tr>
                     <th rowspan="2">#</th>
@@ -140,66 +142,111 @@
             </thead>
             <tbody>
                 @foreach ($attendancegenerate as $index => $punch)
-                @foreach($attendanceData as $data)
-                @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $punch->user->lastname }}, {{ $punch->user->name }} {{ $punch->user->middlename }} @if($punch->user->suffix == 'N/A') @else {{$punch->user->suffix}}@endif</td>
-                    <td>{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
-                    <td>@if($punch->punch_in_am_first != null)
-                            {{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}
-                        @else
-                            No data
-                        @endif
-                    </td>
-                    <td>
-                        @if($punch->punch_in_am_second != null)
-                            {{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}
-                        @else
-                            No data
-                        @endif
-                    </td>
-                    <td>
-                        @if($punch->punch_in_pm_first != null)
-                            {{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}
-                        @else
-                           
-                        @endif
-                    </td>
-                    <td>
-                        @if($punch->punch_in_pm_second != null)
-                            {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
-                        @else
-                           
-                        @endif
-                    </td>
+                    @foreach ($attendanceData as $data)
+                        @if ($data['user_id'] === $punch->user_id && $data['date'] === $punch->date)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $punch->user->lastname }}, {{ $punch->user->name }}
+                                    {{ $punch->user->middlename }} @if ($punch->user->suffix == 'N/A')
+                                    @else
+                                        {{ $punch->user->suffix }}
+                                    @endif
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($punch->date)->format('Y, F j') }}</td>
+                                <td>
+                                    @if ($punch->punch_in_am_first != null)
+                                        {{ \Carbon\Carbon::parse($punch->punch_in_am_first)->format('g:i A') }}
+                                    @else
+                                        No data
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($punch->punch_in_am_second != null)
+                                        {{ \Carbon\Carbon::parse($punch->punch_in_am_second)->format('g:i A') }}
+                                    @else
+                                        No data
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($punch->punch_in_pm_first != null)
+                                        {{ \Carbon\Carbon::parse($punch->punch_in_pm_first)->format('g:i A') }}
+                                    @else
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($punch->punch_in_pm_second != null)
+                                        {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
+                                    @else
+                                    @endif
+                                </td>
 
-                    @if($data['total_minutes'] <= 480)
-                        @php
-                            $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
-                            $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
-                            $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
-                        @endphp
-                        @if($remainingMinutesMod> 10)
-                            <td style="color: red;">
-                                {{ $remainingHours }}
-                            </td>
-                            <td style="color: red;">
-                                {{ $remainingMinutesMod }}
-                            </td>
-                        @else
-                            <td class="text-dark">
+                                @php
+                                    $total_minutes_am = 0;
+                                    $total_minutes_pm = 0;
 
-                            </td>
-                            <td class="text-dark">
+                                    // Morning punch-in and punch-out
+                                    if (!empty($punch['punch_in_am_first']) && !empty($punch['punch_in_am_second'])) {
+                                        $punch_in_time = (new DateTime($punch['punch_in_am_first']))->format('H:i:s');
+                                        $punch_out_time = (new DateTime($punch['punch_in_am_second']))->format('H:i:s');
 
-                            </td>
+                                        if ($punch_in_time < '08:00:00' && $punch_out_time > '12:00:00') {
+                                            $punch_in = new DateTime('08:00:00');
+                                            $punch_out = new DateTime('12:00:00');
+                                        } else {
+                                            $punch_in = new DateTime($punch['punch_in_am_first']);
+                                            $punch_out = new DateTime($punch['punch_in_am_second']);
+                                        }
+
+                                        $interval = $punch_in->diff($punch_out);
+                                        $total_minutes_am = $interval->h * 60 + $interval->i;
+                                    }
+
+                                    // Afternoon punch-in and punch-out
+                                    if (!empty($punch['punch_in_pm_first']) && !empty($punch['punch_in_pm_second'])) {
+                                        $punch_in_time_pm = (new DateTime($punch['punch_in_pm_first']))->format(
+                                            'H:i:s',
+                                        );
+                                        $punch_out_time_pm = (new DateTime($punch['punch_in_pm_second']))->format(
+                                            'H:i:s',
+                                        );
+
+                                        if ($punch_in_time_pm < '13:00:00' && $punch_out_time_pm > '17:00:00') {
+                                            $punch_in_pm = new DateTime('13:00:00');
+                                            $punch_out_pm = new DateTime('17:00:00');
+                                        } else {
+                                            $punch_in_pm = new DateTime($punch['punch_in_pm_first']);
+                                            $punch_out_pm = new DateTime($punch['punch_in_pm_second']);
+                                        }
+
+                                        $interval_pm = $punch_in_pm->diff($punch_out_pm);
+                                        $total_minutes_pm = $interval_pm->h * 60 + $interval_pm->i;
+                                    }
+
+                                    // Total minutes
+                                    $total = $total_minutes_am + $total_minutes_pm;
+                                @endphp
+
+
+                                @php
+                                    $remainingMinutes = 480 - $total; // Calculate the remaining minutes
+                                    $remainingHours = intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
+                                    $remainingMinutesMod = $remainingMinutes % 60; // Calculate remaining minutes after hours
+                                @endphp
+
+
+                                @if ($remainingHours === 0 && $remainingMinutesMod < 10)
+                                    <td>
+                                    </td>
+                                    <td></td>
+                                @else
+                                    <td style="color:red;">{{ $remainingHours }}</td>
+                                    <td style="color:red;">{{ $remainingMinutesMod }}</td>
+                                @endif
+
+
+                            </tr>
                         @endif
-                    @endif
-                   
-                </tr>
-                @endif
-                @endforeach
+                    @endforeach
                 @endforeach
             </tbody>
         </table>
