@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Carbon\Carbon;
 use App\Models\Attendance;
+use App\Models\Leave;
 use App\Models\User;
 
 class AttendanceController extends Controller
@@ -1053,6 +1054,8 @@ class AttendanceController extends Controller
 
     public function dtrreports(Request $request)
     {
+
+        $leave = Leave::all();
         // Current month and year
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
@@ -1146,10 +1149,7 @@ class AttendanceController extends Controller
         $dailySeries = array_merge(array_fill_keys($allDays, 0), $dailySeries);
         //Undertime calculation
 
-        // Retrieve input values for the date range and employee ID
-        $timeframeStart = $request->input('timeframeStart');
-        $timeframeEnd = $request->input('timeframeEnd');
-        $employeeIds = $request->input('employeeIds');
+        $employeeIds = Auth::user()->custom_id;
 
 
         // Initialize the Leave query with the user relationship
@@ -1169,9 +1169,14 @@ class AttendanceController extends Controller
             $attendancegenerate->where('user_id', $employeeIds);
         }
         // Apply date range filter if both start and end dates are provided
-        if ($timeframeStart && $timeframeEnd) {
-            $attendancegenerate->whereBetween('created_at', [$timeframeStart, $timeframeEnd]);
-        }
+         // Get the current year and month
+         $currentYear = Carbon::now()->year;            // Current year, e.g., 2025
+         $currentMonth = Carbon::now()->format('F');   // Full month name, e.g., "January"
+         $daysInMonth = Carbon::now()->daysInMonth;    // Number of days in the month, e.g., 31
+
+ 
+         // Format the date range
+         $date_range = "{$currentMonth} 1 - {$daysInMonth}, {$currentYear}";
 
         // Get the filtered data
         $attendancegenerate = $attendancegenerate->get();
@@ -1185,9 +1190,8 @@ class AttendanceController extends Controller
                 'attendancegenerate' => $attendancegenerate,
                 'dailySeries' => $dailySeries,
                 'recordCount' => $recordCount,
-                'timeframeStart' => $timeframeStart,
-                'timeframeEnd' => $timeframeEnd,
                 'dateNow' => $dateNow,
+                'date_range' => $date_range,
                 'employeeIds' => $employeeIds,
                 'weekends' => $weekends,
                 'holidays' => $holidayDates
@@ -1198,8 +1202,7 @@ class AttendanceController extends Controller
                 'attendancegenerate' => $attendancegenerate,
                 'dailySeries' => $dailySeries,
                 'recordCount' => $recordCount,
-                'timeframeStart' => $timeframeStart,
-                'timeframeEnd' => $timeframeEnd,
+                'date_range' => $date_range,
                 'dateNow' => $dateNow,
                 'employeeIds' => $employeeIds,
                 'weekends' => $weekends,

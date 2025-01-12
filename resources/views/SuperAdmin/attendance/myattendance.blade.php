@@ -12,11 +12,13 @@
                                 <div class=" pt-4 px-4 ">
                                     <div class="row g-4">
                                         <div class="col-sm-12 col-xl-7 rounded">
-                                        <a type="button" class="btn btn-info mx-2 d-flex align-items-center"
-                                            data-bs-toggle="modal" data-bs-target="#DTRReportsModal">
-                                            Generate Reports
-                                        </a>
+
                                             <div class=" bg-white rounded-3  h-100 p-4">
+                                                <div class="text-start">
+                                                    <a type="button" href="{{ url('/SuperAdmin/Attendance/DailyTimeRecord') }}" style="width:250px;" class="btn btn-success  mb-2 d-flex align-items-center">
+                                                        Generate Daily Time Record
+                                                    </a>
+                                                </div>
                                                 <table
                                                     class="table table-striped table-hover table-responsive table-bordered text-start align-middle ">
                                                     <thead class="text-dark">
@@ -85,28 +87,64 @@
                                                                 {{ \Carbon\Carbon::parse($punch->punch_in_pm_second)->format('g:i A') }}
                                                                 @endif
                                                             </td>
-                                                            @if($data['total_minutes'] <= 480)
-                                                                @php
-                                                                $remainingMinutes=480 - $data['total_minutes']; // Calculate the remaining minutes
-                                                                $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
-                                                                $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
-                                                                @endphp
-                                                                @if($remainingMinutesMod> 10)
-                                                                <td style="color: red;">
-                                                                    {{ $remainingHours }}
-                                                                </td>
-                                                                <td style="color: red;">
-                                                                    {{ $remainingMinutesMod }}
-                                                                </td>
-                                                                @else
-                                                                <td class="text-dark">
+                                                            @php
+                                                            $total_minutes_am = 0;
+                                                            $total_minutes_pm = 0;
 
-                                                                </td>
-                                                                <td class="text-dark">
+                                                            // Morning punch-in and punch-out
+                                                            if (!empty($punch['punch_in_am_first']) && !empty($punch['punch_in_am_second'])) {
+                                                            $punch_in_time = (new DateTime($punch['punch_in_am_first']))->format('H:i:s');
+                                                            $punch_out_time = (new DateTime($punch['punch_in_am_second']))->format('H:i:s');
 
-                                                                </td>
-                                                                @endif
-                                                                @endif
+                                                            if ($punch_in_time < '08:00:00' || $punch_out_time> '12:00:00') {
+                                                                $punch_in = new DateTime("08:00:00");
+                                                                $punch_out = new DateTime("12:00:00");
+                                                                } else {
+                                                                $punch_in = new DateTime($punch['punch_in_am_first']);
+                                                                $punch_out = new DateTime($punch['punch_in_am_second']);
+                                                                }
+
+                                                                $interval = $punch_in->diff($punch_out);
+                                                                $total_minutes_am = ($interval->h * 60) + $interval->i;
+                                                                }
+
+                                                                // Afternoon punch-in and punch-out
+                                                                if (!empty($punch['punch_in_pm_first']) && !empty($punch['punch_in_pm_second'])) {
+                                                                $punch_in_time_pm = (new DateTime($punch['punch_in_pm_first']))->format('H:i:s');
+                                                                $punch_out_time_pm = (new DateTime($punch['punch_in_pm_second']))->format('H:i:s');
+
+                                                                if ($punch_in_time_pm < '13:00:00' || $punch_out_time_pm> '17:00:00') {
+                                                                    $punch_in_pm = new DateTime("13:00:00");
+                                                                    $punch_out_pm = new DateTime("17:00:00");
+                                                                    } else {
+                                                                    $punch_in_pm = new DateTime($punch['punch_in_pm_first']);
+                                                                    $punch_out_pm = new DateTime($punch['punch_in_pm_second']);
+                                                                    }
+
+                                                                    $interval_pm = $punch_in_pm->diff($punch_out_pm);
+                                                                    $total_minutes_pm = ($interval_pm->h * 60) + $interval_pm->i;
+                                                                    }
+
+                                                                    // Total minutes
+                                                                    $total = $total_minutes_am + $total_minutes_pm;
+                                                                    @endphp
+
+
+                                                                    @php
+                                                                    $remainingMinutes=480 - $total; // Calculate the remaining minutes
+                                                                    $remainingHours=intdiv($remainingMinutes, 60); // Convert remaining minutes to hours
+                                                                    $remainingMinutesMod=$remainingMinutes % 60; // Calculate remaining minutes after hours
+                                                                    @endphp
+
+
+                                                                    @if($remainingHours === 0 && $remainingMinutesMod < 10 )
+                                                                        <td>
+                                                                        </td>
+                                                                        <td></td>
+                                                                        @else
+                                                                        <td style="color:red;">{{$remainingHours}}</td>
+                                                                        <td style="color:red;">{{$remainingMinutesMod}}</td>
+                                                                        @endif
                                                         </tr>
                                                         @endif
                                                         @endforeach
@@ -239,42 +277,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="modal fade" id="DTRReportsModal" tabindex="-1" aria-labelledby="DTRReportsModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="DTRReportsModalLabel">Generate Reports</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{ url('/SuperAdmin/Attendance/DailyTimeRecord') }}" method="POST">
-                                            @csrf <!-- Add CSRF token for security -->
-                                            <label class="text-dark" for="employeeIds">Select User</label>
-                                            <select id="employeeIds" name="employeeIds" class="form-control underline-input">
-                                                <option value="" selected>--Select All--</option>
-                                                @foreach ($users as $user)
-                                                <option value="{{ $user->custom_id }}">{{ $user->lastname }}, {{ $user->name }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            <label for="timeframeStart">From:</label>
-                                            <input type="date" name="timeframeStart" id="timeframeStart"
-                                                class="form-control underline-input">
-                                            <label for="timeframeEnd">To:</label>
-                                            <input type="date" name="timeframeEnd" id="timeframeEnd"
-                                                class="form-control underline-input">
-                                            <div class="text-center mt-1">
-                                                <button type="submit" class="btn btn-info">Generate Reports</button>
-                                            </div>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
 
 
                                         <script>

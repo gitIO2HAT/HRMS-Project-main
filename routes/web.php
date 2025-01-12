@@ -80,7 +80,7 @@ Route::group(['middleware' => 'superadmin'], function () {
     Route::post('/SuperAdmin/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-superadmin', [AttendanceController::class, 'currentTime'])->name('current-time-superadmin');
     Route::post('/SuperAdmin/Attendance/GenerateReports', [AttendanceController::class, 'generatereports']);
-    Route::post('/SuperAdmin/Attendance/DailyTimeRecord', [AttendanceController::class, 'dtrreports']);
+    Route::get('/SuperAdmin/Attendance/DailyTimeRecord', [AttendanceController::class, 'dtrreports']);
 
     Route::get('/SuperAdmin/MyAccount', [MyAccountController::class, 'myaccount']);
     Route::post('/SuperAdmin/MyAccount/Update', [MyAccountController::class, 'updatemyaccount']);
