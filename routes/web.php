@@ -123,6 +123,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('/Admin/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-admin', [AttendanceController::class, 'currentTime'])->name('current-time-admin');
     Route::post('/Admin/Attendance/GenerateReports', [AttendanceController::class, 'generatereports']);
+    Route::get('/Admin/Attendance/DailyTimeRecord', [AttendanceController::class, 'dtrreports']);
 
 
     Route::get('/Admin/Department', [DepartmentController::class, 'department']);
@@ -163,4 +164,5 @@ Route::group(['middleware' => 'employee'], function () {
     Route::post('/Employee/ClockIn', [AttendanceController::class, 'clockIn']);
     Route::post('/Employee/ClockOut', [AttendanceController::class, 'clockOut']);
     Route::get('/current-time-employee', [AttendanceController::class, 'currentTime'])->name('current-time-employee');
+    Route::get('/Employee/Attendance/DailyTimeRecord', [AttendanceController::class, 'dtrreports']);
 });

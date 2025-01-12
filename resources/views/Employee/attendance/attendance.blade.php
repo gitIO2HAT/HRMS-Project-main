@@ -9,7 +9,11 @@
                     <div class="row g-4">
                         <div class="col-sm-12 col-xl-8 rounded">
                             <div class=" bg-white rounded-3  h-100 p-4">
-
+                                <div class="text-start">
+                                    <a type="button" href="{{ url('/Employee/Attendance/DailyTimeRecord') }}" style="width:250px;" class="btn btn-success  mb-2 d-flex align-items-center">
+                                        Generate Daily Time Record
+                                    </a>
+                                </div>
                                 <table class="table table-striped table-hover table-responsive table-bordered text-start align-middle ">
                                     <thead class="text-dark">
                                         <tr>

@@ -1056,6 +1056,7 @@ class AttendanceController extends Controller
     {
 
         $leave = Leave::all();
+
         // Current month and year
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
@@ -1158,8 +1159,10 @@ class AttendanceController extends Controller
         if (Auth::user()->user_type == 0) {
             $attendancegenerate = Attendance::query()->with('user');
         }
-        if (Auth::user()->user_type == 1) {
-            $attendancegenerate = Attendance::query()->where('user_id', '!=', 1)->with('user');
+        elseif (Auth::user()->user_type == 1) {
+            $attendancegenerate = Attendance::query()->where('user_id', '!=', [0,2])->with('user');
+        }elseif (Auth::user()->user_type == 2) {
+            $attendancegenerate = Attendance::query()->where('user_id', '!=', [0,1])->with('user');
         }
 
         $dateNow = $this->getInternetTime();
@@ -1194,10 +1197,11 @@ class AttendanceController extends Controller
                 'date_range' => $date_range,
                 'employeeIds' => $employeeIds,
                 'weekends' => $weekends,
-                'holidays' => $holidayDates
+                'holidays' => $holidayDates,
+                'leave' => $leave
             ]);
         }
-        if (Auth::user()->user_type == 1) {
+        elseif (Auth::user()->user_type == 1) {
             $pdf = PDF::loadView('admin.attendance.dtrreports', [
                 'attendancegenerate' => $attendancegenerate,
                 'dailySeries' => $dailySeries,
@@ -1206,9 +1210,24 @@ class AttendanceController extends Controller
                 'dateNow' => $dateNow,
                 'employeeIds' => $employeeIds,
                 'weekends' => $weekends,
-                'holidays' => $holidayDates
+                'holidays' => $holidayDates,
+                'leave' => $leave
             ]);
         }
+        elseif (Auth::user()->user_type == 2) {
+            $pdf = PDF::loadView('employee.attendance.dtrreports', [
+                'attendancegenerate' => $attendancegenerate,
+                'dailySeries' => $dailySeries,
+                'recordCount' => $recordCount,
+                'date_range' => $date_range,
+                'dateNow' => $dateNow,
+                'employeeIds' => $employeeIds,
+                'weekends' => $weekends,
+                'holidays' => $holidayDates,
+                'leave' => $leave
+            ]);
+        }
+
 
 
         // Return the PDF to be viewed in the browser
